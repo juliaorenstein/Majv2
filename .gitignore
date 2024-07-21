@@ -93,7 +93,7 @@ x64/
 x86/
 bld/
 [Bb]in/
-[Oo]bj/
+#[Oo]bj/
 [Ll]og/
 
 # Visual Studio 2015/2017 cache/options directory
@@ -470,19 +470,19 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Packed Addressables
-/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 
 # Temporary auto-generated Android Assets
-/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/[Aa]ssets/[Ss]treamingAssets/aa/*
+[Aa]ssets/[Ss]treamingAssets/aa.meta
+[Aa]ssets/[Ss]treamingAssets/aa/*
 
 
 # Photon Fusion
-/[Aa]ssets/Photon/
-/[Aa]ssets.Photon.meta
-/[Aa]ssets.Fusion.*
-/Unity.Fusion.*
+[Aa]ssets/Photon/
+[Aa]ssets.Photon.meta
+[Aa]ssets.Fusion.*
+Unity.Fusion.*
 
 # TextMeshPro
-/[Aa]ssets/TextMesh Pro/
-/[Aa]ssets/TextMesh Pro.meta
+[Aa]ssets/TextMesh Pro/
+[Aa]ssets/TextMesh Pro.meta
