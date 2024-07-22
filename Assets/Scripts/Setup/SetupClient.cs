@@ -16,6 +16,7 @@ public class SetupClient
             DealerId = 3 // TODO: rotate dealer each game
         };
         Refs.GManagerClient = new(Refs);
+        new EventMonitor(Refs);
 
         //Refs.EventSystem.gameObject.AddComponent<Navigation>(); // TODO: remove this?
 

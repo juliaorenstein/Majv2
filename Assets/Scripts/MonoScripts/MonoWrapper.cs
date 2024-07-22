@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 
 public class MonoWrapper : MonoBehaviour, IMonoWrapper
@@ -65,6 +67,23 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
         GameManager.TileList[tileId].tileComponent
                    .GetComponentInChildren<TileLocomotion>()
                    .MoveTile(destination);
+    }
+
+    public void UpdateRack(List<int> tileIds)
+    {
+        List<int> currentTileIds = ObjRefs.LocalRack
+            .GetComponentsInChildren<TileMono>()
+            .Select(tileMono => tileMono.tile.Id).ToList();
+        // remove old tiles
+        foreach (int tileId in currentTileIds)
+        {
+            if (!tileIds.Contains(tileId)) MoveTile(tileId, ObjRefs.TilePool);
+        }
+
+        foreach (int tileId in tileIds)
+        {
+            if (!currentTileIds.Contains(tileId)) MoveTile(tileId, ObjRefs.LocalRack.GetChild(1));
+        }
     }
 
     public void StartNewCoroutine(IEnumerator func)

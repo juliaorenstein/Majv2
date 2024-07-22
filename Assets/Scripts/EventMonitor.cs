@@ -19,7 +19,6 @@ public class EventMonitor
             .GetProperty(e.PropertyName)
             .GetValue(gManagerClient) as List<int>;
 
-        // TODO: finish this
-        
+        mono.UpdateRack(rackList);  
     }
 }

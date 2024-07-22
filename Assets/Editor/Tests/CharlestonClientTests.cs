@@ -411,4 +411,9 @@ class FakeMonoWrapper : IMonoWrapper
     {
         yield return new();
     }
+
+    public void UpdateRack(List<int> tileIds)
+    {
+        throw new System.NotImplementedException();
+    }
 }
