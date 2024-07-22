@@ -4,6 +4,7 @@ using System;
 public class GameManager
 {
     // singleton pattern
+    // TODO: phase out singleton
     private static readonly Lazy<GameManager> lazy =
             new Lazy<GameManager>(() => new GameManager());
 

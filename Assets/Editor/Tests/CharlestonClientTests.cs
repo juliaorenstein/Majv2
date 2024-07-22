@@ -139,20 +139,20 @@ public class CharlestonClientTests
     public void ReceiveRackUpdate_ReceiveNewRack_RackIsUpdated()
     {
         // ARRANGE
-        ClassReferences refs = new()
+        ClassReferences Refs = new()
         {
             Mono = new FakeMonoWrapper(),
             CFusion = new FakeCharlestonFusion()
         };
-        CharlestonClient CClient = new(refs);
+        CharlestonClient CClient = new(Refs);
         GameManagerClient gManagerClient = new()
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };
-        refs.GManagerClient = gManagerClient;
+        Refs.GManagerClient = gManagerClient;
 
         // ACT
-        CClient.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
+        Refs.ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
         List<int> expected = new() { 4, 5, 6, 7, 8 };
         List<int> actual = gManagerClient.PrivateRack;
 
