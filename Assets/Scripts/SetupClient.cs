@@ -1,7 +1,7 @@
 public class SetupClient
 {
-    ObjectReferences Refs;
-    public SetupClient(ObjectReferences refs)
+    ClassReferences Refs;
+    public SetupClient(ClassReferences refs)
     {
         Refs = refs;
     }

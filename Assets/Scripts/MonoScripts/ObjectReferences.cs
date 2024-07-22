@@ -6,16 +6,6 @@ public class ObjectReferences : MonoBehaviour
 {
     public ClassReferences ClassRefs;
 
-    public SetupMono setupMono;
-    public MonoWrapper Mono;
-    public FusionWrapper Fusion;
-    public GameManager GManager;
-    public CharlestonManager CManager;
-    public FusionManager FManager;
-    public SendGameState SendGame;
-    public NetworkCallbacks NetworkCallbacks;
-    public NetworkRunner Runner;
-
     public Transform Discard;
     public Transform TilePool;
     public Transform LocalRack;

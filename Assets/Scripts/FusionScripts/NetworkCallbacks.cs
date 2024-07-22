@@ -8,10 +8,11 @@ using UnityEngine.SceneManagement;
 public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 {
     // GAME OBJECTS
-    private ObjectReferences Refs;
+    private ClassReferences Refs;
     private NetworkRunner runner;
     private FusionManager FManager;
-    private Setup setup;
+    private SetupHost setupHost;
+    private SetupClient setupClient;
 
     public CallInputStruct inputStruct;
 
@@ -19,7 +20,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
         inputStruct = new();
-        Refs = ObjectReferences.Instance;
+        Refs = ObjectReferences.Instance.ClassRefs;
         Refs.NetworkCallbacks = this;
     }
 
@@ -88,7 +89,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
                 // Initialize Setup variables
                 FManager = Scripts.GetComponentInChildren<FusionManager>();
-                setup = new()
+                setupHost = new(Refs);
                 {
                     setupMono = Scripts.GetComponentInChildren<SetupMono>()
                 };  // established for when other players join as well
@@ -96,7 +97,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
             // Do the rest of the setup for all clients
             FManager.H_InitializePlayer(player);
-            setup.H_Setup(player.PlayerId);
+            setupHost.H_Setup(player.PlayerId);
             
 
             /*
@@ -109,7 +110,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
             */
         }
 
-        setup.C_Setup();
+        setupHost.C_Setup();
     }
     
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }

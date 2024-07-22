@@ -1,4 +1,4 @@
-using System;
+using Fusion;
 
 // This class is intended to hold references to wrappers and managers that are
 // not monobehaviours or networkbehaviours. Offshoot from ObjectReferences as I
@@ -8,6 +8,9 @@ public class ClassReferences
 {
     // Initiated in ObjectReferences
 
+    public NetworkCallbacks NetworkCallbacks;
+    public NetworkRunner Runner;
+    public SetupMono setupMono;
     public CharlestonHost CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;

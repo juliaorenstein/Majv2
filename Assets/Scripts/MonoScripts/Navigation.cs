@@ -31,7 +31,7 @@ public class Navigation : MonoBehaviour
         PassButton = Refs.CallWaitButtons.transform.GetChild(1).gameObject;
         CallButton = Refs.CallWaitButtons.transform.GetChild(2).gameObject;
         NeverMindButton = Refs.CallWaitButtons.transform.GetChild(3).gameObject;
-        NCallbacks = Refs.NetworkCallbacks;
+        NCallbacks = Refs.ClassRefs.NetworkCallbacks;
         ESystem = EventSystem.current; // i think this needs to be last to avoid
         // the eventsystem triggering anything that interrupts start
     }

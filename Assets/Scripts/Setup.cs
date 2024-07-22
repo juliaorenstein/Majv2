@@ -3,6 +3,7 @@ using System.Linq;
 
 public class Setup
 {
+    /*
     public ObjectReferences Refs;
     public SetupMono setupMono;
 
@@ -87,4 +88,5 @@ public class Setup
     }
 
     void HideButtons() => Refs.Mono.SetActive(MonoObject.StartButtons, false);
+    */
 }
