@@ -221,14 +221,6 @@ public class CharlestonHostTests
 
     List<List<int>> TestRacks() => new() { Rack0, Rack1, Rack2, Rack3 };
     List<List<int>> TestPasses() => new() { Pass0, Pass1, Pass2, Pass3 };
-
-    void PopulatePassList(CharlestonHost cHost, GameManager gManager)
-    {
-        for (int playerId = 0; playerId < 4; playerId++)
-        {
-            cHost.PassList[playerId] = gManager.Racks[playerId].GetRange(0, 3);
-        }
-    }
 }
 
 class FakeFusionWrapper : IFusionWrapper
