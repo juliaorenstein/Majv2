@@ -31,6 +31,7 @@ public class TurnManager
         refs.TManager = this;
         mono = refs.Mono;
         fusion = refs.Fusion;
+        GManager = refs.GManager;
         PlayersWaiting = new();
         PlayersCalling = new();
     }

@@ -4,12 +4,6 @@ using NUnit.Framework;
 
 public class CharlestonClientTests
 {
-    [TearDown]
-    public void Cleanup()
-    {
-        
-    }
-
     // CheckReadyToPass
     [Test]
     public void CheckReadyToPass_ThreeValidTiles_ReturnsTrue()
@@ -148,10 +142,10 @@ public class CharlestonClientTests
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };
-        Refs.GManagerClient = gManagerClient;
+        ReceiveGameState ReceiveGame = new(Refs);
 
         // ACT
-        Refs.ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
+        ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
         List<int> expected = new() { 4, 5, 6, 7, 8 };
         List<int> actual = gManagerClient.PrivateRack;
 
@@ -235,6 +229,7 @@ public class CharlestonClientTests
             Mono = mono,
             CFusion = new FakeCharlestonFusion()
         };
+        refs.GManager = new(refs);
         refs.TManager = new(refs);
         CharlestonClient CClient = new(refs);
         mono.SetActive(MonoObject.CharlestonBox, true);

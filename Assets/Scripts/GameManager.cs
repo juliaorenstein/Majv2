@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 
 public class GameManager
 {
@@ -10,7 +9,7 @@ public class GameManager
 
     // Game State - only available to host
     public Stack<int> Wall = new();
-    public List<List<int>> Racks = new() { new(), new(), new(), new() };
+    public List<List<int>> Racks = new();
 
     public int WaitTime { get; set; } = 2000;
 
