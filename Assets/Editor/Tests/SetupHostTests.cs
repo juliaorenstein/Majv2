@@ -7,7 +7,7 @@ public class SetupHostTests
 	public void SetupDriver_WhenCalled_PopulatesWallAndRacks()
 	{
 		// ARRANGE
-		ClassReferences refs = new() { GManager = new() };
+		ClassReferences refs = new();
 		SetupHost setupHost = new(refs);
 
 		// ACT

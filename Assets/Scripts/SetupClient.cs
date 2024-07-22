@@ -1,21 +1,30 @@
 public class SetupClient
 {
-    ClassReferences Refs;
-    public SetupClient(ClassReferences refs)
+    readonly ClassReferences Refs;
+    readonly SetupMono setupMono;
+    public SetupClient(ClassReferences refs, SetupMono _setupMono)
     {
         Refs = refs;
+        setupMono = _setupMono;
     }
 
     public void SetupDriver()
     {
-        Refs.GManager.LocalPlayerId = Refs.Fusion.LocalPlayerId;
-        Refs.GManager.DealerId = 3; // : rotate dealer each game
+        Refs.GManager = new(Refs)
+        {
+            LocalPlayerId = Refs.Fusion.LocalPlayerId,
+            DealerId = 3 // TODO: rotate dealer each game
+        };
+        Refs.GManagerClient = new(Refs);
+
         //Refs.EventSystem.gameObject.AddComponent<Navigation>(); // TODO: remove this?
 
         HideButtons();                      // hide start buttons
         // show the other player's racks
         bool isDealer = Refs.GManager.DealerId == Refs.GManager.LocalPlayerId;
-        Refs.setupMono.PopulateOtherRacks(isDealer);
+        setupMono.PopulateOtherRacks(isDealer);
+        Refs.Nav.SetNetworkCallbacks(Refs.NetworkCallbacks);
+        Refs.ReceiveGame = new(Refs);
     }
 
     void HideButtons() => Refs.Mono.SetActive(MonoObject.StartButtons, false);

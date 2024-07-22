@@ -24,6 +24,7 @@ public class TurnManager
     private bool AnyPlayerCalling
     { get { return PlayersCalling.Count > 0; } }
 
+    // instantiated in SetupHost
     public TurnManager(ClassReferences refs)
     {
         Refs = refs;

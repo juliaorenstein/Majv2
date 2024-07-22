@@ -17,7 +17,7 @@ public class FusionManager : NetworkBehaviour
         }
     }
 
-    public void H_InitializePlayer(PlayerRef player)
+    public void InitializePlayer(PlayerRef player)
     {
         NetworkObject newInputObj = Runner.Spawn(Resources.Load<GameObject>("Prefabs/Input Object"));
         newInputObj.AssignInputAuthority(player);

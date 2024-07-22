@@ -144,8 +144,7 @@ public class CharlestonClientTests
             Mono = new FakeMonoWrapper(),
             CFusion = new FakeCharlestonFusion()
         };
-        CharlestonClient CClient = new(Refs);
-        GameManagerClient gManagerClient = new()
+        GameManagerClient gManagerClient = new(Refs)
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };

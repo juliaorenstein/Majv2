@@ -196,13 +196,12 @@ public class CharlestonHostTests
     {
         FakeFusionWrapper fusion = new();
         FakeCharlestonFusion cFusion = new();
-        GameManager gManager = new() { Racks = TestRacks() };
         ClassReferences refs = new()
         {
             Fusion = fusion,
             CFusion = cFusion,
-            GManager = gManager
         };
+        GameManager gManager = new(refs) { Racks = TestRacks() };
         CharlestonHost cHost = new(refs);
 
         return (cHost, refs, fusion, cFusion, gManager);

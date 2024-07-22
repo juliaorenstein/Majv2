@@ -4,6 +4,11 @@ using System.Runtime.CompilerServices;
 
 public class GameManagerClient : INotifyPropertyChanged
 {
+    public GameManagerClient(ClassReferences refs)
+    {
+        refs.GManagerClient = this;
+    }
+
     private List<int> privateRack;
     public List<int> PrivateRack
     {

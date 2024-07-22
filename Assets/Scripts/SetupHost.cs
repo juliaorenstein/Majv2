@@ -14,6 +14,8 @@ public class SetupHost
 
     public void SetupDriver()
     {
+        Refs.TManager = new(Refs); // TODO: rename to TManagerHost?
+
         if (!ShuffledAndDealt)
         {
             Shuffle();

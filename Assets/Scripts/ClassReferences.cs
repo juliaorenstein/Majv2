@@ -9,8 +9,8 @@ public class ClassReferences
     // Initiated in ObjectReferences
 
     public NetworkCallbacks NetworkCallbacks;
+    public Navigation Nav;
     public NetworkRunner Runner;
-    public SetupMono setupMono;
     public CharlestonHost CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
