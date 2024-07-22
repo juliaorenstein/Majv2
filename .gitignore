@@ -478,11 +478,11 @@ crashlytics-build.properties
 
 
 # Photon Fusion
-[Aa]ssets/Photon/
+[Aa]ssets/[Pp]hoton/
 [Aa]ssets.Photon.meta
 [Aa]ssets.Fusion.*
 Unity.Fusion.*
 
 # TextMeshPro
-[Aa]ssets/TextMesh Pro/
+[Aa]ssets/TextMesh Pro
 [Aa]ssets/TextMesh Pro.meta
