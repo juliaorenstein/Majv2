@@ -32,7 +32,7 @@ public class Setup
             Deal();
         }
         int[] tileArr = PrepRackForClient(playerId);
-        Refs.Fusion.RPC_SendRackToPlayer(playerId, tileArr);
+        Refs.Fusion.RPC_H2C_SendRack(playerId, tileArr);
     }
 
     // FISHER-YATES

@@ -8,27 +8,6 @@ public class ClassReferences
 {
     // Initiated in ObjectReferences
 
-    // singleton pattern
-    /*private static readonly Lazy<ClassReferences> lazy =
-            new Lazy<ClassReferences>(() => new ClassReferences());
-
-    private static ClassReferences instance;
-    public static ClassReferences Instance
-    {
-        get
-        {
-            return lazy.Value;
-        }
-    }
-
-    public static void SetTestingInstance(ClassReferences newInstance)
-    {
-        instance = newInstance;
-    }
-    */
-
-    
-
     public CharlestonHost CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
@@ -38,4 +17,6 @@ public class ClassReferences
     public GameManagerClient GManagerClient;
     public IMonoWrapper Mono;
     public IFusionWrapper Fusion;
+    public SendGameState SendGame;
+    public ReceiveGameState ReceiveGame;
 }

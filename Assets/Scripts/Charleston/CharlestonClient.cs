@@ -54,11 +54,6 @@ public class CharlestonClient
         CFusion.RPC_C2H_StartPass(ClientPassArr);
     }
 
-    public void ReceiveRackUpdate(int[] newRack)
-    {
-        Refs.GManagerClient.PrivateRack = newRack.ToList();
-    }
-
     void UpdateButton() { UpdateButton(CFusion.Counter); }
 
     public void UpdateButton(int counter)

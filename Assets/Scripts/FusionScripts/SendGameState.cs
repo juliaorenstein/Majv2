@@ -12,16 +12,4 @@ public class SendGameState : NetworkBehaviour
     {
         Refs.SendGame = this;
     }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
-    public void RPC_SendRackToPlayer(int playerId, int[] tileArr) => PopulateLocalRack(tileArr);
-
-    public void PopulateLocalRack(int[] tileArr)
-    {
-        Refs.ClassRefs.GManagerClient.DisplayRack = tileArr.ToList();
-        foreach (int tileId in tileArr)
-        {
-            Refs.Mono.MoveTile(tileId, MonoObject.PrivateRack);
-        }
-    }
 }

@@ -306,7 +306,7 @@ class FakeFusionWrapper : IFusionWrapper
         throw new System.NotImplementedException();
     }
 
-    public void RPC_SendRackToPlayer(int playerId, int[] tileArr)
+    public void RPC_H2C_SendRack(int playerId, int[] tileArr)
     {
         throw new System.NotImplementedException();
     }

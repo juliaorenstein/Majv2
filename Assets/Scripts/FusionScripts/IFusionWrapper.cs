@@ -22,7 +22,7 @@ public interface IFusionWrapper
     void RPC_H2A_ShowDiscard(int discardTileId);
     void RPC_H2C_CallTurn(int callPlayerId, int callTileId);
     void RPC_H2C_NextTurn(int nextPlayerId, int nextTileId);
-    void RPC_SendRackToPlayer(int playerId, int[] tileArr);
+    void RPC_H2C_SendRack(int playerId, int[] tileArr);
     void Spawned();
     bool WasCallPressed(int playerId);
     bool WasNeverMindPressed(int playerId);

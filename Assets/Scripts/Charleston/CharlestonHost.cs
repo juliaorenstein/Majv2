@@ -129,7 +129,7 @@ public class CharlestonHost
     {
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            CFusion.RPC_H2C_UpdateRack(playerId, RecList[playerId].ToArray());
+            fusion.RPC_H2C_SendRack(playerId, RecList[playerId].ToArray());
         }
     }
 
