@@ -10,7 +10,6 @@ public class ObjectReferences : MonoBehaviour
     public MonoWrapper Mono;
     public FusionWrapper Fusion;
     public GameManager GManager = GameManager.Instance;
-    public CharlestonManager CManager;
     public FusionManager FManager;
     public SendGameState SendGame;
     public NetworkCallbacks NetworkCallbacks;
