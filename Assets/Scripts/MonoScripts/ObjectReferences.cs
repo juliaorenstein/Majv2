@@ -9,7 +9,7 @@ public class ObjectReferences : MonoBehaviour
     public SetupMono setupMono;
     public MonoWrapper Mono;
     public FusionWrapper Fusion;
-    public GameManager GManager = GameManager.Instance;
+    public GameManager GManager;
     public CharlestonManager CManager;
     public FusionManager FManager;
     public SendGameState SendGame;

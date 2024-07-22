@@ -9,7 +9,7 @@ public class TurnManager
     public IFusionWrapper fusion;
 
     public FusionManager FManager;
-    private readonly GameManager GManager = GameManager.Instance;
+    private readonly GameManager GManager;
     public string ExposeTileName;
     private int DiscardTile;
     private int CallTile;
