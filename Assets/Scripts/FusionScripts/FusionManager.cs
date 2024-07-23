@@ -7,6 +7,10 @@ public class FusionManager : NetworkBehaviour
     public Dictionary<int, PlayerRef> PlayerDict { get; set; }
     public Dictionary<int, InputCollection> InputDict { get; set; }
 
+    // Shared between server and client
+    [Networked] public GamePhase GamePhase { get; set; }
+    [Networked] public TurnPhase TurnPhase { get; set; }
+
     public override void Spawned()
     {
         PlayerDict = new();

@@ -37,6 +37,12 @@ public class GameManagerClient : INotifyPropertyChanged
         }
     }
 
+    public int LocalPlayer { get; set; }
+    public int? ActivePlayer { get; set; }
+    public bool IsActivePlayer { get => ActivePlayer == LocalPlayer; }
+    public int? ExposingPlayer { get; set; }
+    public bool IsExposingPlayer { get => ExposingPlayer == LocalPlayer; }
+
     public event PropertyChangedEventHandler PropertyChanged;
 
     void OnPropertyChanged([CallerMemberName] string propertyName = null)

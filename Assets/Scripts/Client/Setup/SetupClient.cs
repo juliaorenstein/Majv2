@@ -12,10 +12,14 @@ public class SetupClient
     {
         Refs.GManager = new(Refs)
         {
-            LocalPlayerId = Refs.Fusion.LocalPlayerId,
+            //LocalPlayerId = Refs.Fusion.LocalPlayerId, // FIXME: deprecate this property in favor of GameManagerClient.LocalPlayer
             DealerId = 3 // TODO: rotate dealer each game
         };
-        Refs.GManagerClient = new(Refs);
+
+        Refs.GManagerClient = new(Refs)
+        {
+            LocalPlayer = Refs.Fusion.LocalPlayerId,
+        };
         new EventMonitor(Refs);
 
         //Refs.EventSystem.gameObject.AddComponent<Navigation>(); // TODO: remove this?

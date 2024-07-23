@@ -177,20 +177,20 @@ public class Navigation : MonoBehaviour
 
             if (Charleston.gameObject.activeInHierarchy)
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickCharleston();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickCharleston();
                 return;
             }
 
-            if (Discard.GetComponentInChildren<Image>().raycastTarget)
+            if (Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.Discardable())
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickDiscard();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickDiscard();
                 Unselect();
                 return;
             }
 
-            if (Selected.GetComponentInChildren<TileLocomotion>().EligibleForExpose())
+            if (Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.Exposable())
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickExpose();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickExpose();
                 return;
             }
         }

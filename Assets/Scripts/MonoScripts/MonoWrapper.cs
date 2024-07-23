@@ -8,81 +8,81 @@ using System.Linq;
 
 public class MonoWrapper : MonoBehaviour, IMonoWrapper
 {
-    ObjectReferences ObjRefs;
+    ObjectReferences objRefs;
 
     TextMeshProUGUI TurnIndicatorText;
 
     private void Awake()
     {
-        ObjRefs = ObjectReferences.Instance;
-        ObjRefs.ClassRefs.Mono = this;
+        objRefs = ObjectReferences.Instance;
+        objRefs.ClassRefs.Mono = this;
     }
 
     private void Start()
     {
-        TurnIndicatorText = ObjRefs.TurnIndicator.transform.GetChild(0)
+        TurnIndicatorText = objRefs.TurnIndicator.transform.GetChild(0)
             .GetComponent<TextMeshProUGUI>();
     }
 
     public void SetActive(MonoObject monoObject, bool value)
     {
-        ObjRefs.ObjectDict[monoObject].gameObject.SetActive(value);
+        objRefs.ObjectDict[monoObject].gameObject.SetActive(value);
     }
 
     public void SetRaycastTarget(MonoObject monoObject, bool value)
     {
-        ObjRefs.ObjectDict[monoObject].transform.GetComponent<Image>().raycastTarget = value;
+        objRefs.ObjectDict[monoObject].transform.GetComponent<Image>().raycastTarget = value;
     }
 
     public void SetRaycastTargetOnTile(int tileId, bool value)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
-        GameManager.TileList[tileId].tileComponent
+        GameManager.TileList[tileId].tileMono
                    .GetComponentInChildren<Image>()
                    .raycastTarget = value;
     }
 
     public bool IsButtonInteractable(MonoObject monoObject)
     {
-        Button button = ObjRefs.ObjectDict[monoObject].GetComponent<Button>();
+        Button button = objRefs.ObjectDict[monoObject].GetComponent<Button>();
         Debug.Assert(button != null);
         return button.IsInteractable();
     }
 
     public void SetButtonInteractable(MonoObject monoObject, bool value)
     {
-        Button button = ObjRefs.ObjectDict[monoObject].GetComponent<Button>();
+        Button button = objRefs.ObjectDict[monoObject].GetComponent<Button>();
         Debug.Assert(button != null);
-        ObjRefs.ObjectDict[monoObject].GetComponent<Button>().interactable = value;
+        objRefs.ObjectDict[monoObject].GetComponent<Button>().interactable = value;
     }
 
     public void MoveTile(int tileId, MonoObject destination)
     {
-        MoveTile(tileId, ObjRefs.ObjectDict[destination].transform);
+        MoveTile(tileId, objRefs.ObjectDict[destination].transform);
     }
 
     private void MoveTile(int tileId, Transform destination)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
-        GameManager.TileList[tileId].tileComponent
-                   .GetComponentInChildren<TileLocomotion>()
+        GameManager.TileList[tileId].tileMono
+                   .GetComponentInChildren<TileLocomotionMono>()
                    .MoveTile(destination);
     }
 
     public void UpdateRack(List<int> tileIds)
     {
-        List<int> currentTileIds = ObjRefs.LocalRack
+        List<int> currentTileIds = objRefs.LocalRack
             .GetComponentsInChildren<TileMono>()
             .Select(tileMono => tileMono.tile.Id).ToList();
         // remove old tiles
         foreach (int tileId in currentTileIds)
         {
-            if (!tileIds.Contains(tileId)) MoveTile(tileId, ObjRefs.TilePool);
+            if (!tileIds.Contains(tileId)) MoveTile(tileId, objRefs.TilePool);
         }
 
         foreach (int tileId in tileIds)
         {
-            if (!currentTileIds.Contains(tileId)) MoveTile(tileId, ObjRefs.LocalRack.GetChild(1));
+            if (!currentTileIds.Contains(tileId)) MoveTile(tileId, objRefs.LocalRack.GetChild(1));
         }
     }
 
@@ -98,7 +98,7 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
 
     public void SetButtonText(MonoObject monoObject, string text)
     {
-        Button button = ObjRefs.ObjectDict[monoObject].GetComponent<Button>();
+        Button button = objRefs.ObjectDict[monoObject].GetComponent<Button>();
         Debug.Assert(button != null);
         button.GetComponentInChildren<TextMeshProUGUI>()
             .SetText(text);
@@ -115,7 +115,7 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
 
     public void ExposeOtherPlayerTile(int rackId, int tileId)
     {
-        Transform exposePlayerRack = ObjRefs.OtherRacks.transform
+        Transform exposePlayerRack = objRefs.OtherRacks.transform
             .GetChild(rackId);
         Destroy(exposePlayerRack.GetChild(1).GetChild(0).gameObject);
         MoveTile(tileId, exposePlayerRack.GetChild(0));
@@ -123,9 +123,9 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
 
     public void UnexposeOtherPlayerTile(int rackId, int tileId)
     {
-        Transform exposePlayerRack = ObjRefs.OtherRacks.transform
+        Transform exposePlayerRack = objRefs.OtherRacks.transform
             .GetChild(rackId);
         Instantiate(exposePlayerRack.GetChild(1).GetChild(0).gameObject, exposePlayerRack.GetChild(1));
-        MoveTile(tileId, ObjRefs.TilePool.transform);
+        MoveTile(tileId, objRefs.TilePool.transform);
     }
 }

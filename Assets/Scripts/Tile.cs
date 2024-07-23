@@ -10,7 +10,7 @@ public class Tile : IComparable<Tile>
     public int? value;
     public Direction? direction;
     public bool isVirtual;
-    public TileMono tileComponent;
+    public TileMono tileMono;
 
     public int Id;
 
@@ -25,16 +25,16 @@ public class Tile : IComparable<Tile>
         SetValues(v, s, dir);
     }
 
-    public Tile(TileMono tc, int id, int? v = null, Suit? s = null, Direction? dir = null, bool virt = false)
+    public Tile(TileMono tm, int id, int? v = null, Suit? s = null, Direction? dir = null, bool virt = false)
     {
-        tileComponent = tc;
-        tileComponent.tile = this;
+        tileMono = tm;
+        tileMono.tile = this;
         Id = id;
         isVirtual = virt;
 
         SetValues(v, s, dir);
 
-        tileComponent.Init();
+        tileMono.Init();
     }
 
     void SetValues(int? v = null, Suit? s = null, Direction? dir = null)

@@ -4,7 +4,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
     ClassReferences Refs;
     FusionManager FManager;
-    readonly TurnManager TManager;
+    TurnManager TManager;
 
     // Info about players
     public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }
@@ -31,6 +31,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
         Refs = ObjectReferences.Instance.ClassRefs;
         Refs.Fusion = this;
         FManager = Refs.FManager;
+        TManager = Refs.TManager;
         // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;
     }

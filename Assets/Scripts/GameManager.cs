@@ -2,7 +2,6 @@
 
 public class GameManager
 {
-    public FusionManager FManager;
     public int LocalPlayerId;
     public int DealerId;
     public static List<Tile> TileList = new();
@@ -22,3 +21,18 @@ public class GameManager
     }
 }
 
+public enum GamePhase
+{ // FIXME: set these in the appropriate places so they work in TileLocomotion
+    Pregame,
+    Setup,
+    Charleston,
+    Gameplay,
+    Endgame
+}
+
+public enum TurnPhase
+{
+    Discarding,
+    LoggingCallers,
+    Exposing,
+}
