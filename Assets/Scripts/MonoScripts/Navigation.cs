@@ -5,13 +5,12 @@ using System;
 
 public class Navigation : MonoBehaviour
 {
-    public ObjectReferences Refs;
+    public ObjectReferences ObjRefs;
     private EventSystem ESystem;
     private Transform RackPrivate;
     private Transform RackPublic;
     private Transform Selected;
     private Transform Charleston;
-    private CharlestonMono ChButton;
     private Transform Discard;
     private GameObject WaitButton;
     private GameObject PassButton;
@@ -21,23 +20,23 @@ public class Navigation : MonoBehaviour
 
     private void Start()
     {
-        Refs = ObjectReferences.Instance;
-        RackPrivate = Refs.LocalRack.transform.GetChild(1);
-        RackPublic = Refs.LocalRack.transform.GetChild(0);
-        Charleston = Refs.CharlestonBox;
-        ChButton = Charleston.GetComponentInChildren<CharlestonMono>();
-        Discard = Refs.Discard;
-        WaitButton = Refs.CallWaitButtons.transform.GetChild(0).gameObject;
-        PassButton = Refs.CallWaitButtons.transform.GetChild(1).gameObject;
-        CallButton = Refs.CallWaitButtons.transform.GetChild(2).gameObject;
-        NeverMindButton = Refs.CallWaitButtons.transform.GetChild(3).gameObject;
-        NCallbacks = Refs.NetworkCallbacks;
-        ESystem = EventSystem.current; // i think this needs to be last to avoid
-        // the eventsystem triggering anything that interrupts start
+        ObjRefs = ObjectReferences.Instance;
+        ObjRefs.ClassRefs.Nav = this;
+        RackPrivate = ObjRefs.LocalRack.transform.GetChild(1);
+        RackPublic = ObjRefs.LocalRack.transform.GetChild(0);
+        Charleston = ObjRefs.CharlestonBox;
+        Discard = ObjRefs.Discard;
+        WaitButton = ObjRefs.CallWaitButtons.transform.GetChild(0).gameObject;
+        PassButton = ObjRefs.CallWaitButtons.transform.GetChild(1).gameObject;
+        CallButton = ObjRefs.CallWaitButtons.transform.GetChild(2).gameObject;
+        NeverMindButton = ObjRefs.CallWaitButtons.transform.GetChild(3).gameObject;
+        NCallbacks = ObjRefs.ClassRefs.NetworkCallbacks;
+        ESystem = EventSystem.current;
     }
 
     private void Update()
     {
+        if (!NCallbacks) return;
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (!Selected)
@@ -178,20 +177,20 @@ public class Navigation : MonoBehaviour
 
             if (Charleston.gameObject.activeInHierarchy)
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickCharleston();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickCharleston();
                 return;
             }
 
-            if (Discard.GetComponentInChildren<Image>().raycastTarget)
+            if (Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.Discardable())
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickDiscard();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickDiscard();
                 Unselect();
                 return;
             }
 
-            if (Selected.GetComponentInChildren<TileLocomotion>().EligibleForExpose())
+            if (Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.Exposable())
             {
-                Selected.GetComponentInChildren<TileLocomotion>().DoubleClickExpose();
+                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickExpose();
                 return;
             }
         }
@@ -200,7 +199,7 @@ public class Navigation : MonoBehaviour
         {
             if (Charleston.gameObject.activeInHierarchy)
             {
-                Refs.ClassRefs.CClient.InitiatePass();
+                ObjRefs.ClassRefs.CClient.InitiatePass();
                 Unselect();
                 return;
             }
@@ -290,5 +289,10 @@ public class Navigation : MonoBehaviour
         WaitButton.SetActive(true);
         CallButton.transform.parent.gameObject.SetActive(false);
         Unselect();
+    }
+
+    public void SetNetworkCallbacks(NetworkCallbacks networkCallbacks)
+    {
+        NCallbacks = networkCallbacks;
     }
 }

@@ -9,7 +9,7 @@ public class TurnManager
     public IFusionWrapper fusion;
 
     public FusionManager FManager;
-    private readonly GameManager GManager = GameManager.Instance;
+    private readonly GameManager GManager;
     public string ExposeTileName;
     private int DiscardTile;
     private int CallTile;
@@ -24,12 +24,14 @@ public class TurnManager
     private bool AnyPlayerCalling
     { get { return PlayersCalling.Count > 0; } }
 
+    // instantiated in SetupHost
     public TurnManager(ClassReferences refs)
     {
         Refs = refs;
         refs.TManager = this;
         mono = refs.Mono;
         fusion = refs.Fusion;
+        GManager = refs.GManager;
         PlayersWaiting = new();
         PlayersCalling = new();
     }

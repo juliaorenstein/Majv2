@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using static UnityEditor.ShaderData;
 
 public class CharlestonHostTests
 {
@@ -198,13 +196,12 @@ public class CharlestonHostTests
     {
         FakeFusionWrapper fusion = new();
         FakeCharlestonFusion cFusion = new();
-        GameManager gManager = new() { Racks = TestRacks() };
         ClassReferences refs = new()
         {
             Fusion = fusion,
             CFusion = cFusion,
-            GManager = gManager
         };
+        GameManager gManager = new(refs) { Racks = TestRacks() };
         CharlestonHost cHost = new(refs);
 
         return (cHost, refs, fusion, cFusion, gManager);
@@ -223,116 +220,4 @@ public class CharlestonHostTests
 
     List<List<int>> TestRacks() => new() { Rack0, Rack1, Rack2, Rack3 };
     List<List<int>> TestPasses() => new() { Pass0, Pass1, Pass2, Pass3 };
-
-    void PopulatePassList(CharlestonHost cHost, GameManager gManager)
-    {
-        for (int playerId = 0; playerId < 4; playerId++)
-        {
-            cHost.PassList[playerId] = gManager.Racks[playerId].GetRange(0, 3);
-        }
-    }
-}
-
-class FakeFusionWrapper : IFusionWrapper
-{
-    public int LocalPlayerId => throw new System.NotImplementedException();
-
-    public int TurnPlayerId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public int CallPlayerId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-    public bool IsServer => throw new System.NotImplementedException();
-
-    public int ActiveDiscardTileId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-    public bool IsTimerExpired => throw new System.NotImplementedException();
-
-    public bool IsTimerRunning => throw new System.NotImplementedException();
-
-    public void CreateTimer()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void FixedUpdateNetwork()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public List<int> AiPlayers = new();
-    public bool IsPlayerAI(int playerID) => AiPlayers.Contains(playerID);
-
-    public void ResetTimer()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_C2A_Expose(int exposeTileId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_C2H_Discard(int discardTileId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2A_NeverMind()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2A_ResetButtons()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2A_ShowButtons(int discardPlayerId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2A_ShowDiscard(int discardTileId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2C_CallTurn(int callPlayerId, int callTileId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_H2C_NextTurn(int nextPlayerId, int nextTileId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void RPC_SendRackToPlayer(int playerId, int[] tileArr)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void Spawned()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool WasCallPressed(int playerId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool WasNeverMindPressed(int playerId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool WasPassPressed(int playerId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool WasWaitPressed(int playerId)
-    {
-        throw new System.NotImplementedException();
-    }
 }

@@ -4,12 +4,6 @@ using NUnit.Framework;
 
 public class CharlestonClientTests
 {
-    [TearDown]
-    public void Cleanup()
-    {
-        
-    }
-
     // CheckReadyToPass
     [Test]
     public void CheckReadyToPass_ThreeValidTiles_ReturnsTrue()
@@ -139,20 +133,19 @@ public class CharlestonClientTests
     public void ReceiveRackUpdate_ReceiveNewRack_RackIsUpdated()
     {
         // ARRANGE
-        ClassReferences refs = new()
+        ClassReferences Refs = new()
         {
             Mono = new FakeMonoWrapper(),
             CFusion = new FakeCharlestonFusion()
         };
-        CharlestonClient CClient = new(refs);
-        GameManagerClient gManagerClient = new()
+        GameManagerClient gManagerClient = new(Refs)
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };
-        refs.GManagerClient = gManagerClient;
+        ReceiveGameState ReceiveGame = new(Refs);
 
         // ACT
-        CClient.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
+        ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
         List<int> expected = new() { 4, 5, 6, 7, 8 };
         List<int> actual = gManagerClient.PrivateRack;
 
@@ -236,6 +229,7 @@ public class CharlestonClientTests
             Mono = mono,
             CFusion = new FakeCharlestonFusion()
         };
+        refs.GManager = new(refs);
         refs.TManager = new(refs);
         CharlestonClient CClient = new(refs);
         mono.SetActive(MonoObject.CharlestonBox, true);
@@ -246,105 +240,6 @@ public class CharlestonClientTests
         // ASSERT
         CollectionAssert.DoesNotContain(mono.ActiveList, MonoObject.CharlestonBox);
     }
-
-    // PASSLOGIC
-    /*
-    List<List<int>> TestHostPassArr()
-    {
-        return new()
-        {
-            new() { 1, 2, 3 },
-            new() { 4, 5, 6 },
-            new() { 7, 8, 9 },
-            new() { 10, 11, 12 }
-        };
-    }
-
-    
-    [Test]
-    public void PassLogic_ToTheRightNoStealing_CheckArray()
-    {
-        // ARRANGE
-        CharlestonClient CClient = new();
-        CClient.HostPassArr = TestHostPassArr();
-        CClient.Counter = 0;
-
-        // ACT
-        List<List<int>> result = CClient.PassLogic();
-        List<List<int>> expected = new()
-        {
-            new() { 10, 11, 12 },
-            new() { 1, 2, 3 },
-            new() { 4, 5, 6 },
-            new() { 7, 8, 9 }
-        };
-
-        // ASSERT
-        CollectionAssert.AreEqual(expected, result);
-    }
-
-    [Test]
-    public void PassLogic_AcrossNoStealing_CheckArray()
-    {
-        // ARRANGE
-        CharlestonClient CClient = new();
-        CClient.HostPassArr = TestHostPassArr();
-        CClient.Counter = 0;
-
-        // ACT
-        List<List<int>> result = CClient.PassLogic();
-        List<List<int>> expected = new()
-        {
-            new() { 7, 8, 9 },
-            new() { 10, 11, 12 },
-            new() { 1, 2, 3 },
-            new() { 4, 5, 6 },
-        };
-
-        // ASSERT
-        CollectionAssert.AreEqual(expected, result);
-    }
-
-    [Test]
-    public void PassLogic_ToTheLeftNoStealing_CheckArray()
-    {
-        // ARRANGE
-        CharlestonClient CClient = new();
-        CClient.HostPassArr = TestHostPassArr();
-        CClient.Counter = 0;
-
-        // ACT
-        List<List<int>> result = CClient.PassLogic();
-        List<List<int>> expected = new()
-        {
-            new() { 4, 5, 6 },
-            new() { 7, 8, 9 },
-            new() { 10, 11, 12 },
-            new() { 1, 2, 3 }
-        };
-
-        // ASSERT
-        CollectionAssert.AreEqual(expected, result);
-    }
-    
-    [Test]
-    public void PassLogic_AcrossWithStealing_CheckArray()
-    {
-
-    }
-
-    [Test]
-    public void PassLogic_ToTheLeftWithStealing_CheckArray()
-    {
-
-    }
-
-    [Test]
-    public void PassLogic_OptionalAcross_CheckArray()
-    {
-
-    }
-    */
 }
 
 class FakeMonoWrapper : IMonoWrapper
@@ -416,5 +311,10 @@ class FakeMonoWrapper : IMonoWrapper
     public IEnumerator WaitForSeconds(int seconds)
     {
         yield return new();
+    }
+
+    public void UpdateRack(List<int> tileIds)
+    {
+        throw new System.NotImplementedException();
     }
 }

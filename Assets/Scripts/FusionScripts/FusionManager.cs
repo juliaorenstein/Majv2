@@ -7,6 +7,10 @@ public class FusionManager : NetworkBehaviour
     public Dictionary<int, PlayerRef> PlayerDict { get; set; }
     public Dictionary<int, InputCollection> InputDict { get; set; }
 
+    // Shared between server and client
+    [Networked] public GamePhase GamePhase { get; set; }
+    [Networked] public TurnPhase TurnPhase { get; set; }
+
     public override void Spawned()
     {
         PlayerDict = new();
@@ -17,7 +21,7 @@ public class FusionManager : NetworkBehaviour
         }
     }
 
-    public void H_InitializePlayer(PlayerRef player)
+    public void InitializePlayer(PlayerRef player)
     {
         NetworkObject newInputObj = Runner.Spawn(Resources.Load<GameObject>("Prefabs/Input Object"));
         newInputObj.AssignInputAuthority(player);

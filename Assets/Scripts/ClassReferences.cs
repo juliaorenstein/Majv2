@@ -1,4 +1,4 @@
-using System;
+using Fusion;
 
 // This class is intended to hold references to wrappers and managers that are
 // not monobehaviours or networkbehaviours. Offshoot from ObjectReferences as I
@@ -8,27 +8,9 @@ public class ClassReferences
 {
     // Initiated in ObjectReferences
 
-    // singleton pattern
-    /*private static readonly Lazy<ClassReferences> lazy =
-            new Lazy<ClassReferences>(() => new ClassReferences());
-
-    private static ClassReferences instance;
-    public static ClassReferences Instance
-    {
-        get
-        {
-            return lazy.Value;
-        }
-    }
-
-    public static void SetTestingInstance(ClassReferences newInstance)
-    {
-        instance = newInstance;
-    }
-    */
-
-    
-
+    public NetworkCallbacks NetworkCallbacks;
+    public Navigation Nav;
+    public NetworkRunner Runner;
     public CharlestonHost CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
@@ -38,4 +20,6 @@ public class ClassReferences
     public GameManagerClient GManagerClient;
     public IMonoWrapper Mono;
     public IFusionWrapper Fusion;
+    public SendGameState SendGame;
+    public ReceiveGameState ReceiveGame;
 }

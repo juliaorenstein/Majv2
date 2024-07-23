@@ -93,7 +93,7 @@ public class TileMono : MonoBehaviour
     public void AddTileLocomotionAndSendTilesToGameManager()
     {
         // add locomotive abilities
-        transform.GetChild(0).gameObject.AddComponent<TileLocomotion>();
+        transform.GetChild(0).gameObject.AddComponent<TileLocomotionMono>();
 
         // send to GameManager
         GameManager.TileList.Add(tile);

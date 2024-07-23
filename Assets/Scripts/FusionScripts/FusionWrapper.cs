@@ -1,9 +1,8 @@
 using Fusion;
-using UnityEngine;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
-    ObjectReferences Refs;
+    ClassReferences Refs;
     FusionManager FManager;
     TurnManager TManager;
 
@@ -29,11 +28,11 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 
     public override void Spawned()
     {
-        Refs = ObjectReferences.Instance;
+        Refs = ObjectReferences.Instance.ClassRefs;
         Refs.Fusion = this;
         FManager = Refs.FManager;
-        TManager = new(Refs.ClassRefs);
-        TurnPlayerId = Refs.GManager.DealerId;
+        TManager = Refs.TManager;
+        // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;
     }
 
@@ -71,7 +70,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     public void RPC_H2A_NeverMind() => TManager.C_NeverMind();
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
-    public void RPC_SendRackToPlayer(int playerId, int[] tileArr) => Refs.SendGame.PopulateLocalRack(tileArr); // TODO: game state updates
+    public void RPC_H2C_SendRack(int playerId, int[] tileArr) => Refs.ReceiveGame.ReceiveRackUpdate(tileArr); // TODO: game state updates
 
     // Player Input
 

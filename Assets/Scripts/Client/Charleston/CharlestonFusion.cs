@@ -23,13 +23,4 @@ public class CharlestonFusion : NetworkBehaviour, ICharlestonFusion
     {
         CHost.PassDriver(info.Source.PlayerId, tileIDsToPass);
     }
-
-    // send new racks from Host to Client
-    public void RPC_H2C_UpdateRack(int playerId, int[] newRack) =>
-        RPC_H2C_UpdateRack(Refs.FManager.PlayerDict[playerId], newRack);
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2C_UpdateRack([RpcTarget] PlayerRef playerId, int[] newRack)
-    {
-        CClient.ReceiveRackUpdate(newRack);
-    }
 }

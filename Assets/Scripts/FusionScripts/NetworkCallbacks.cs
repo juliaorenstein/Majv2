@@ -8,10 +8,13 @@ using UnityEngine.SceneManagement;
 public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 {
     // GAME OBJECTS
-    private ObjectReferences Refs;
-    private NetworkRunner runner;
-    private FusionManager FManager;
-    private Setup setup;
+    ClassReferences Refs;
+    NetworkRunner runner;
+
+    GameObject Scripts;
+    FusionManager fManager;
+    SetupHost setupHost;
+    SetupClient setupClient;
 
     public CallInputStruct inputStruct;
 
@@ -19,7 +22,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
         inputStruct = new();
-        Refs = ObjectReferences.Instance;
+        Refs = ObjectReferences.Instance.ClassRefs;
         Refs.NetworkCallbacks = this;
     }
 
@@ -76,40 +79,36 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     {   // logged on host when host joins
         // logged on host when client joins
         // logged on client when client joins
-       
-        if (runner.IsServer)
+
+        // everybody does this, host player and clients
+
+        if (!Scripts)
         {
+            Scripts = runner.Spawn(
+            Resources.Load<GameObject>("Prefabs/ScriptObjects")).gameObject;
+        }
+        SetupMono setupMono = Scripts.GetComponentInChildren<SetupMono>();
+        setupClient = new(Refs, setupMono);
+        setupClient.SetupDriver();
+
+        if (runner.IsServer)
+        {   // code for host
 
             if (player == runner.LocalPlayer) // host sets up variables the first time
-            {
-                // Create object that holds all the extra scripts you might need
-                GameObject Scripts = runner.Spawn(
-                    Resources.Load<GameObject>("Prefabs/ScriptObjects")).gameObject;
+            {   // code for host when host joins
 
                 // Initialize Setup variables
-                FManager = Scripts.GetComponentInChildren<FusionManager>();
-                setup = new()
-                {
-                    setupMono = Scripts.GetComponentInChildren<SetupMono>()
-                };  // established for when other players join as well
+                fManager = Scripts.GetComponentInChildren<FusionManager>();
+                setupHost = new(Refs);
+
+                // shuffle and deal
+                setupHost.SetupDriver();
             }
 
             // Do the rest of the setup for all clients
-            FManager.H_InitializePlayer(player);
-            setup.H_Setup(player.PlayerId);
-            
-
-            /*
-            else // host deals other players
-            {
-                
-                //DealMe.GetComponent<DealClient>().Player = player;
-                //DealMe.SetActive(true);
-            }
-            */
+            fManager.InitializePlayer(player);
+            setupHost.SendRack(player.PlayerId);
         }
-
-        setup.C_Setup();
     }
     
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
