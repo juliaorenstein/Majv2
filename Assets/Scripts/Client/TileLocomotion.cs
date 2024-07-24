@@ -8,15 +8,15 @@ public class TileLocomotion
     readonly ClassReferences refs;
     readonly ObjectReferences objRefs;
     readonly GameManagerClient gameManagerClient;
-    readonly FusionManager fusionManager;
-    readonly TileLocomotionMono tileLocoMono;
+    readonly IFusionManager fusionManager;
+    readonly ITileLocomotionMono tileLocoMono;
     readonly int tileId;
 
-    public TileLocomotion(ClassReferences refs, TileLocomotionMono tileLocoMono)
+    public TileLocomotion(ClassReferences refs, ITileLocomotionMono tileLocoMono)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
         this.tileLocoMono = tileLocoMono;
-        tileId = tileLocoMono.tileId;
+        tileId = tileLocoMono.TileId;
         this.refs = refs;
         objRefs = ObjectReferences.Instance;
         gameManagerClient = refs.GManagerClient;
@@ -34,12 +34,23 @@ public class TileLocomotion
             }
             if (fusionManager.GamePhase == GamePhase.Gameplay)
             {
+                if (Exposable())
+                {
+                    Expose();
+                    return;
+                }
+                if (Discardable())
+                {
+                    Discard();
+                    return;
+                }
+
                 switch (fusionManager.TurnPhase)
                 {
-                    case TurnPhase.Exposing: // TODO: need to fall out of this to discard when applicable
-                        DoubleClickExpose(); break;
+                    case TurnPhase.Exposing:
+                        Expose(); break; // FIXME: deal with discard during expose
                     case TurnPhase.Discarding:
-                        DoubleClickDiscard(); break;
+                        Discard(); break;
                     case TurnPhase.LoggingCallers:
                         break;
                     default:
@@ -50,8 +61,6 @@ public class TileLocomotion
     }
 
     public void DoubleClickCharleston() => refs.CClient.CharlestonTileMover(tileId);
-
-    public void DoubleClickExpose() => refs.TManager.C_Expose(tileId);
 
     public void DoubleClickDiscard() => refs.TManager.C_Discard(tileId);
 
@@ -144,12 +153,6 @@ public class TileLocomotion
 
             refs.CClient.CharlestonTileMover(tileId, start, end);
         }
-
-        void Discard() => refs.TManager.C_Discard(tileId);
-
-        void Expose() => throw new NotImplementedException();
-
-        void MoveBack() => tileLocoMono.MoveBack();
     }
 
     public bool TileIsOnTopOfRack(List<MonoObject> raycastTargets) =>
@@ -170,11 +173,12 @@ public class TileLocomotion
 
     public bool Discardable()
     {
-        if (fusionManager.TurnPhase != TurnPhase.Discarding) return false;
+        if (fusionManager.TurnPhase != TurnPhase.Discarding) return false; // FIXME: deal with expose turn discards
         if (!gameManagerClient.IsActivePlayer) return false;
         return true;
     }
 
+    // TODO: come back to this stuff when working on TurnManager
     bool Discardable(List<MonoObject> raycastTargets)
     {
         if (!Discardable()) return false;
@@ -186,6 +190,7 @@ public class TileLocomotion
     {
         if (fusionManager.TurnPhase != TurnPhase.Exposing) return false;
         if (!gameManagerClient.IsExposingPlayer) return false;
+        if (!GameManager.TileList[tileId].Equals(refs.TManager.DiscardTile)) return false;
         return true;
     }
 
@@ -195,4 +200,10 @@ public class TileLocomotion
         if (!raycastTargets.Contains(MonoObject.PublicRack)) return false;
         return true;
     }
+
+    void Discard() => refs.TManager.C_Discard(tileId);
+
+    void Expose() => throw new NotImplementedException();
+
+    void MoveBack() => tileLocoMono.MoveBack();
 }

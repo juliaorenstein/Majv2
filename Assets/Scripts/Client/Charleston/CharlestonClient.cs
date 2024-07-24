@@ -15,6 +15,7 @@ public class CharlestonClient
 
     public CharlestonClient(ClassReferences refs)
     {
+        refs.CClient = this;
         this.refs = refs;
         mono = refs.Mono;
         charlestonFusion = refs.CFusion;
@@ -137,6 +138,7 @@ public class CharlestonClient
             {
                 ClientPassArr[i] = tileId;
                 gameManagerClient.PrivateRack.Remove(tileId);
+                return;
             }
         }
     }

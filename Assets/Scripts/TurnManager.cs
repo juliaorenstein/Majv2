@@ -11,7 +11,7 @@ public class TurnManager
     public FusionManager FManager;
     private readonly GameManager GManager;
     public string ExposeTileName;
-    private int DiscardTile;
+    public int DiscardTile;
     private int CallTile;
     private int DiscardPlayerId;
     private int ExposePlayerId;

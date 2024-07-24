@@ -898,7 +898,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 33270812}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &33270813
 MonoBehaviour:
@@ -978,7 +978,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 34192399}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &34192400
 MonoBehaviour:
@@ -1058,7 +1058,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 37780969}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &37780970
 MonoBehaviour:
@@ -1708,7 +1708,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 69332905}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &69332906
 MonoBehaviour:
@@ -1788,7 +1788,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 71725597}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &71725598
 MonoBehaviour:
@@ -2590,7 +2590,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 135516265}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &135516266
 MonoBehaviour:
@@ -2805,7 +2805,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 140654677}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &140654678
 MonoBehaviour:
@@ -2885,7 +2885,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 141908655}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &141908656
 MonoBehaviour:
@@ -3858,7 +3858,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 164136130}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &164136131
 MonoBehaviour:
@@ -4394,7 +4394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.x
@@ -4402,15 +4402,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4442,11 +4442,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -35
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4506,51 +4506,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
@@ -4611,7 +4611,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 195936267}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &195936268
 MonoBehaviour:
@@ -4691,7 +4691,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 201946954}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &201946955
 MonoBehaviour:
@@ -5115,7 +5115,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 207161251}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &207161252
 MonoBehaviour:
@@ -5195,7 +5195,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 208779961}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &208779962
 MonoBehaviour:
@@ -5408,7 +5408,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 241611534}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &241611535
 MonoBehaviour:
@@ -5488,7 +5488,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 244720168}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &244720169
 MonoBehaviour:
@@ -5624,10 +5624,10 @@ RectTransform:
   m_Father: {fileID: 1244673069}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 151.2898, y: -21.958124}
-  m_SizeDelta: {x: 302.5796, y: 43.91625}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &249573887
 MonoBehaviour:
@@ -7080,7 +7080,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 324412103}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &324412104
 MonoBehaviour:
@@ -7293,7 +7293,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 332290900}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &332290901
 MonoBehaviour:
@@ -7373,7 +7373,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 336499854}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &336499855
 MonoBehaviour:
@@ -7453,7 +7453,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 340237098}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &340237099
 MonoBehaviour:
@@ -8578,7 +8578,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 394700407}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &394700408
 MonoBehaviour:
@@ -8783,7 +8783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.x
@@ -8791,15 +8791,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8831,11 +8831,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -181
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8863,27 +8863,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AspectMode
@@ -8891,27 +8891,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
@@ -9218,10 +9218,10 @@ RectTransform:
   m_Father: {fileID: 1244673069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 151.2898, y: -65.874374}
-  m_SizeDelta: {x: 302.5796, y: 43.91625}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &432917214
 MonoBehaviour:
@@ -9639,7 +9639,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 453271996}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &453271997
 MonoBehaviour:
@@ -10004,7 +10004,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 464587060}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &464587061
 MonoBehaviour:
@@ -10057,7 +10057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.x
@@ -10065,15 +10065,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10105,11 +10105,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -108
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -10133,27 +10133,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AspectMode
@@ -10161,27 +10161,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 390
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
@@ -10508,7 +10508,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 476620499}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &476620500
 MonoBehaviour:
@@ -10821,7 +10821,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 494127934}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &494127935
 MonoBehaviour:
@@ -10901,7 +10901,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 496124072}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &496124073
 MonoBehaviour:
@@ -11266,7 +11266,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 510563792}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &510563793
 MonoBehaviour:
@@ -11346,7 +11346,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 513605500}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &513605501
 MonoBehaviour:
@@ -12228,7 +12228,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 522689784}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &522689785
 MonoBehaviour:
@@ -12308,7 +12308,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 524967614}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &524967615
 MonoBehaviour:
@@ -12521,7 +12521,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 526887382}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &526887383
 MonoBehaviour:
@@ -12810,7 +12810,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 554824021}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &554824022
 MonoBehaviour:
@@ -13059,7 +13059,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 561310150}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &561310151
 MonoBehaviour:
@@ -13378,7 +13378,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 572611155}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &572611156
 MonoBehaviour:
@@ -13692,11 +13692,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 598814249}
   m_CullTransparentMesh: 1
---- !u!1 &603206518 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 784723312128127198, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
-  m_PrefabInstance: {fileID: 8097334388979379669}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &603206519 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
@@ -14252,7 +14247,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 627363990}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &627363991
 MonoBehaviour:
@@ -14465,7 +14460,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 635087583}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &635087584
 MonoBehaviour:
@@ -14545,7 +14540,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 636509062}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &636509063
 MonoBehaviour:
@@ -14758,7 +14753,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 639881785}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &639881786
 MonoBehaviour:
@@ -15047,7 +15042,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 652984144}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &652984145
 MonoBehaviour:
@@ -15203,7 +15198,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 660844078}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &660844079
 MonoBehaviour:
@@ -15359,7 +15354,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 670812912}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &670812913
 MonoBehaviour:
@@ -15987,9 +15982,9 @@ RectTransform:
   m_Father: {fileID: 572215803}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 35.271725, y: -45.3623}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 80.7246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &697640663
@@ -16176,7 +16171,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 704995342}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &704995343
 MonoBehaviour:
@@ -16332,7 +16327,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 708357398}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &708357399
 MonoBehaviour:
@@ -16412,7 +16407,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 709941955}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &709941956
 MonoBehaviour:
@@ -17290,9 +17285,9 @@ RectTransform:
   m_Father: {fileID: 572215803}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 156.35863, y: -45.3623}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 80.7246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &739368447
@@ -17920,7 +17915,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 753296655}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &753296656
 MonoBehaviour:
@@ -18076,7 +18071,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 757284790}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &757284791
 MonoBehaviour:
@@ -18289,7 +18284,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 766418661}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &766418662
 MonoBehaviour:
@@ -18654,7 +18649,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 777867452}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &777867453
 MonoBehaviour:
@@ -18734,7 +18729,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 782935941}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &782935942
 MonoBehaviour:
@@ -19213,7 +19208,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 803979479}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &803979480
 MonoBehaviour:
@@ -19976,7 +19971,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 831088141}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &831088142
 MonoBehaviour:
@@ -20550,7 +20545,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 852802841}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &852802842
 MonoBehaviour:
@@ -20898,7 +20893,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 860093713}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &860093714
 MonoBehaviour:
@@ -20978,7 +20973,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 861026528}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &861026529
 MonoBehaviour:
@@ -21058,7 +21053,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 869927827}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &869927828
 MonoBehaviour:
@@ -21138,7 +21133,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 870706493}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &870706494
 MonoBehaviour:
@@ -21351,7 +21346,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 879209954}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &879209955
 MonoBehaviour:
@@ -21659,7 +21654,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 894740163}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &894740164
 MonoBehaviour:
@@ -21815,7 +21810,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 905787999}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &905788000
 MonoBehaviour:
@@ -22028,7 +22023,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 911025493}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &911025494
 MonoBehaviour:
@@ -22108,7 +22103,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 911740930}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &911740931
 MonoBehaviour:
@@ -22872,7 +22867,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 965547852}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &965547853
 MonoBehaviour:
@@ -23161,7 +23156,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 983721323}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &983721324
 MonoBehaviour:
@@ -23216,7 +23211,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Discard: {fileID: 1602720862}
   TilePool: {fileID: 829965888}
-  LocalRack: {fileID: 603206518}
+  LocalRack: {fileID: 0}
+  PublicRack: {fileID: 0}
+  PrivateRack: {fileID: 0}
   OtherRacks: {fileID: 1772208756}
   EventSystem: {fileID: 1177800612}
   StartButtons: {fileID: 1244673068}
@@ -23225,6 +23222,7 @@ MonoBehaviour:
   CharlestonPassButton: {fileID: 0}
   TurnIndicator: {fileID: 1648293901}
   Dragging: {fileID: 556764448}
+  CharlestonSpots: 
 --- !u!4 &984535265
 Transform:
   m_ObjectHideFlags: 0
@@ -23296,7 +23294,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 991869903}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &991869904
 MonoBehaviour:
@@ -23870,7 +23868,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1044743601}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1044743602
 MonoBehaviour:
@@ -24235,7 +24233,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1057172668}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1057172669
 MonoBehaviour:
@@ -24513,7 +24511,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1073539709}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1073539710
 MonoBehaviour:
@@ -24726,7 +24724,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1087334821}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1087334822
 MonoBehaviour:
@@ -24806,7 +24804,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1088937432}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1088937433
 MonoBehaviour:
@@ -24962,7 +24960,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1089478056}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1089478057
 MonoBehaviour:
@@ -25251,7 +25249,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1094349493}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1094349494
 MonoBehaviour:
@@ -25540,7 +25538,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1114334177}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1114334178
 MonoBehaviour:
@@ -25829,7 +25827,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1121080311}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1121080312
 MonoBehaviour:
@@ -25909,7 +25907,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1132902334}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1132902335
 MonoBehaviour:
@@ -25989,7 +25987,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1133881695}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1133881696
 MonoBehaviour:
@@ -26069,7 +26067,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1146448535}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1146448536
 MonoBehaviour:
@@ -26225,7 +26223,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1162524222}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1162524223
 MonoBehaviour:
@@ -26666,7 +26664,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1169270017}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1169270018
 MonoBehaviour:
@@ -27047,7 +27045,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1176704073}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1176704074
 MonoBehaviour:
@@ -27127,7 +27125,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1177066855}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1177066856
 MonoBehaviour:
@@ -27422,7 +27420,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1183044864}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1183044865
 MonoBehaviour:
@@ -27844,7 +27842,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1185439859}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1185439860
 MonoBehaviour:
@@ -27924,7 +27922,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1188494340}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1188494341
 MonoBehaviour:
@@ -28422,7 +28420,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1224261016}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1224261017
 MonoBehaviour:
@@ -28928,7 +28926,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1262722086}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1262722087
 MonoBehaviour:
@@ -29084,7 +29082,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1264942161}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1264942162
 MonoBehaviour:
@@ -29240,7 +29238,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1266654605}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1266654606
 MonoBehaviour:
@@ -29455,7 +29453,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1276670880}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1276670881
 MonoBehaviour:
@@ -29535,7 +29533,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1279923602}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1279923603
 MonoBehaviour:
@@ -29881,7 +29879,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1287246243}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1287246244
 MonoBehaviour:
@@ -30379,7 +30377,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1308848707}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1308848708
 MonoBehaviour:
@@ -30459,7 +30457,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1323408473}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1323408474
 MonoBehaviour:
@@ -30881,7 +30879,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1354691454}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1354691455
 MonoBehaviour:
@@ -30961,7 +30959,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1371280854}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1371280855
 MonoBehaviour:
@@ -31174,7 +31172,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1376054899}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1376054900
 MonoBehaviour:
@@ -31596,7 +31594,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1398445953}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1398445954
 MonoBehaviour:
@@ -32322,7 +32320,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1431437542}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1431437543
 MonoBehaviour:
@@ -32744,7 +32742,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1445456146}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1445456147
 MonoBehaviour:
@@ -33109,7 +33107,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 1465180171}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1465180172
 MonoBehaviour:
@@ -33322,7 +33320,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 1477660991}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1477660992
 MonoBehaviour:
@@ -33402,7 +33400,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1478593886}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1478593887
 MonoBehaviour:
@@ -33482,7 +33480,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1482575362}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1482575363
 MonoBehaviour:
@@ -33562,7 +33560,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 1484378631}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1484378632
 MonoBehaviour:
@@ -33927,7 +33925,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1497954238}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1497954239
 MonoBehaviour:
@@ -34558,7 +34556,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1543840381}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1543840382
 MonoBehaviour:
@@ -34771,7 +34769,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1546498594}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1546498595
 MonoBehaviour:
@@ -34981,9 +34979,9 @@ RectTransform:
   m_Father: {fileID: 572215803}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 95.81517, y: -45.3623}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 80.7246}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1554832612
@@ -35436,7 +35434,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1564205567}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1564205568
 MonoBehaviour:
@@ -36148,7 +36146,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 1602568245}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1602568246
 MonoBehaviour:
@@ -36405,7 +36403,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1611150433}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1611150434
 MonoBehaviour:
@@ -36694,7 +36692,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1627760892}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1627760893
 MonoBehaviour:
@@ -36774,7 +36772,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1643916240}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1643916241
 MonoBehaviour:
@@ -37216,7 +37214,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1652528065}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1652528066
 MonoBehaviour:
@@ -37296,7 +37294,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1659174327}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1659174328
 MonoBehaviour:
@@ -37376,7 +37374,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1663066620}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1663066621
 MonoBehaviour:
@@ -37589,7 +37587,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1680344376}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1680344377
 MonoBehaviour:
@@ -37745,7 +37743,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1688193691}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1688193692
 MonoBehaviour:
@@ -38460,7 +38458,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1722604425}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1722604426
 MonoBehaviour:
@@ -38939,7 +38937,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1734686329}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1734686330
 MonoBehaviour:
@@ -39019,7 +39017,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1741420368}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1741420369
 MonoBehaviour:
@@ -39365,7 +39363,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1764358973}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1764358974
 MonoBehaviour:
@@ -39445,7 +39443,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1766184964}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1766184965
 MonoBehaviour:
@@ -39665,7 +39663,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 1776026739}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1776026740
 MonoBehaviour:
@@ -39745,7 +39743,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1780273131}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1780273132
 MonoBehaviour:
@@ -39825,7 +39823,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1780617748}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1780617749
 MonoBehaviour:
@@ -39905,7 +39903,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1794467325}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1794467326
 MonoBehaviour:
@@ -39985,7 +39983,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1794541472}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1794541473
 MonoBehaviour:
@@ -40141,7 +40139,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 1830334698}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1830334699
 MonoBehaviour:
@@ -40221,7 +40219,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1838623092}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1838623093
 MonoBehaviour:
@@ -40643,7 +40641,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1846692273}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1846692274
 MonoBehaviour:
@@ -40932,7 +40930,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1858233390}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1858233391
 MonoBehaviour:
@@ -41012,7 +41010,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1871498653}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1871498654
 MonoBehaviour:
@@ -41909,7 +41907,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1894404022}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1894404023
 MonoBehaviour:
@@ -42673,7 +42671,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1930613917}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1930613918
 MonoBehaviour:
@@ -43363,7 +43361,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1945252702}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1945252703
 MonoBehaviour:
@@ -44374,7 +44372,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 1981049443}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1981049444
 MonoBehaviour:
@@ -44853,7 +44851,7 @@ MonoBehaviour:
   tile:
     kind: 1
     isVirtual: 0
-    tileComponent: {fileID: 1998929816}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &1998929817
 MonoBehaviour:
@@ -44933,7 +44931,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2004966910}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2004966911
 MonoBehaviour:
@@ -45013,7 +45011,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2007192247}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2007192248
 MonoBehaviour:
@@ -45359,7 +45357,7 @@ MonoBehaviour:
   tile:
     kind: 3
     isVirtual: 0
-    tileComponent: {fileID: 2017908587}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2017908588
 MonoBehaviour:
@@ -45483,7 +45481,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2029496987}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2029496988
 MonoBehaviour:
@@ -45563,7 +45561,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2040795221}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2040795222
 MonoBehaviour:
@@ -45643,7 +45641,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2044872716}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2044872717
 MonoBehaviour:
@@ -45856,7 +45854,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2048961798}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2048961799
 MonoBehaviour:
@@ -45936,7 +45934,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 2050282004}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2050282005
 MonoBehaviour:
@@ -46377,7 +46375,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2070566838}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2070566839
 MonoBehaviour:
@@ -46533,7 +46531,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 2075338817}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2075338818
 MonoBehaviour:
@@ -46613,7 +46611,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2075442296}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2075442297
 MonoBehaviour:
@@ -47035,7 +47033,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 2100729834}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2100729835
 MonoBehaviour:
@@ -47115,7 +47113,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2104226890}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2104226891
 MonoBehaviour:
@@ -47328,7 +47326,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2111612290}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2111612291
 MonoBehaviour:
@@ -47484,7 +47482,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 2120626197}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2120626198
 MonoBehaviour:
@@ -47910,7 +47908,7 @@ MonoBehaviour:
   tile:
     kind: 0
     isVirtual: 0
-    tileComponent: {fileID: 2137555705}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2137555706
 MonoBehaviour:
@@ -48123,7 +48121,7 @@ MonoBehaviour:
   tile:
     kind: 2
     isVirtual: 0
-    tileComponent: {fileID: 2144112477}
+    tileMono: {fileID: 0}
     Id: 0
 --- !u!114 &2144112478
 MonoBehaviour:
@@ -48538,27 +48536,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 790
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 71.16345
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610459789813784787, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -40.581726
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5510802681366683271, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AspectRatio
@@ -48570,27 +48568,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 790
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 71.16345
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6105260093198514519, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -111.74518
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8573909076444531038, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
       propertyPath: m_Name

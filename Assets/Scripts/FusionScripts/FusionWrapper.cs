@@ -30,7 +30,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     {
         Refs = ObjectReferences.Instance.ClassRefs;
         Refs.Fusion = this;
-        FManager = Refs.FManager;
+        FManager = (FusionManager)Refs.FManager;
         TManager = Refs.TManager;
         // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;

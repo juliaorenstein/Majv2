@@ -9,6 +9,7 @@ public class TileLocomotionMono : MonoBehaviour
     , IBeginDragHandler
     , IDragHandler
     , IEndDragHandler
+    , ITileLocomotionMono
 {
     // TODO: REFACTOR
     public TileLocomotion tileLoco;
@@ -21,7 +22,7 @@ public class TileLocomotionMono : MonoBehaviour
     Transform RackPublicTF;
     Transform OtherRacksTF;
     Transform DiscardTF;
-    public int tileId;
+    public int TileId { get; private set; }
     List<Transform> RebuildLayoutTransforms;
     public List<float> TilePositions
     {
@@ -35,7 +36,7 @@ public class TileLocomotionMono : MonoBehaviour
             return value;
         }
     }
-        
+
     // lerp stuff
     bool Lerping = false;
     Vector3 StartPos;
@@ -45,7 +46,7 @@ public class TileLocomotionMono : MonoBehaviour
 
     private void Start()
     {
-        tileId = GetComponentInParent<TileMono>().tile.Id;
+        TileId = GetComponentInParent<TileMono>().tile.Id;
         tileLoco = new(classRefs, this);
         objRefs = ObjectReferences.Instance;
         classRefs = objRefs.ClassRefs;
@@ -56,7 +57,7 @@ public class TileLocomotionMono : MonoBehaviour
         OtherRacksTF = objRefs.OtherRacks.transform;
         DiscardTF = objRefs.Discard.transform;
         RebuildLayoutTransforms = new() { DiscardTF, RackPrivateTF, RackPublicTF };
-        foreach ( Transform rack in OtherRacksTF )
+        foreach (Transform rack in OtherRacksTF)
         {
             RebuildLayoutTransforms.Add(rack.GetChild(0));
         }
@@ -69,7 +70,7 @@ public class TileLocomotionMono : MonoBehaviour
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        classRefs.Mono.SetRaycastTargetOnTile(tileId, false);
+        classRefs.Mono.SetRaycastTargetOnTile(TileId, false);
         transform.SetParent(objRefs.Dragging);
     }
 
@@ -100,10 +101,10 @@ public class TileLocomotionMono : MonoBehaviour
     public void MoveBack() =>
         MoveTile(TileTF.parent, TileTF.GetSiblingIndex());
 
-    public void MoveTile(MonoObject newParent, int newSibIx) =>
+    void MoveTile(MonoObject newParent, int newSibIx) =>
         MoveTile(objRefs.ObjectDict[newParent], newSibIx);
 
-    public void MoveTile(Transform newParentTF, int newSibIx)
+    void MoveTile(Transform newParentTF, int newSibIx)
     {
         if (transform.IsChildOf(objRefs.TilePool.transform))
         {
@@ -131,12 +132,9 @@ public class TileLocomotionMono : MonoBehaviour
     public void MoveTile(Transform newParent) =>
         MoveTile(newParent, newParent.childCount);
 
-    public void Movetile(MonoObject newParent) =>
-        MoveTile(objRefs.ObjectDict[newParent]);
-
     // FIXME: you can discard multiple tiles during discard 2 sec
 
-    private void Update()
+    void Update()
     {
         if (Lerping)
         {
@@ -150,6 +148,6 @@ public class TileLocomotionMono : MonoBehaviour
                 CurrentLerpTime = 0f;
                 Lerping = false;
             }
-        }      
+        }
     }
 }
