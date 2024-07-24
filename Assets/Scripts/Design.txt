@@ -1,0 +1,315 @@
+﻿DESIGN
+
+=== Lobby ===
+
+Buttons:
+> Play offline
+	> start offline game immediately
+> Play on network
+	> Server Game
+		> initialize game
+	> Join Game
+		> User input: username of existing Server
+			> join game
+
+=== Game State (Server) ===
+
+information needed by the Server to fully track the game
+
+> Wall: list of all undealt tiles
+> Player Private Racks: list of tiles in each player's private rack
+> Player Display Racks: list of tiles each player has displayed
+> Game Phase: what section of the game is happening right now
+	> Setup: everything is being initialized. no user interaction at this time
+	> Charleston: players are passing tiles between each other
+		> Counter: which pass are we on
+		> Pass Array: tiles players have submitted for passing
+	> Gameplay: the main part of the game
+		> Turn Phase: what part of a turn is happening right now
+			> Logging Callers: A player has just discarded and the game is waiting a few seconds to collect callers
+				> Discard Tile: the tile that has been most recenty discarded
+			> Discarding: A player has a 14th tile in their hand and is deciding which one to discard
+			> Exposing: A player has called a tile and the computer is waiting a few seconds for people to submit discards
+		> ActivePlayer: the player that is or was most recently discarding
+		> ExposingPlayer: the player that has called a tile and is actively exposing
+		> 
+	> End game
+		> A player has called Mah Jongg, all tiles are displayed
+
+> Player Dictionary: dictionary of player IDs and their fusion PlayerRefs
+> Player Inputs: dictionary of players and their input objects
+
+=== Game State (Client) ===
+
+information needed by the client to fully track or recreate the game
+
+> Local Player Id
+> Local Private Rack: list of tiles on the local player's rack (subset of Player Private Racks on Server)
+> Player Private Rack Counts: number of tiles on other players' racks
+> Player Display Racks
+> Game Phase
+	> Turn Phase
+		> Counter
+		> Local Pass Array
+
+
+=== Charleston (Client) ===
+
+GamePhase = Charleston
+
+Actions a player can take:
+> Rearrange tiles on rack
+> Move tile from rack to Charleston spots
+	> May not be a joker
+> Move tile from Charleston spot to rack
+> Move tile from one Charleston spot to another
+
+When ready to pass
+> RPC tiles to Server
+	Requirements:
+	> No jokers
+	> When counter = 0, 1, 3, 4, all three spots must be filled
+> Deactivate Charleston box until RPC received
+> RPC received from Server with new game state
+
+
+=== Charelston (UI) ===
+
+> Track changes in the pass array and the rack to guide UI changes.
+> On each tile move between Charleston and the rack, check the pass requirements above. When satisfied, the pass button should be available. When not satisfied, the pass button should be greyed out.
+> When passing tiles, tiles move off the screen in the direction of the pass *** NOT IMPEMENTED YET ***
+> When receiving tiles, tiles move onto the screen in the direction of the pass *** NOT IMPLEMENTED YET ***
+
+
+=== Charleston (Server) ===
+
+GamePhase = Charleston
+
+Main Driver
+> Call in whenever a client submits a pass
+> Track tiles from each player in a pass array
+> When all four players have submitted, rearrange tiles:
+	> On right passes (counter = 0, 5), move tiles one index down (player 3 passes to player 2, etc)
+	> On over passes (counter = 1, 4), move tiles two indices up (player 1 passes to player 3, etc)
+	> On left passes (counter = 2, 3), move tiles 1 index up (player 1 passes to player 2, etc)
+	> On optional passes (counter = 2, 5), if a player receives more tiles than they pass, then pass along more tiles to the next player until they only take as many tiles as they pass
+	> On the optional over (counter = 6), players offer up to three tiles. If the player across (2 indices over) offers less than the local player, the local player is prompted to re-pick their tiles to match the lower number.
+	> After counter = 2, players may choose to stop passing. If all players choose this option, Charlestons end here. *** WRITE UNIT TEST / IMPLEMENT THIS ***
+	> *** OPEN ***: Does the optional pass (counter = 6) still happen if players choose to stop passing acter counter = 2?
+> RPC each client's new tiles to the clients
+
+
+=== Gameplay (Client) ===
+
+On local player's turn
+> Turn Phase = Discarding
+> DiscardTile = null
+> Receive RPC with new tile and add the tile to the local private rack
+> Make discard available
+> Enable swap joker on display rack functionality *** NOT IMPLEMENTED YET ***
+	> Player may place a tile from their hand onto any player's display rack (including their own) that has a group of the same tile with a joker
+	> RPC to Server
+	> Receive RPC with updated racks, both local private, and the display rack that was targeted
+
+When local player discards
+> Turn Phase = Logging Callers
+> Disable discard
+> RPC tile ID to Server
+> Display notice that other players are calling
+
+When another player receives tile (no callers)
+> Receive RPC with:
+	> updated Active Player
+	> Discard Tile = null
+	> Turn Phase = Discarding
+> Display tile back on private rack of new Active Player
+> Display call button if not a joker
+
+When call button is pressed
+> Server tracks the button input, no RPC needed
+> Deactivate call button, enable never mind button
+> Wait until calls are done logging
+
+When player presses never mind before call logging is over
+> Server tracks the button input, no RPC needed
+> Deactivate the never mind button, enable call button
+> Wait until calls are done logging
+
+When tile is given to local player for calling
+> Receive RPC with Game State, including:
+	> Exposing Player = local player
+	> Active player still the previous player (needed in case all callers end up canceling)
+	> Turn Phase = Exposing
+> Tile moves to player's public rack
+> Player may place like tiles and jokers on the display rack
+
+When local player exposes new tiles after calling
+> Never Mind button is disabled
+> RPC to Server with tiles
+> After three tiles in the group are placed, player may discard
+
+When player presses never mind after being chosen for calling
+> Server tracks button input
+> Tile moves to discard or to next caller (see more in Server script)
+
+When player is unable to expose 3 tiles
+> Dead hand *** FIGURE OUT HOW TO HANDLE THIS ***
+
+When player discards after exposing
+> Turn Phase = Logging Callers
+> Active Player = Exposing Player
+> Exposing Player = null
+> Discard Tile = new tile discarded
+> RPC to Server with discarded tile
+
+When another player is picked for calling
+> Receive RPC with Game State, including:
+	> Exposing Player = the other player
+	> Active Player still the previous player
+> Tile moves to other player's display rack
+
+When another player exposes a tile
+> Receive RPC with Game State including new Display Rack and new Private Rack counts
+> Tile moves to other player's display rack
+
+
+=== Gameplay (Server) ===
+
+When player discards
+> Turn Phase = Logging Callers
+> Tile moves to center screen for calling
+> For 2 seconds, collect callers:
+	> Receive RPC from calling player
+	> Add player to priority queue list Calling Players in order of the players, starting on the next player after the discarder
+	> Receive RPC from never minding player
+	> Remove player from Calling Players
+> Go to Choose a caller
+
+Choose a caller
+> After 2 seconds, choose a caller
+	> If Players Calling is not null
+		> Turn Phase = Exposing
+		> Active player stays the same
+		> Exposing player = first caller
+		> RPC to client with new game state
+	> If Players Calling is null
+		> Turn Phase = Discarding
+		> Discard Player = null
+		> Active player = player after current Active Player
+		> RPC to Active Player with new tile
+		> RPC to other players with updates above, but not the tile
+
+When Exposing Player exposes
+> Receive RPC with tile from Exposing Player
+> Send RPC to players reflecting updates
+
+When Exposing Player discards
+> Receive RPC with tile from Exposing Player
+> If 2 or fewer tiles exposed, dead hand *** NOT DESIGNED YET ***
+> Active Player = Exposing Player
+> Exposing Player = null
+> Send RPC to players reflecting updates
+
+When Exposing Player never minds before exposing
+> Receive RPC with never mind
+> Remove player from Calling Players
+> Go to Choose a Caller
+
+=== Tile Locomotion (Client) ===
+
+
+
+=== Event Monitoring (UI) ===
+
+*** OPEN QUESTION *** Is there a way to handle UI based on changing lists? A tile leaves one list and enters another. Is it possible to listen for those and respond appropriately?
+*** POTENTIAL SOLUTION ***
+> Each location on the game board has a list
+	> Private Racks
+	> Display Racks
+	> Wall
+	> Discard
+> Track a Dictionary<int tileId, List<int> tileLocation> Tile Locations
+
+Initialize
+> All tiles are in Wall / All tiles in dictionary have location of Wall
+
+Move Tile
+> New Location = argument
+> Current = Tile Locations[tileId]
+> Remove tile from Current list
+> Add tile to New list
+> Update Tile Locations[tileId] to New
+> LERP tile from Current to New
+
+*** QUESTION *** How does this split out between client and Server?
+
+
+=== Tile Location Manager (Server) ===
+
+Tile Locations Struct (Server)
+> List<int> Wall
+> List<int> Discard
+> List<List<int>> Player Private Racks
+> List<List<int>> Player Display Racks
+> Dictionary<int, List<int>> 
+
+Send Game State
+> Translate Server locations struct to each Client's individual locations struct
+> Send separate RPC to each client
+
+
+=== Tile Location Manager (Client) ===
+
+Tile Locations Struct (Client)
+> List<int> Private Rack
+> List<int> Display Rack
+> Dictionary<int, int> Other Private Rack Counts
+> Dictionary<int, List<int>> Other Display Racks
+> int Wall Count
+> List<int> Discard
+> List<int> Tile Pool (all other tiles)
+
+Client can access subset of Tile Locations
+> All unseen tiles have location of Tile Pool
+
+Request to move tile: client-initiated move
+> Move tile with UI (drag, double-click, keyboard input, etc)
+> RPC to Server with move tile request (including current and new location)
+> If confirmation response not received in x seconds, cancel move..? *** NOT SURE ABOUT THIS ***
+> Expected client-initiated changes during gameplay:
+	> Local player discards => tile moves from private rack to new discard spot
+	> Local player calls => call button is replaced with never mind button
+	> Local player neverminds during call logging => nevermind button is replaced with call button
+	> Local player neverminds after call logging while chosen for exposing => nevermind button goes away, tile moves from display rack to either next caller's display rack or to discard
+	> Local player neverminds after call logging while not exposing => nevermind button goes away
+	> Local player exposes => tile moves from private rack to display rack
+
+Receive tile location update: Server-initiated move
+> Receive new game state
+> For each tile, verify location matches client-side location
+> If there are any unexpected changes, throw user error
+> Any expected changes (new tile in Discard during another player's turn, etc), apply the changes
+> Expected Server-initiated changes during gameplay:
+	> Another player discards => tile moves from other rack to new discard spot
+	> Another player picks up unidentified tile => tile moves from wall to rack (unseen)
+	> Another player calls => tile moves from new discard spot to player's display rack
+	> Another player exposes => tile moves from player's private rack to display rack
+	> Another player swaps tile with joker => non-joker moves from player's private rack to other player's display rack - joker moves from other player's display rack from player's private rack
+	> Local player receives tile they called => tile moves from new discard spot to private rack
+	> Local player receives tile for their turn => tile moves from wall to private rack
+
+
+Full flows of player actions from client to Server to client
+
+Client_Discard(int tileId)	=> RPC_C2S_Discard(tileId)	=> Server_Discard(tileId)	=> RPC_S2C(GameState)	=> Client_DiscardConfirmation(GameState)
+																											=> Client_OtherPlayerDiscards(GameState)
+Client_Calls()	=> RPC_C2S_Call()	=> Server_LogCall()
+Server_CheckForCallers()	=> if no callers	=> Server_NextPlayer()	=> RPC_S2C(GameState)	=> Client_StartTurn(tileId)
+																								=> Client_OtherPlayerTurn(playerId)
+							=> if callers	 => Server_PlayerExposes()	=> RPC_S2C(GameState)	=> Client_ExposeTurn()
+																								=> Client_OtherPlayerExposes()
+Client_NeverMindBeforeExpose()		=> RPC_C2S_CancelCall()		=> Server_UnlogCall()
+Client_NeverMindDuringOtherExpose()	=> RPC_C2S_CancelCall()		=> Server_UnlogCall()
+Client_NeverMindDuringLocalExpose()	=> RPC_C2S_CancelExpose()	=> Server_CheckForCallers()
+Client_Expose()	=> RPC_C2S_Expose()	=> Server_Expose()	=> RPC_S2C(GameState)	=> Client_Expose_Confirm()
+																				=>
