@@ -313,3 +313,20 @@ Client_NeverMindDuringOtherExpose()	=> RPC_C2S_CancelCall()		=> Server_UnlogCall
 Client_NeverMindDuringLocalExpose()	=> RPC_C2S_CancelExpose()	=> Server_CheckForCallers()
 Client_Expose()	=> RPC_C2S_Expose()	=> Server_Expose()	=> RPC_S2C(GameState)	=> Client_Expose_Confirm()
 																				=>
+
+
+***	QUESTIONS ***
+Should server send:
+> Whole game state - overkill but straightforward and not that intensive - maybe the best option
+> All tile locations
+> Just the rack / location that's changed
+> Just the singular tile
+>> Send previous GameState and the delta - client checks previous GameState against their own, then can apply delta accordingly
+
+Should the client:
+> Sift through every single tile
+> Look for a specific change
+
+How to deal with changing the UI but then confirming change from server afterward?
+> Wait x time and then if no confirmation, send again, then error...?
+> time: under .5s is generous. Could wait up to 1 or 2 sec and that would be safe
