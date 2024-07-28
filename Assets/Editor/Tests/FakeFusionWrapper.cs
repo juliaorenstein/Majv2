@@ -2,6 +2,11 @@ using System.Collections.Generic;
 
 class FakeFusionWrapper : IFusionWrapper
 {
+    public FakeFusionWrapper(ClassReferences refs)
+    {
+        refs.Fusion = this;
+    }
+
     public int LocalPlayerId => throw new System.NotImplementedException();
 
     public int TurnPlayerId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
@@ -35,7 +40,7 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public void RPC_C2A_Expose(int exposeTileId)

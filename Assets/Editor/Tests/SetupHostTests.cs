@@ -8,12 +8,13 @@ public class SetupHostTests
 	{
 		// ARRANGE
 		ClassReferences refs = new();
-        TileTracker tileTracker = new(refs);
 		SetupHost setupHost = new(refs);
+        new FakeFusionWrapper(refs);
+        new GameManager(refs);
 
 		// ACT
 		setupHost.SetupDriver();
-		List<int> wall = tileTracker.Wall;
+		List<int> wall = refs.TileTracker.Wall;
 
 		// ASSERT
 		Assert.True(wall.Count == 152 - (13 * 4 + 1));
@@ -24,12 +25,13 @@ public class SetupHostTests
     {
         // ARRANGE
         ClassReferences refs = new();
-        TileTracker tileTracker = new(refs);
         SetupHost setupHost = new(refs);
+        new FakeFusionWrapper(refs);
+        new GameManager(refs);
 
         // ACT
         setupHost.SetupDriver();
-        List<List<int>> racks = tileTracker.PrivateRacks;
+        List<List<int>> racks = refs.TileTracker.PrivateRacks;
 
         // ASSERT
         Assert.True(racks.Count == 4);

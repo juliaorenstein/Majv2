@@ -23227,7 +23227,6 @@ MonoBehaviour:
   CharlestonPassButton: {fileID: 0}
   TurnIndicator: {fileID: 1648293901}
   Dragging: {fileID: 556764448}
-  CharlestonSpots: 
 --- !u!4 &984535265
 Transform:
   m_ObjectHideFlags: 0

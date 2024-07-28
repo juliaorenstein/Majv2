@@ -194,13 +194,9 @@ public class CharlestonHostTests
         , FakeCharlestonFusion
         , TileTracker) CreateTestVariables()
     {
-        FakeFusionWrapper fusion = new();
-        FakeCharlestonFusion cFusion = new();
-        ClassReferences refs = new()
-        {
-            Fusion = fusion,
-            CFusion = cFusion,
-        };
+        ClassReferences refs = new();
+        FakeFusionWrapper fusion = new(refs);
+        FakeCharlestonFusion cFusion = new(refs);
         TileTracker tileTracker = new(refs) { PrivateRacks = TestRacks() };
         CharlestonHost cHost = new(refs);
 

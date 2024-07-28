@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
@@ -6,23 +5,21 @@ using System.Diagnostics;
 public class TileTracker
 {
     readonly ClassReferences refs;
-    readonly IFusionWrapper fusion;
 
     // initialized in SetupHost
     public TileTracker(ClassReferences refs)
     {
         refs.TileTracker = this;
         this.refs = refs;
-        fusion = refs.Fusion;
     }
 
     // TileLocations
     public List<int> Wall;
-    public List<int> Discard;
-    public List<List<int>> PrivateRacks;
-    public List<List<int>> DisplayRacks;
+    public List<int> Discard = new();
+    public List<List<int>> PrivateRacks = new();
+    public List<List<int>> DisplayRacks = new();
 
-    public Dictionary<int, List<int>> TileLocations;
+    public Dictionary<int, List<int>> TileLocations = new();
 
     // Tile Locations for Client in networkable format (int arrays)
     NetworkableTileLocations NetworkTileLocs
@@ -63,8 +60,8 @@ public class TileTracker
     {
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            if (fusion.IsPlayerAI(playerId)) continue;
-            fusion.RPC_S2C_SendGameState(playerId, NetworkTileLocs);
+            if (refs.Fusion.IsPlayerAI(playerId)) continue;
+            refs.Fusion.RPC_S2C_SendGameState(playerId, NetworkTileLocs);
         }
     } 
 }

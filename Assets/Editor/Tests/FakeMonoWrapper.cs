@@ -3,8 +3,6 @@ using System.Collections;
 
 class FakeMonoWrapper : IMonoWrapper
 {
-    public FakeMonoWrapper() { }
-
     public FakeMonoWrapper(ClassReferences refs)
     {
         refs.Mono = this;

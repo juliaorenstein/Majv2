@@ -6,8 +6,9 @@ class FakeCharlestonFusion : ICharlestonFusion
     public void RPC_H2C_UpdateRack(int playerId, int[] newRack)
     { }
 
-    public FakeCharlestonFusion()
+    public FakeCharlestonFusion(ClassReferences refs)
     {
+        refs.CFusion = this;
         Counter = 0;
     }
 }

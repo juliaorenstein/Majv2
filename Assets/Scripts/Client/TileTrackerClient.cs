@@ -62,12 +62,16 @@ public class TileTrackerClient : INotifyPropertyChanged
     }
 
     public void ReceiveGameState(int wallCount, int[] discard, int[] privateRack
-        , int[] privateRackCounts, int[][] displayRacks)
+        , int[] privateRackCounts, int[] displayRack0, int[] displayRack1
+        , int[] displayRack2, int[] displayRack3)
     {
         WallCount = wallCount;
         Discard = discard.ToList();
         PrivateRack = privateRack.ToList();
         PrivateRackCounts = privateRackCounts;
-        DisplayRacks = displayRacks.Select(arr => arr.ToList()).ToArray();
+        DisplayRacks[0] = displayRack0.ToList();
+        DisplayRacks[1] = displayRack1.ToList();
+        DisplayRacks[2] = displayRack2.ToList();
+        DisplayRacks[3] = displayRack3.ToList();
     }
 }

@@ -48,14 +48,17 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     {
         RPC_S2C_SendGameState(FManager.PlayerDict[playerId], tileLocs.WallCount
             , tileLocs.Discard, tileLocs.PrivateRack, tileLocs.PrivateRackCounts
-            , tileLocs.DisplayRacks);
+            , tileLocs.DisplayRacks[0], tileLocs.DisplayRacks[1]
+            , tileLocs.DisplayRacks[2], tileLocs.DisplayRacks[3]);
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     void RPC_S2C_SendGameState(PlayerRef player, int wallCount, int[] discard
-        , int[] privateRack, int[] privateRackCounts, int[][] displayRacks)
+        , int[] privateRack, int[] privateRackCounts, int[] displayRack0
+        , int[] displayRack1, int[] displayRack2, int[] displayRack3)
     {
         refs.TileTrackerClient.ReceiveGameState(wallCount, discard, privateRack
-            , privateRackCounts, displayRacks);
+            , privateRackCounts, displayRack0, displayRack1, displayRack2
+            , displayRack3);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

@@ -3,20 +3,20 @@ using System.Linq;
 
 public class SetupHost
 {
-    ClassReferences Refs;
+    readonly ClassReferences refs;
     bool ShuffledAndDealt;
-    TileTracker tileTracker;
+    readonly TileTracker tileTracker;
 
     public SetupHost(ClassReferences refs)
     {
-        Refs = refs;
+        this.refs = refs;
         ShuffledAndDealt = false;
         tileTracker = new(refs);
     }
 
     public void SetupDriver()
     {
-        Refs.TManager = new(Refs); // TODO: rename to TManagerHost?
+        refs.TManager = new(refs); // TODO: rename to TManagerHost?
 
         if (!ShuffledAndDealt)
         {
@@ -57,7 +57,7 @@ public class SetupHost
         for (int i = 0; i < 4; i++)
         {   
             rack = new();
-            tileTracker.PrivateRacks[i] = rack;
+            tileTracker.PrivateRacks.Add(rack);
 
             for (int j = 0; j < 13; j++)
             {
@@ -66,6 +66,6 @@ public class SetupHost
         }
 
         // one more tile to the dealer
-        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[Refs.GManager.DealerId]);
+        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.GManager.DealerId]);
     }
 }
