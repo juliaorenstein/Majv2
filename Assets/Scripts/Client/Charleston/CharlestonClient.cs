@@ -5,14 +5,14 @@ using System;
 
 public class CharlestonClient 
 {
-    ClassReferences refs;
-    GameManagerClient gameManagerClient;
-    IMonoWrapper mono;
-    ICharlestonFusion charlestonFusion;
-    ObjectReferences objRefs;
+    readonly ClassReferences refs;
+    readonly GameManagerClient gameManagerClient;
+    readonly IMonoWrapper mono;
+    readonly ICharlestonFusion charlestonFusion;
+    List<int> Rack { get => gameManagerClient.PrivateRack; }
 
     public int[] ClientPassArr;
-    int[] StealPasses = new int[2] { 2, 5 };
+    readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate
     bool BlindAllowed { get => StealPasses.Contains(charlestonFusion.Counter); }
 
     public List<MonoObject> CharlestonSpots = new()
@@ -29,7 +29,6 @@ public class CharlestonClient
         mono = refs.Mono;
         charlestonFusion = refs.CFusion;
         gameManagerClient = refs.GManagerClient;
-        objRefs = ObjectReferences.Instance;
     }
 
     public bool CheckReadyToPass()
@@ -99,7 +98,7 @@ public class CharlestonClient
 
     public void DoubleClickCharlestonTileMover(int tileId)
     {
-        if (gameManagerClient.PrivateRack.Contains(tileId))
+        if (Rack.Contains(tileId))
         {
             DoubleClickRackToCharleston(tileId);
             return;
@@ -123,7 +122,7 @@ public class CharlestonClient
             if (!Tile.IsValidTileId(ClientPassArr[i]))
             {
                 ClientPassArr[i] = tileId;
-                gameManagerClient.PrivateRack.Remove(tileId);
+                Rack.Remove(tileId);
                 return;
             }
         }
@@ -142,16 +141,14 @@ public class CharlestonClient
 
             int startIx = SpotIx(start);
             int endIx = SpotIx(end);
-            int tmp = ClientPassArr[startIx];
-            ClientPassArr[startIx] = ClientPassArr[endIx];
-            ClientPassArr[endIx] = tmp;
+            (ClientPassArr[endIx], ClientPassArr[startIx]) = (ClientPassArr[startIx], ClientPassArr[endIx]);
             return;
         }
 
         // drag - move tile from rack to charleston
         if (start == MonoObject.PrivateRack)
         {
-            Debug.Assert(gameManagerClient.PrivateRack.Contains(tileId));
+            Debug.Assert(Rack.Contains(tileId));
 
             // check if that spot is already populated
             int tileAlreadyInSpot = ClientPassArr[SpotIx(end)];
@@ -170,14 +167,15 @@ public class CharlestonClient
     void MoveTileFromRackToCharleston(int tileId, int spotIx)
     {
         ClientPassArr[spotIx] = tileId;
-        gameManagerClient.PrivateRack.Remove(tileId);
+        Rack.Remove(tileId);
     }
 
-    public void MoveTileFromCharlestonToRack(int tileId)
+    public void MoveTileFromCharlestonToRack(int tileId, int newIx = -1)
     {
         // TODO: change passArr to nullable and replace -1s with null
         ClientPassArr[Array.IndexOf(ClientPassArr, tileId)] = -1;
-        gameManagerClient.PrivateRack.Add(tileId);
+        if (newIx == -1) Rack.Add(tileId);
+        else Rack.Insert(newIx, tileId);
     }
 
     int SpotIx(MonoObject spot)

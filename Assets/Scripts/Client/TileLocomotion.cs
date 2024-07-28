@@ -92,28 +92,30 @@ public class TileLocomotion
         MoveBack();
 
         void DropOnRack()
-        {   // FIXME: assumes moving within rack. doesn't account for moving from charleston
+        {
             Debug.Assert(fusionManager.GamePhase > GamePhase.Setup);
 
             List<int> rack = gameManagerClient.PrivateRack;
 
-            // if to the right of all other tiles, just add on the end
-            if (dropIx == -1)
-            {
-                rack.Remove(tileId);
-                rack.Add(tileId);
-                return;
-            }
-
-            // otherwise, do logic
             int curIx = rack.IndexOf(tileId);
+            bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId); 
+
             int newIx = dropIx;
-            // if the tile was already on the rack (curIx > 0) but left of the new place (curIx < dropIx), then decrease the newIx by one.
-            if (curIx >= 0 && curIx < dropIx) newIx--;
-            if (rightOfTile) newIx++;
+            if (!comingFromCharles)
+            {
+                // if dropped to the right of all other tiles, just add on the end
+                if (dropIx == -1)
+                {
+                    rack.Remove(tileId);
+                    rack.Add(tileId);
+                    return;
+                }
+                if (curIx < dropIx) newIx--; // moving right - decrease final index
+            }
+            if (rightOfTile) newIx++; // dropped to the right of the center of the tile - increase final index
 
             // assumes only two cases are rack to rack and charleston to rack. not sure if others will come up
-            if (curIx < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId);
+            if (curIx < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId, newIx);
             else
             {
                 rack.Remove(tileId);

@@ -108,7 +108,8 @@ public class TileLocomotionTests
     public void OnEndDrag_MoveTileRightOnRackRightOfAnotherTile_RackRearranges()
     {
         (GameManagerClient game
-            , TileLocomotion tileLoco) = MakeVariablesForGameplayTest();
+            , CharlestonClient _
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         game.PrivateRack = TestRack;
         int dropIx = 3;
@@ -125,7 +126,8 @@ public class TileLocomotionTests
     public void OnEndDrag_MoveTileRightOnRackLeftOfAnotherTile_RackRearranges()
     {
         (GameManagerClient game
-            , TileLocomotion tileLoco) = MakeVariablesForGameplayTest();
+            , CharlestonClient _
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         game.PrivateRack = TestRack;
         int dropIx = 3;
@@ -142,7 +144,8 @@ public class TileLocomotionTests
     public void OnEndDrag_MoveTileLeftOnRackRightOfAnotherTile_RackRearranges()
     {
         (GameManagerClient game
-            , TileLocomotion tileLoco) = MakeVariablesForGameplayTest(4);
+            , CharlestonClient _
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         game.PrivateRack = TestRack;
         int dropIx = 2;
@@ -159,7 +162,8 @@ public class TileLocomotionTests
     public void OnEndDrag_MoveTileLeftOnRackLeftOfAnotherTile_RackRearranges()
     {
         (GameManagerClient game
-            , TileLocomotion tileLoco) = MakeVariablesForGameplayTest(4);
+            , CharlestonClient _
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         game.PrivateRack = TestRack;
         int dropIx = 2;
@@ -176,7 +180,8 @@ public class TileLocomotionTests
     public void OnEndDrag_MoveTileRightOnRackRightOfAllTiles_RackRearranges()
     {
         (GameManagerClient game
-    , TileLocomotion tileLoco) = MakeVariablesForGameplayTest();
+            , CharlestonClient _
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         game.PrivateRack = TestRack;
         int dropIx = -1;
@@ -252,7 +257,7 @@ public class TileLocomotionTests
     }
 
     [Test]
-    public void OnEndDrag_CharlestonToRack_TileMovesToRack()
+    public void OnEndDrag_CharlesToEndOfRack_TileMovesToRack()
     {
         (GameManagerClient game
             , CharlestonClient charles
@@ -260,10 +265,52 @@ public class TileLocomotionTests
         List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
         charles.ClientPassArr[1] = 84;
 
-        tileLoco.OnEndDrag(raycastTargets);
+        tileLoco.OnEndDrag(raycastTargets, -1);
 
         List<int> expectedRack = TestRack;
         expectedRack.Add(84);
+        int[] expectedPassArr = new int[] { -1, -1, -1 };
+        (List<int> actualRack, int[] actualPassArr) =
+            GetActualVarsForCharlestons(game, charles);
+
+        CollectionAssert.AreEqual(expectedRack, actualRack);
+        CollectionAssert.AreEqual(expectedPassArr, actualPassArr);
+    }
+
+    [Test]
+    public void OnEndDrag_CharlesToMiddleOfRackRightOfTile_TileMovesToRack()
+    {
+        (GameManagerClient game
+            , CharlestonClient charles
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
+        charles.ClientPassArr[1] = 84;
+
+        tileLoco.OnEndDrag(raycastTargets, 2, true);
+
+        List<int> expectedRack = TestRack;
+        expectedRack.Insert(3, 84);
+        int[] expectedPassArr = new int[] { -1, -1, -1 };
+        (List<int> actualRack, int[] actualPassArr) =
+            GetActualVarsForCharlestons(game, charles);
+
+        CollectionAssert.AreEqual(expectedRack, actualRack);
+        CollectionAssert.AreEqual(expectedPassArr, actualPassArr);
+    }
+
+    [Test]
+    public void OnEndDrag_CharlesToMiddleOfRackLeftOfTile_TileMovesToRack()
+    {
+        (GameManagerClient game
+            , CharlestonClient charles
+            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
+        charles.ClientPassArr[1] = 84;
+
+        tileLoco.OnEndDrag(raycastTargets, 2, false);
+
+        List<int> expectedRack = TestRack;
+        expectedRack.Insert(2, 84);
         int[] expectedPassArr = new int[] { -1, -1, -1 };
         (List<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(game, charles);
@@ -314,7 +361,7 @@ public class TileLocomotionTests
     }
 
     [Test]
-    public void OnEndDrag_CharlestonToNowhere_TileMovesBack()
+    public void OnEndDrag_CharlesToNowhere_TileMovesBack()
     {
         (GameManagerClient game
            , CharlestonClient charles
@@ -354,7 +401,20 @@ public class TileLocomotionTests
     */
 
     [Test]
-    public void OnEndDrag_RackToNowhere_TileMovesBack() { throw new NotImplementedException(); }
+    public void OnEndDrag_RackToNowhere_TileMovesBack()
+    {
+        (GameManagerClient game
+           , CharlestonClient _
+           , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        List<MonoObject> raycastResults = new();
+        game.PrivateRack = TestRack;
+
+        tileLoco.OnEndDrag(raycastResults);
+        List<int> expectedRack = TestRack;
+        List<int> actualRack = game.PrivateRack;
+
+        CollectionAssert.AreEqual(expectedRack, actualRack);
+    }
 
     // Utility functions
     List<int> TestRack { get => new(Enumerable.Range(0, 5).ToList()); }
