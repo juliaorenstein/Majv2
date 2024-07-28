@@ -13298,7 +13298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -13692,6 +13692,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 598814249}
   m_CullTransparentMesh: 1
+--- !u!1 &603206518 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 784723312128127198, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
+  m_PrefabInstance: {fileID: 8097334388979379669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &603206519 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 896276284601836212, guid: e53c852bc50fe4d1fad971249e0efd65, type: 3}
@@ -23211,7 +23216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Discard: {fileID: 1602720862}
   TilePool: {fileID: 829965888}
-  LocalRack: {fileID: 0}
+  LocalRack: {fileID: 603206518}
   PublicRack: {fileID: 0}
   PrivateRack: {fileID: 0}
   OtherRacks: {fileID: 1772208756}

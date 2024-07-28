@@ -93,9 +93,11 @@ public class TileLocomotionMono : MonoBehaviour
             }
         }
 
-        float xPos = eventData.pointerDrag.transform.position.x;
+        Transform droppedOnTile = raycastResults.Find(res => res.gameObject.tag == "Tile").gameObject.transform;
+        int dropIx = transform.GetSiblingIndex();
+        bool rightOfTile = transform.position.x > droppedOnTile.position.x;
 
-        tileLoco.OnEndDrag(raycastTargets, xPos);
+        tileLoco.OnEndDrag(raycastTargets, dropIx, rightOfTile);
     }
 
     public void MoveBack() =>

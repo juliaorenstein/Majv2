@@ -217,6 +217,9 @@ When Exposing Player never minds before exposing
 
 === Tile Locomotion (Client) ===
 
+How to move around tiles on a rack:
+
+
 
 
 === Event Monitoring (UI) ===

@@ -47,12 +47,12 @@ public class TurnManager
         }
         else if (fusion.IsPlayerAI(GManager.DealerId) && fusion.IsServer)
         {
-            H_AITurn(GManager.Racks[GManager.DealerId].Last());
+            H_AITurn(GManager.PrivateRacks[GManager.DealerId].Last());
         }
     }
 
     // Client discards a tile
-    public void C_Discard(int discardTileId)
+    public void C_RequestDiscard(int discardTileId)
     {
         ExposeTileName = null;
         fusion.RPC_C2H_Discard(discardTileId);
@@ -65,7 +65,7 @@ public class TurnManager
         // update lists
         DiscardPlayerId = fusion.TurnPlayerId;
         DiscardTile = discardTileId;
-        GManager.Racks[DiscardPlayerId].Remove(discardTileId);
+        GManager.PrivateRacks[DiscardPlayerId].Remove(discardTileId);
         fusion.RPC_H2A_ShowDiscard(discardTileId);
 
         // wait for callers
@@ -162,7 +162,7 @@ public class TurnManager
         int nextTileId = GManager.Wall.Pop();
         mono.SetRaycastTargetOnTile(nextTileId, true);
         
-        GManager.Racks[fusion.TurnPlayerId].Add(nextTileId);                 // add that tile to the player's rack list
+        GManager.PrivateRacks[fusion.TurnPlayerId].Add(nextTileId);                 // add that tile to the player's rack list
         if (fusion.IsPlayerAI(nextPlayer))                         // AI turn
         {
             H_AITurn(nextTileId);
@@ -176,7 +176,7 @@ public class TurnManager
         CallTile = DiscardTile;
         ExposePlayerId = H_InitializeNextTurn();
 
-        GManager.Racks[fusion.TurnPlayerId].Add(CallTile); // TODO: track public tiles separately
+        GManager.PrivateRacks[fusion.TurnPlayerId].Add(CallTile); // TODO: track public tiles separately
         // TODO: AI support for calling
         fusion.RPC_H2C_CallTurn(ExposePlayerId, CallTile);
     }

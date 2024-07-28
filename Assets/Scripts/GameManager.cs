@@ -8,7 +8,10 @@ public class GameManager
 
     // Game State - only available to host
     public Stack<int> Wall = new();
-    public List<List<int>> Racks = new();
+    public List<List<int>> PrivateRacks = new();
+    public List<List<int>> DisplayRacks = new();
+    public List<int> Discard = new();
+    public Dictionary<int, List<int>> TileLocations = new();
 
     public int WaitTime { get; set; } = 2000;
 

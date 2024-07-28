@@ -37,7 +37,6 @@ public class ObjectReferences : MonoBehaviour
 
     public Dictionary<MonoObject, Transform> ObjectDict;
     public Dictionary<Transform, MonoObject> ReverseObjectDict;
-    public List<MonoObject> CharlestonSpots;
 
     void Start()
     {
@@ -62,9 +61,9 @@ public class ObjectReferences : MonoBehaviour
             { MonoObject.Discard, Discard },
             { MonoObject.CharlestonBox, CharlestonBox },
             { MonoObject.CharlestonPassButton, CharlestonPassButton },
-            { MonoObject.CharlestonSpot1, CharlestonBox.GetChild(0) },
-            { MonoObject.CharlestonSpot2, CharlestonBox.GetChild(1) },
-            { MonoObject.CharlestonSpot3, CharlestonBox.GetChild(2) },
+            { MonoObject.CharlestonSpot0, CharlestonBox.GetChild(0) },
+            { MonoObject.CharlestonSpot1, CharlestonBox.GetChild(1) },
+            { MonoObject.CharlestonSpot2, CharlestonBox.GetChild(2) },
             { MonoObject.TilePool, TilePool },
             { MonoObject.CallWaitButtons, CallWaitButtons },
             { MonoObject.WaitButton, CallWaitButtons.GetChild(0) },
@@ -80,13 +79,6 @@ public class ObjectReferences : MonoBehaviour
         {
             ReverseObjectDict[item.Value] = item.Key;
         }
-
-        CharlestonSpots = new()
-        {
-            MonoObject.CharlestonSpot1,
-            MonoObject.CharlestonSpot2,
-            MonoObject.CharlestonSpot3
-        };
     }
 }
 
@@ -95,9 +87,9 @@ public enum MonoObject
     StartButtons,
     CharlestonBox,
     CharlestonPassButton,
+    CharlestonSpot0,
     CharlestonSpot1,
     CharlestonSpot2,
-    CharlestonSpot3,
     TilePool,
     Discard,
     CallWaitButtons,

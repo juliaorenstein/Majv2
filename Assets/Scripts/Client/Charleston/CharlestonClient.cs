@@ -1,5 +1,7 @@
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System;
 
 public class CharlestonClient 
 {
@@ -12,6 +14,13 @@ public class CharlestonClient
     public int[] ClientPassArr;
     int[] StealPasses = new int[2] { 2, 5 };
     bool BlindAllowed { get => StealPasses.Contains(charlestonFusion.Counter); }
+
+    public List<MonoObject> CharlestonSpots = new()
+        {
+            MonoObject.CharlestonSpot0,
+            MonoObject.CharlestonSpot1,
+            MonoObject.CharlestonSpot2
+        };
 
     public CharlestonClient(ClassReferences refs)
     {
@@ -88,19 +97,46 @@ public class CharlestonClient
         };
     }
 
-    public void CharlestonTileMover(int tileId)
+    public void DoubleClickCharlestonTileMover(int tileId)
     {
-        bool tileInLocalRack = gameManagerClient.PrivateRack.Contains(tileId);
-        if (tileInLocalRack) MoveTileFromRackToCharleston(tileId);
-        else MoveTileFromCharlestonToRack(tileId);
+        if (gameManagerClient.PrivateRack.Contains(tileId))
+        {
+            DoubleClickRackToCharleston(tileId);
+            return;
+        }
+
+        if (ClientPassArr.Contains(tileId))
+        {
+            MoveTileFromCharlestonToRack(tileId);
+            return;
+        }
+
+        throw new Exception("Trying to move a tile from invalid location for charleston.");
     }
 
-    public void CharlestonTileMover(int tileId, MonoObject start, MonoObject end)
+    void DoubleClickRackToCharleston(int tileId)
+    {
+        // find an empty spot in passArr to place tile. If there is none
+        // put the tile in the last spot ( i = 2 )
+        for (int i = 0; i < 3; i++)
+        {
+            if (!Tile.IsValidTileId(ClientPassArr[i]))
+            {
+                ClientPassArr[i] = tileId;
+                gameManagerClient.PrivateRack.Remove(tileId);
+                return;
+            }
+        }
+
+        // if we reach here, all boxes were filled, so replace the tile at ix 2
+        MoveTileFromCharlestonToRack(ClientPassArr[2]);
+        MoveTileFromRackToCharleston(tileId, 2);
+    }
+
+    public void DragCharlestonTileMover(int tileId, MonoObject start, MonoObject end)
     {
         // swap two tiles in Charleston
-        if ((objRefs.CharlestonSpots.Contains(start)
-            && objRefs.CharlestonSpots.Contains(end))
-            || start == MonoObject.CharlestonBox)
+        if (CharlestonSpots.Contains(start))
         {
             Debug.Assert(ClientPassArr.Contains(tileId));
 
@@ -112,8 +148,8 @@ public class CharlestonClient
             return;
         }
 
-        // move tile from rack to charleston
-        if (objRefs.CharlestonSpots.Contains(end))
+        // drag - move tile from rack to charleston
+        if (start == MonoObject.PrivateRack)
         {
             Debug.Assert(gameManagerClient.PrivateRack.Contains(tileId));
 
@@ -124,37 +160,29 @@ public class CharlestonClient
                 MoveTileFromCharlestonToRack(tileAlreadyInSpot);
             }
 
-            MoveTileFromRackToCharleston(tileId);
+            MoveTileFromRackToCharleston(tileId, SpotIx(end));
+            return;
         }
+
+        throw new Exception("bad start location");
     }
 
-    void MoveTileFromRackToCharleston(int tileId)
+    void MoveTileFromRackToCharleston(int tileId, int spotIx)
     {
-        // find an empty spot in passArr to place tile. If there is none
-        // put the tile in the last spot ( i = 2 )
-        for (int i = 0; i < 3; i++)
-        {
-            if (!Tile.IsValidTileId(ClientPassArr[i]) || i == 2)
-            {
-                ClientPassArr[i] = tileId;
-                gameManagerClient.PrivateRack.Remove(tileId);
-                return;
-            }
-        }
+        ClientPassArr[spotIx] = tileId;
+        gameManagerClient.PrivateRack.Remove(tileId);
     }
 
-    void MoveTileFromCharlestonToRack(int tileId)
+    public void MoveTileFromCharlestonToRack(int tileId)
     {
-        for (int i = 0; i < 3; i++)     // TODO: change passArr to nullable and replace -1s with null
-        {
-            if (ClientPassArr[i] == tileId) ClientPassArr[i] = -1;
-        }
+        // TODO: change passArr to nullable and replace -1s with null
+        ClientPassArr[Array.IndexOf(ClientPassArr, tileId)] = -1;
         gameManagerClient.PrivateRack.Add(tileId);
     }
 
     int SpotIx(MonoObject spot)
     {
-        Debug.Assert(objRefs.CharlestonSpots.Contains(spot));
-        return objRefs.CharlestonSpots.IndexOf(spot);
+        Debug.Assert(CharlestonSpots.Contains(spot));
+        return CharlestonSpots.IndexOf(spot);
     }
 }

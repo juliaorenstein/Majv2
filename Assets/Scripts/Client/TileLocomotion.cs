@@ -6,7 +6,6 @@ using System.Diagnostics;
 public class TileLocomotion
 {
     readonly ClassReferences refs;
-    readonly ObjectReferences objRefs;
     readonly GameManagerClient gameManagerClient;
     readonly IFusionManager fusionManager;
     readonly ITileLocomotionMono tileLocoMono;
@@ -18,53 +17,54 @@ public class TileLocomotion
         this.tileLocoMono = tileLocoMono;
         tileId = tileLocoMono.TileId;
         this.refs = refs;
-        objRefs = ObjectReferences.Instance;
         gameManagerClient = refs.GManagerClient;
         fusionManager = refs.FManager;
     }
 
     public void OnPointerClick(bool doubleClick)
     {
-        if (doubleClick)
+        if (!doubleClick) return;
+
+        if (fusionManager.GamePhase == GamePhase.Charleston)
         {
-            if (fusionManager.GamePhase == GamePhase.Charleston)
+            DoubleClickCharleston();
+            return;
+        }
+
+        if (fusionManager.GamePhase == GamePhase.Gameplay)
+        {
+            if (Exposable())
             {
-                DoubleClickCharleston();
+                Expose();
                 return;
             }
-            if (fusionManager.GamePhase == GamePhase.Gameplay)
+            if (Discardable())
             {
-                if (Exposable())
-                {
-                    Expose();
-                    return;
-                }
-                if (Discardable())
-                {
-                    Discard();
-                    return;
-                }
+                Discard();
+                return;
+            }
 
-                switch (fusionManager.TurnPhase)
-                {
-                    case TurnPhase.Exposing:
-                        Expose(); break; // FIXME: deal with discard during expose
-                    case TurnPhase.Discarding:
-                        Discard(); break;
-                    case TurnPhase.LoggingCallers:
-                        break;
-                    default:
-                        break;
-                }
+            switch (fusionManager.TurnPhase)
+            {
+                case TurnPhase.Exposing:
+                    Expose(); break; // FIXME: deal with discard during expose
+                case TurnPhase.Discarding:
+                    Discard(); break;
+                case TurnPhase.LoggingCallers:
+                    break;
+                default:
+                    break;
             }
         }
+
+        throw new Exception("This tile probably should not have been raycast enabled.");
     }
 
-    public void DoubleClickCharleston() => refs.CClient.CharlestonTileMover(tileId);
+    public void DoubleClickCharleston() => refs.CClient.DoubleClickCharlestonTileMover(tileId);
 
-    public void DoubleClickDiscard() => refs.TManager.C_Discard(tileId);
+    public void DoubleClickDiscard() => refs.TManager.C_RequestDiscard(tileId);
 
-    public void OnEndDrag(List<MonoObject> raycastTargets, float xPos)
+    public void OnEndDrag(List<MonoObject> raycastTargets, int dropIx = -1, bool rightOfTile = false)
     {
         refs.Mono.SetRaycastTargetOnTile(tileId, true);
         if (TileIsOnTopOfRack(raycastTargets))
@@ -72,7 +72,7 @@ public class TileLocomotion
             DropOnRack();
             return;
         }
-        if (TileIsOnTopOfCharleston(raycastTargets)) 
+        if (Charlestonable(raycastTargets)) 
         {
             DropOnCharleston();
             return;
@@ -92,56 +92,46 @@ public class TileLocomotion
         MoveBack();
 
         void DropOnRack()
-        {
+        {   // FIXME: assumes moving within rack. doesn't account for moving from charleston
             Debug.Assert(fusionManager.GamePhase > GamePhase.Setup);
 
-            float thisDist;
-            float prevDist = float.MaxValue;
-            int closestTileIndex = gameManagerClient.PrivateRack.Count - 1;
-            int newIndex;
+            List<int> rack = gameManagerClient.PrivateRack;
 
-            /*
-            subtract current position from the position of each tile starting
-            from the left. this value will decrease and then start increasing.
-            when it starts increasing, then the previous tile was the closest
-            one. save off that index to closesttileindex.if the increase is
-            never reached, then the tile should go to the end of the rack,
-            which is why closesttileindex is initialized there.
-            */
-            for (int i = 0; i < gameManagerClient.PrivateRack.Count; i++)
+            // if to the right of all other tiles, just add on the end
+            if (dropIx == -1)
             {
-                thisDist = Math.Abs(xPos - tileLocoMono.TilePositions[i]);
-
-                if (thisDist > prevDist)
-                {
-                    closestTileIndex = i - 1;
-                    break;
-                }
-                prevDist = thisDist;
+                rack.Remove(tileId);
+                rack.Add(tileId);
+                return;
             }
 
-            // now check if we're to the left or right of the tile and set accordingly.
-            newIndex = xPos > tileLocoMono.TilePositions[closestTileIndex]
-               ? closestTileIndex + 1 : closestTileIndex;
-            // offset one if we're moving to the right.
-            // TODO: verify this works as expected for moving within rack
-            // TODO: verify this works as expected for moving from charleston box
-            if (newIndex > gameManagerClient.PrivateRack.IndexOf(tileId)) { newIndex--; }
+            // otherwise, do logic
+            int curIx = rack.IndexOf(tileId);
+            int newIx = dropIx;
+            // if the tile was already on the rack (curIx > 0) but left of the new place (curIx < dropIx), then decrease the newIx by one.
+            if (curIx >= 0 && curIx < dropIx) newIx--;
+            if (rightOfTile) newIx++;
 
-            gameManagerClient.PrivateRack.Remove(tileId);
-            gameManagerClient.PrivateRack.Insert(newIndex, tileId);
-            // tileLocoMono.MoveTile(MonoObject.PrivateRack, newIndex); // TODO: take care of this with eventmonitor
+            // assumes only two cases are rack to rack and charleston to rack. not sure if others will come up
+            if (curIx < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId);
+            else
+            {
+                rack.Remove(tileId);
+                rack.Insert(newIx, tileId);
+            }
         }
 
         void DropOnCharleston()
         {
-            MonoObject end = raycastTargets.First(target
-                    => objRefs.CharlestonSpots.Contains(target));
+            Debug.Assert(!Tile.IsJoker(tileId));
+
             MonoObject start;
+            MonoObject end = raycastTargets.First(target
+                    => refs.CClient.CharlestonSpots.Contains(target));
 
             if (refs.CClient.ClientPassArr.Contains(tileId))
             {
-                start = MonoObject.CharlestonBox;
+                start = refs.CClient.CharlestonSpots[Array.IndexOf(refs.CClient.ClientPassArr, tileId)];
             }
 
             else if (gameManagerClient.PrivateRack.Contains(tileId))
@@ -151,23 +141,24 @@ public class TileLocomotion
 
             else throw new Exception("invalid start position");
 
-            refs.CClient.CharlestonTileMover(tileId, start, end);
+            refs.CClient.DragCharlestonTileMover(tileId, start, end);
         }
     }
 
     public bool TileIsOnTopOfRack(List<MonoObject> raycastTargets) =>
         raycastTargets.Contains(MonoObject.PrivateRack);
 
-    bool TileIsOnTopOfCharleston()
+    bool Charlestonable()
     {
+        if (Tile.IsJoker(tileId)) return false;
         return (fusionManager.GamePhase == GamePhase.Charleston);
     }
 
-    bool TileIsOnTopOfCharleston(List<MonoObject> raycastTargets)
+    bool Charlestonable(List<MonoObject> raycastTargets)
     {
-        if (!TileIsOnTopOfCharleston()) return false;
+        if (!Charlestonable()) return false;
         if (!raycastTargets.Any(target
-            => objRefs.CharlestonSpots.Contains(target))) return false;
+            => refs.CClient.CharlestonSpots.Contains(target))) return false;
         return true;
     }
 
@@ -201,9 +192,9 @@ public class TileLocomotion
         return true;
     }
 
-    void Discard() => refs.TManager.C_Discard(tileId);
+    public void Discard() => refs.TManager.C_RequestDiscard(tileId);
 
-    void Expose() => throw new NotImplementedException();
+    public void Expose() => throw new NotImplementedException();
 
     void MoveBack() => tileLocoMono.MoveBack();
 }

@@ -51,7 +51,7 @@ public class SetupHost
         for (int i = 0; i < 4; i++)
         {   
             rack = new();
-            Refs.GManager.Racks.Add(rack);
+            Refs.GManager.PrivateRacks.Add(rack);
 
             for (int j = 0; j < 13; j++)
             {   
@@ -60,12 +60,12 @@ public class SetupHost
         }
 
         // one more tile to the dealer
-        Refs.GManager.Racks[Refs.GManager.DealerId].Add(Refs.GManager.Wall.Pop());
+        Refs.GManager.PrivateRacks[Refs.GManager.DealerId].Add(Refs.GManager.Wall.Pop());
     }
 
     public void SendRack(int playerId)
     {
-        int[] rack = Refs.GManager.Racks[playerId].ToArray();
+        int[] rack = Refs.GManager.PrivateRacks[playerId].ToArray();
         Refs.Fusion.RPC_H2C_SendRack(playerId, rack);
     }
 }
