@@ -14,7 +14,7 @@ public class SetupHostTests
 		// ACT
 		setupHost.SetupDriver();
 		Stack<int> wall = gManager.Wall;
-		List<List<int>> racks = gManager.Racks;
+		List<List<int>> racks = gManager.PrivateRacks;
 
 		// ASSERT
 		Assert.True(wall.Count == 152 - (13 * 4 + 1));
@@ -31,7 +31,7 @@ public class SetupHostTests
         // ACT
         setupHost.SetupDriver();
         Stack<int> wall = gManager.Wall;
-        List<List<int>> racks = gManager.Racks;
+        List<List<int>> racks = gManager.PrivateRacks;
 
         // ASSERT
         Assert.True(racks.Count == 4);

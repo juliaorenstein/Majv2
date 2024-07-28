@@ -30,7 +30,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     {
         Refs = ObjectReferences.Instance.ClassRefs;
         Refs.Fusion = this;
-        FManager = Refs.FManager;
+        FManager = (FusionManager)Refs.FManager;
         TManager = Refs.TManager;
         // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;
@@ -47,7 +47,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     public void RPC_C2H_Discard(int discardTileId) => TManager.H_Discard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2A_ShowDiscard(int discardTileId) => TManager.C_Discard(discardTileId);
+    public void RPC_H2A_ShowDiscard(int discardTileId) => TManager.C_RequestDiscard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RPC_H2A_ShowButtons(int discardPlayerId) => TManager.C_ShowButtons();

@@ -215,9 +215,6 @@ When Exposing Player never minds before exposing
 > Remove player from Calling Players
 > Go to Choose a Caller
 
-=== Tile Locomotion (Client) ===
-
-
 
 === Event Monitoring (UI) ===
 

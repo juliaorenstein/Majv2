@@ -188,9 +188,11 @@ public class Navigation : MonoBehaviour
                 return;
             }
 
-            if (Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.Exposable())
+            if (Selected.GetComponentInChildren<TileLocomotionMono>()
+                .tileLoco.Exposable())
             {
-                Selected.GetComponentInChildren<TileLocomotionMono>().tileLoco.DoubleClickExpose();
+                Selected.GetComponentInChildren<TileLocomotionMono>()
+                    .tileLoco.Expose();
                 return;
             }
         }

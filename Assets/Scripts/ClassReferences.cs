@@ -15,7 +15,7 @@ public class ClassReferences
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
     public TurnManager TManager;
-    public FusionManager FManager;
+    public IFusionManager FManager;
     public GameManager GManager;
     public GameManagerClient GManagerClient;
     public IMonoWrapper Mono;

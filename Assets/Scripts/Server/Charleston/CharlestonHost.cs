@@ -49,7 +49,7 @@ public class CharlestonHost
         {
             Debug.Assert(Tile.IsValidTileId(tile)); // valid tiles
             Debug.Assert(!Tile.IsJoker(tile));      // not jokers
-            Debug.Assert(Refs.GManager.Racks[sourcePlayerId].Contains(tile)); // tile is in player's rack
+            Debug.Assert(Refs.GManager.PrivateRacks[sourcePlayerId].Contains(tile)); // tile is in player's rack
         }
 
         if (!AiPassed) AiTilesToPass();
@@ -69,7 +69,7 @@ public class CharlestonHost
             if (!fusion.IsPlayerAI(playerId)) continue;
 
             // This player's HostPassArr entry is the first three tiles of their rack
-            PassList[playerId] = Refs.GManager.Racks[playerId].GetRange(0, 3);
+            PassList[playerId] = Refs.GManager.PrivateRacks[playerId].GetRange(0, 3);
             PlayersReady++;
         }
         AiPassed = true;
@@ -116,11 +116,11 @@ public class CharlestonHost
         {
             foreach (int tileId in PassList[playerId])
             {
-                Refs.GManager.Racks[playerId].Remove(tileId);
+                Refs.GManager.PrivateRacks[playerId].Remove(tileId);
             }
             foreach (int tileId in RecList[playerId])
             {
-                Refs.GManager.Racks[playerId].Add(tileId);
+                Refs.GManager.PrivateRacks[playerId].Add(tileId);
             }
         }
     }

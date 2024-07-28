@@ -15,7 +15,7 @@ public class CharlestonHostTests
 
         // ACT
         CHost.PassDriver(sourcePlayerId,
-            GManager.Racks[sourcePlayerId].GetRange(0, 3).ToArray());
+            GManager.PrivateRacks[sourcePlayerId].GetRange(0, 3).ToArray());
 
         // ASSERT
         foreach (int aiPlayerId in aiPlayers)
@@ -33,7 +33,7 @@ public class CharlestonHostTests
 
         // ACT
         CHost.PassDriver(0,
-            GManager.Racks[0].GetRange(0, 3).ToArray());
+            GManager.PrivateRacks[0].GetRange(0, 3).ToArray());
 
         // ASSERT
         Assert.True(CHost.AiPassed);
@@ -106,7 +106,7 @@ public class CharlestonHostTests
             TestPasses()[(shift + 2) % 4],
             TestPasses()[(shift + 3) % 4],
         };
-        List<List<int>> actualRacks = GManager.Racks;
+        List<List<int>> actualRacks = GManager.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -155,7 +155,7 @@ public class CharlestonHostTests
         // i.e. a right pass is a shift of 1, over is shift of 2, left is shift of 3.
         List<List<int>> expectedSubsets = new()
         { rec0.ToList(), rec1.ToList(), rec2.ToList(), rec3.ToList() };
-        List<List<int>> actualRacks = GManager.Racks;
+        List<List<int>> actualRacks = GManager.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -201,7 +201,7 @@ public class CharlestonHostTests
             Fusion = fusion,
             CFusion = cFusion,
         };
-        GameManager gManager = new(refs) { Racks = TestRacks() };
+        GameManager gManager = new(refs) { PrivateRacks = TestRacks() };
         CharlestonHost cHost = new(refs);
 
         return (cHost, refs, fusion, cFusion, gManager);

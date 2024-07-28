@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
-public class FusionManager : NetworkBehaviour
+public class FusionManager : NetworkBehaviour, IFusionManager
 {
     public Dictionary<int, PlayerRef> PlayerDict { get; set; }
     public Dictionary<int, InputCollection> InputDict { get; set; }
