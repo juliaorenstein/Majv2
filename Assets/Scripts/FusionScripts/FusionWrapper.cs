@@ -1,8 +1,9 @@
 using Fusion;
+using System.Collections.Generic;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
-    ClassReferences Refs;
+    ClassReferences refs;
     FusionManager FManager;
     TurnManager TManager;
 
@@ -28,10 +29,10 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 
     public override void Spawned()
     {
-        Refs = ObjectReferences.Instance.ClassRefs;
-        Refs.Fusion = this;
-        FManager = (FusionManager)Refs.FManager;
-        TManager = Refs.TManager;
+        refs = ObjectReferences.Instance.ClassRefs;
+        refs.Fusion = this;
+        FManager = (FusionManager)refs.FManager;
+        TManager = refs.TManager;
         // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;
     }
@@ -43,34 +44,48 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     }
 
     // RPCs
+    public void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs)
+    {
+        RPC_S2C_SendGameState(FManager.PlayerDict[playerId], tileLocs.WallCount
+            , tileLocs.Discard, tileLocs.PrivateRack, tileLocs.PrivateRackCounts
+            , tileLocs.DisplayRacks);
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    void RPC_S2C_SendGameState(PlayerRef player, int wallCount, int[] discard
+        , int[] privateRack, int[] privateRackCounts, int[][] displayRacks)
+    {
+        refs.TileTrackerClient.ReceiveGameState(wallCount, discard, privateRack
+            , privateRackCounts, displayRacks);
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_C2H_Discard(int discardTileId) => TManager.H_Discard(discardTileId);
+    public void RPC_C2S_Discard(int discardTileId) => TManager.H_Discard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2A_ShowDiscard(int discardTileId) => TManager.C_RequestDiscard(discardTileId);
+    public void RPC_S2A_ShowDiscard(int discardTileId) => TManager.C_RequestDiscard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2A_ShowButtons(int discardPlayerId) => TManager.C_ShowButtons();
+    public void RPC_S2A_ShowButtons(int discardPlayerId) => TManager.C_ShowButtons();
 
-    public void RPC_H2C_NextTurn(int nextPlayerId, int nextTileId) => RPC_H2C_NextTurn(FManager.PlayerDict[nextPlayerId], nextPlayerId);
+    public void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId) => RPC_S2C_NextTurn(FManager.PlayerDict[nextPlayerId], nextPlayerId);
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2C_NextTurn(PlayerRef _, int nextTileId) => TManager.C_NextTurn(nextTileId);
+    public void RPC_S2C_NextTurn(PlayerRef _, int nextTileId) => TManager.C_NextTurn(nextTileId);
 
-    public void RPC_H2C_CallTurn(int callPlayerId, int callTileId) => RPC_H2C_CallTurn(FManager.PlayerDict[callPlayerId], callTileId);
+    public void RPC_S2C_CallTurn(int callPlayerId, int callTileId) => RPC_S2C_CallTurn(FManager.PlayerDict[callPlayerId], callTileId);
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2C_CallTurn(PlayerRef _, int callTileId) => TManager.C_CallTurn(callTileId);
+    public void RPC_S2C_CallTurn(PlayerRef _, int callTileId) => TManager.C_CallTurn(callTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2A_ResetButtons() => TManager.C_ResetButtons();
+    public void RPC_S2A_ResetButtons() => TManager.C_ResetButtons();
 
     [Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_C2A_Expose(int exposeTileId) => TManager.C_ExposeOtherPlayer(exposeTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_H2A_NeverMind() => TManager.C_NeverMind();
+    public void RPC_S2A_NeverMind() => TManager.C_NeverMind();
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
-    public void RPC_H2C_SendRack(int playerId, int[] tileArr) => Refs.ReceiveGame.ReceiveRackUpdate(tileArr); // TODO: game state updates
+    public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.ReceiveGame.ReceiveRackUpdate(tileArr); // TODO: game state updates
 
     // Player Input
 

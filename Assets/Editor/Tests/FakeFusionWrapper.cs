@@ -33,47 +33,52 @@ class FakeFusionWrapper : IFusionWrapper
         throw new System.NotImplementedException();
     }
 
+    public void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void RPC_C2A_Expose(int exposeTileId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_C2H_Discard(int discardTileId)
+    public void RPC_C2S_Discard(int discardTileId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2A_NeverMind()
+    public void RPC_S2A_NeverMind()
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2A_ResetButtons()
+    public void RPC_S2A_ResetButtons()
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2A_ShowButtons(int discardPlayerId)
+    public void RPC_S2A_ShowButtons(int discardPlayerId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2A_ShowDiscard(int discardTileId)
+    public void RPC_S2A_ShowDiscard(int discardTileId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2C_CallTurn(int callPlayerId, int callTileId)
+    public void RPC_S2C_CallTurn(int callPlayerId, int callTileId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2C_NextTurn(int nextPlayerId, int nextTileId)
+    public void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId)
     {
         throw new System.NotImplementedException();
     }
 
-    public void RPC_H2C_SendRack(int playerId, int[] tileArr) { }
+    public void RPC_S2C_SendRack(int playerId, int[] tileArr) { }
 
     public bool WasCallPressed(int playerId)
     {

@@ -96,6 +96,6 @@ public class TileMono : MonoBehaviour
         transform.GetChild(0).gameObject.AddComponent<TileLocomotionMono>();
 
         // send to GameManager
-        GameManager.TileList.Add(tile);
+        Tile.TileList.Add(tile);
     }
 }

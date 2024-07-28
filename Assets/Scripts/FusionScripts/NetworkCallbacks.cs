@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 {
     // GAME OBJECTS
-    ClassReferences Refs;
+    ClassReferences refs;
     NetworkRunner runner;
 
     GameObject Scripts;
@@ -22,8 +22,8 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
         inputStruct = new();
-        Refs = ObjectReferences.Instance.ClassRefs;
-        Refs.NetworkCallbacks = this;
+        refs = ObjectReferences.Instance.ClassRefs;
+        refs.NetworkCallbacks = this;
     }
 
     public async void StartGame(GameMode mode)
@@ -88,7 +88,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
             Resources.Load<GameObject>("Prefabs/ScriptObjects")).gameObject;
         }
         SetupMono setupMono = Scripts.GetComponentInChildren<SetupMono>();
-        setupClient = new(Refs, setupMono);
+        setupClient = new(refs, setupMono);
         setupClient.SetupDriver();
 
         if (runner.IsServer)
@@ -99,7 +99,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
                 // Initialize Setup variables
                 fManager = Scripts.GetComponentInChildren<FusionManager>();
-                setupHost = new(Refs);
+                setupHost = new(refs);
 
                 // shuffle and deal
                 setupHost.SetupDriver();
@@ -107,7 +107,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
             // Do the rest of the setup for all clients
             fManager.InitializePlayer(player);
-            setupHost.SendRack(player.PlayerId);
+            refs.TileTracker.SendGameStateToAll();
         }
     }
     

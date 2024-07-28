@@ -6,10 +6,10 @@ using System;
 public class CharlestonClient 
 {
     readonly ClassReferences refs;
-    readonly GameManagerClient gameManagerClient;
+    readonly TileTrackerClient tileTracker;
     readonly IMonoWrapper mono;
     readonly ICharlestonFusion charlestonFusion;
-    List<int> Rack { get => gameManagerClient.PrivateRack; }
+    List<int> Rack { get => tileTracker.PrivateRack; }
 
     public int[] ClientPassArr;
     readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate
@@ -28,7 +28,7 @@ public class CharlestonClient
         this.refs = refs;
         mono = refs.Mono;
         charlestonFusion = refs.CFusion;
-        gameManagerClient = refs.GManagerClient;
+        tileTracker = refs.TileTrackerClient;
     }
 
     public bool CheckReadyToPass()

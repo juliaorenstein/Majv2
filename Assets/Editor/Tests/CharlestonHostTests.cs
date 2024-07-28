@@ -10,12 +10,12 @@ public class CharlestonHostTests
     public void PassDriver_AiPass_WhenCalledWithAis_PassListUpdatedForAis(int sourcePlayerId, int[] aiPlayers)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
         fusion.AiPlayers = aiPlayers.ToList();
 
         // ACT
         CHost.PassDriver(sourcePlayerId,
-            GManager.PrivateRacks[sourcePlayerId].GetRange(0, 3).ToArray());
+            tileTracker.PrivateRacks[sourcePlayerId].GetRange(0, 3).ToArray());
 
         // ASSERT
         foreach (int aiPlayerId in aiPlayers)
@@ -29,11 +29,11 @@ public class CharlestonHostTests
     public void PassDriver_AiPass_WhenCalledWithoutAis_AiPassedTrueAnyway()
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
 
         // ACT
         CHost.PassDriver(0,
-            GManager.PrivateRacks[0].GetRange(0, 3).ToArray());
+            tileTracker.PrivateRacks[0].GetRange(0, 3).ToArray());
 
         // ASSERT
         Assert.True(CHost.AiPassed);
@@ -46,7 +46,7 @@ public class CharlestonHostTests
     public void PassDriver_NotEverybodyReady_DontPass(int[] playersPassing, int[] aiPlayers)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
 
         // ACT
         foreach (int playerId in playersPassing)
@@ -66,7 +66,7 @@ public class CharlestonHostTests
     public void PassDriver_EverybodyReady_Pass(int[] playersPassing, int[] aiPlayers)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
         fusion.AiPlayers = aiPlayers.ToList();
 
         // ACT
@@ -90,7 +90,7 @@ public class CharlestonHostTests
     public void PassDriver_SimplePasses_RacksAreUpdated(int counter, int shift)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
         CFusion.Counter = counter;
 
         // ACT
@@ -106,7 +106,7 @@ public class CharlestonHostTests
             TestPasses()[(shift + 2) % 4],
             TestPasses()[(shift + 3) % 4],
         };
-        List<List<int>> actualRacks = GManager.PrivateRacks;
+        List<List<int>> actualRacks = tileTracker.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -143,7 +143,7 @@ public class CharlestonHostTests
         int[] rec0, int[] rec1, int[] rec2, int[] rec3)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
         List<int[]> testPasses = new() { pass0, pass1, pass2, pass3 };
 
         // ACT
@@ -155,7 +155,7 @@ public class CharlestonHostTests
         // i.e. a right pass is a shift of 1, over is shift of 2, left is shift of 3.
         List<List<int>> expectedSubsets = new()
         { rec0.ToList(), rec1.ToList(), rec2.ToList(), rec3.ToList() };
-        List<List<int>> actualRacks = GManager.PrivateRacks;
+        List<List<int>> actualRacks = tileTracker.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -168,7 +168,7 @@ public class CharlestonHostTests
     public void PassDriver_AfterPass_VariablesAreReset()
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, GManager) = CreateTestVariables();
+        var (CHost, _, _, _, _) = CreateTestVariables();
 
         // ACT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -192,7 +192,7 @@ public class CharlestonHostTests
         , ClassReferences
         , FakeFusionWrapper
         , FakeCharlestonFusion
-        , GameManager) CreateTestVariables()
+        , TileTracker) CreateTestVariables()
     {
         FakeFusionWrapper fusion = new();
         FakeCharlestonFusion cFusion = new();
@@ -201,10 +201,10 @@ public class CharlestonHostTests
             Fusion = fusion,
             CFusion = cFusion,
         };
-        GameManager gManager = new(refs) { PrivateRacks = TestRacks() };
+        TileTracker tileTracker = new(refs) { PrivateRacks = TestRacks() };
         CharlestonHost cHost = new(refs);
 
-        return (cHost, refs, fusion, cFusion, gManager);
+        return (cHost, refs, fusion, cFusion, tileTracker);
     }
 
     // shortening to ten tiles per rack to allow output of unit tests to be more readable

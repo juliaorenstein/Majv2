@@ -3,21 +3,21 @@ using System.ComponentModel;
 
 public class EventMonitor
 {
-    readonly GameManagerClient GManagerClient;
+    readonly TileTrackerClient tileTracker;
     readonly IMonoWrapper mono;
 
     public EventMonitor(ClassReferences refs)
     {
-        GManagerClient = refs.GManagerClient;
-        GManagerClient.PropertyChanged += UpdateRack;
+        tileTracker = refs.TileTrackerClient;
+        tileTracker.PropertyChanged += UpdateRack;
         mono = refs.Mono;
     }
 
-    void UpdateRack(object gManagerClient, PropertyChangedEventArgs e)
+    void UpdateRack(object tileTrackerClient, PropertyChangedEventArgs e)
     {
-        List<int> rackList = gManagerClient.GetType()
+        List<int> rackList = tileTrackerClient.GetType()
             .GetProperty(e.PropertyName)
-            .GetValue(gManagerClient) as List<int>;
+            .GetValue(tileTrackerClient) as List<int>;
 
         mono.UpdateRack(rackList);  
     }

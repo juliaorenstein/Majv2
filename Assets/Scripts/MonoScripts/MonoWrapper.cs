@@ -37,7 +37,7 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
     public void SetRaycastTargetOnTile(int tileId, bool value)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
-        GameManager.TileList[tileId].tileMono
+        Tile.TileList[tileId].tileMono
                    .GetComponentInChildren<Image>()
                    .raycastTarget = value;
     }
@@ -64,7 +64,7 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
     private void MoveTile(int tileId, Transform destination)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
-        GameManager.TileList[tileId].tileMono
+        Tile.TileList[tileId].tileMono
                    .GetComponentInChildren<TileLocomotionMono>()
                    .MoveTile(destination);
     }

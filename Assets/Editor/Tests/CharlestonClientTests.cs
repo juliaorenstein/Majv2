@@ -138,7 +138,7 @@ public class CharlestonClientTests
             Mono = new FakeMonoWrapper(),
             CFusion = new FakeCharlestonFusion()
         };
-        GameManagerClient gManagerClient = new(Refs)
+        TileTrackerClient tileTracker = new(Refs)
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };
@@ -147,7 +147,7 @@ public class CharlestonClientTests
         // ACT
         ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
         List<int> expected = new() { 4, 5, 6, 7, 8 };
-        List<int> actual = gManagerClient.PrivateRack;
+        List<int> actual = tileTracker.PrivateRack;
 
         // ASSERT
         CollectionAssert.AreEqual(expected, actual);

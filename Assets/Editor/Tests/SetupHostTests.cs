@@ -8,13 +8,12 @@ public class SetupHostTests
 	{
 		// ARRANGE
 		ClassReferences refs = new();
-		GameManager gManager = new(refs);
+        TileTracker tileTracker = new(refs);
 		SetupHost setupHost = new(refs);
 
 		// ACT
 		setupHost.SetupDriver();
-		Stack<int> wall = gManager.Wall;
-		List<List<int>> racks = gManager.PrivateRacks;
+		List<int> wall = tileTracker.Wall;
 
 		// ASSERT
 		Assert.True(wall.Count == 152 - (13 * 4 + 1));
@@ -25,13 +24,12 @@ public class SetupHostTests
     {
         // ARRANGE
         ClassReferences refs = new();
-        GameManager gManager = new(refs);
+        TileTracker tileTracker = new(refs);
         SetupHost setupHost = new(refs);
 
         // ACT
         setupHost.SetupDriver();
-        Stack<int> wall = gManager.Wall;
-        List<List<int>> racks = gManager.PrivateRacks;
+        List<List<int>> racks = tileTracker.PrivateRacks;
 
         // ASSERT
         Assert.True(racks.Count == 4);

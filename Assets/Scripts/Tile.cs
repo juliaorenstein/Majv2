@@ -11,6 +11,7 @@ public class Tile : IComparable<Tile>
     public Direction? direction;
     public bool isVirtual;
     public TileMono tileMono;
+    public static List<Tile> TileList = new();
 
     public int Id;
 
