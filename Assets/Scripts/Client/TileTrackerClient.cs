@@ -6,18 +6,19 @@ using System.Linq;
 
 public class TileTrackerClient : INotifyPropertyChanged
 {
+    // initiated in SetupClient
     public TileTrackerClient(ClassReferences refs)
     {
         refs.TileTrackerClient = this;
     }
 
     // shared by host
-    public List<int> Discard;
-    public List<int>[] DisplayRacks;
-    public List<int> LocalPrivateRack;
+    public List<int> Discard = new();
+    public List<List<int>> DisplayRacks = new() { new(), new(), new(), new() };
+    public List<int> LocalPrivateRack = new();
 
     // only counts shared by host
-    public int[] PrivateRackCounts;
+    public int[] PrivateRackCounts = new int[4];
     public int WallCount;
 
     // everything not shared by host (contents of Wall and PrivateRacks)

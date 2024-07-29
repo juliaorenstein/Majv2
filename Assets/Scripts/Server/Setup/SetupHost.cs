@@ -52,13 +52,9 @@ public class SetupHost
 
     void Deal()
     {
-        List<int> rack;
-
         for (int i = 0; i < 4; i++)
-        {   
-            rack = new();
-            tileTracker.PrivateRacks.Add(rack);
-
+        {
+            List<int> rack = tileTracker.PrivateRacks[i];
             for (int j = 0; j < 13; j++)
             {
                 tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), rack);

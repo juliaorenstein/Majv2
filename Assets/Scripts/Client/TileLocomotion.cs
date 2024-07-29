@@ -6,9 +6,7 @@ using System.Diagnostics;
 public class TileLocomotion
 {
     readonly ClassReferences refs;
-    readonly TileTrackerClient tileTracker;
-    readonly GameManagerClient gameManagerClient;
-    readonly IFusionManager fusionManager;
+    IFusionManager FusionManager { get => refs.FManager; }
     readonly ITileLocomotionMono tileLocoMono;
     readonly int tileId;
 
@@ -18,22 +16,19 @@ public class TileLocomotion
         this.tileLocoMono = tileLocoMono;
         tileId = tileLocoMono.TileId;
         this.refs = refs;
-        tileTracker = refs.TileTrackerClient;
-        gameManagerClient = refs.GManagerClient;
-        fusionManager = refs.FManager;
     }
 
     public void OnPointerClick(bool doubleClick)
     {
         if (!doubleClick) return;
 
-        if (fusionManager.GamePhase == GamePhase.Charleston)
+        if (FusionManager.GamePhase == GamePhase.Charleston)
         {
             DoubleClickCharleston();
             return;
         }
 
-        if (fusionManager.GamePhase == GamePhase.Gameplay)
+        if (FusionManager.GamePhase == GamePhase.Gameplay)
         {
             if (Exposable())
             {
@@ -46,7 +41,7 @@ public class TileLocomotion
                 return;
             }
 
-            switch (fusionManager.TurnPhase)
+            switch (FusionManager.TurnPhase)
             {
                 case TurnPhase.Exposing:
                     Expose(); break; // FIXME: deal with discard during expose
@@ -95,9 +90,9 @@ public class TileLocomotion
 
         void DropOnRack()
         {
-            Debug.Assert(fusionManager.GamePhase > GamePhase.Setup);
+            Debug.Assert(FusionManager.GamePhase > GamePhase.Setup);
 
-            List<int> rack = tileTracker.PrivateRack;
+            List<int> rack = refs.TileTrackerClient.PrivateRack;
 
             int curIx = rack.IndexOf(tileId);
             bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId); 
@@ -138,7 +133,7 @@ public class TileLocomotion
                 start = refs.CClient.CharlestonSpots[Array.IndexOf(refs.CClient.ClientPassArr, tileId)];
             }
 
-            else if (tileTracker.PrivateRack.Contains(tileId))
+            else if (refs.TileTrackerClient.PrivateRack.Contains(tileId))
             {
                 start = MonoObject.PrivateRack;
             }
@@ -155,7 +150,7 @@ public class TileLocomotion
     bool Charlestonable()
     {
         if (Tile.IsJoker(tileId)) return false;
-        return (fusionManager.GamePhase == GamePhase.Charleston);
+        return (FusionManager.GamePhase == GamePhase.Charleston);
     }
 
     bool Charlestonable(List<MonoObject> raycastTargets)
@@ -168,8 +163,8 @@ public class TileLocomotion
 
     public bool Discardable()
     {
-        if (fusionManager.TurnPhase != TurnPhase.Discarding) return false; // FIXME: deal with expose turn discards
-        if (!gameManagerClient.IsActivePlayer) return false;
+        if (FusionManager.TurnPhase != TurnPhase.Discarding) return false; // FIXME: deal with expose turn discards
+        if (!refs.GManagerClient.IsActivePlayer) return false;
         return true;
     }
 
@@ -183,8 +178,8 @@ public class TileLocomotion
 
     public bool Exposable()
     {
-        if (fusionManager.TurnPhase != TurnPhase.Exposing) return false;
-        if (!gameManagerClient.IsExposingPlayer) return false;
+        if (FusionManager.TurnPhase != TurnPhase.Exposing) return false;
+        if (!refs.GManagerClient.IsExposingPlayer) return false;
         if (!Tile.TileList[tileId].Equals(refs.TManager.DiscardTile)) return false;
         return true;
     }

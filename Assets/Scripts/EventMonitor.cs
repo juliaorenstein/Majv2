@@ -19,6 +19,6 @@ public class EventMonitor
             .GetProperty(e.PropertyName)
             .GetValue(tileTrackerClient) as List<int>;
 
-        mono.UpdateRack(rackList);  
+        //mono.UpdateRack(rackList);  
     }
 }

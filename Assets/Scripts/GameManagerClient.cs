@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 public class GameManagerClient
 {
+    // initiated in SetupClient
     public GameManagerClient(ClassReferences refs)
     {
         refs.GManagerClient = this;

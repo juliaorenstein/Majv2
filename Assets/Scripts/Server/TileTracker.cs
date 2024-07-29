@@ -16,18 +16,19 @@ public class TileTracker
     // TileLocations
     public List<int> Wall;
     public List<int> Discard = new();
-    public List<List<int>> PrivateRacks = new();
-    public List<List<int>> DisplayRacks = new();
+    public List<List<int>> PrivateRacks = new() { new(), new(), new(), new() };
+    public List<List<int>> DisplayRacks = new() { new(), new(), new(), new() };
 
     public Dictionary<int, List<int>> TileLocations = new();
 
     // Tile Locations for Client in networkable format (int arrays)
-    NetworkableTileLocations NetworkTileLocs
+    NetworkableTileLocations NetworkTileLocs(int playerId)
     {
-        get => new()
+        return new()
         {
             WallCount = Wall.Count,
             Discard = Discard.ToArray(),
+            PrivateRack = PrivateRacks[playerId].ToArray(),
             PrivateRackCounts = PrivateRacks.Select(rack => rack.Count).ToArray(),
             DisplayRacks = DisplayRacks.Select(list => list.ToArray()).ToArray()
         };
@@ -61,7 +62,7 @@ public class TileTracker
         for (int playerId = 0; playerId < 4; playerId++)
         {
             if (refs.Fusion.IsPlayerAI(playerId)) continue;
-            refs.Fusion.RPC_S2C_SendGameState(playerId, NetworkTileLocs);
+            refs.Fusion.RPC_S2C_SendGameState(playerId, NetworkTileLocs(playerId));
         }
     } 
 }
