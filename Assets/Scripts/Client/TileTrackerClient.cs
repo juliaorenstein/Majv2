@@ -1,78 +1,133 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 
-public class TileTrackerClient : INotifyPropertyChanged
+public class TileTrackerClient
 {
+    private ClassReferences refs;
+    private IMonoWrapper mono;
+
     // initiated in SetupClient
     public TileTrackerClient(ClassReferences refs)
     {
         refs.TileTrackerClient = this;
+        this.refs = refs;
+        mono = refs.Mono;
+        Discard.CollectionChanged += DiscardChanged;
+        foreach (ObservableCollection<int> rack in DisplayRacks)
+        {
+            rack.CollectionChanged += DisplayRacksChanged;
+        }
+        //LocalPrivateRack.CollectionChanged += PrivateRackChanged;
     }
 
-    // shared by host
-    public List<int> Discard = new();
-    public List<List<int>> DisplayRacks = new() { new(), new(), new(), new() };
-    public List<int> LocalPrivateRack = new();
+    // lists owned and shared by the host
+    public ObservableCollection<int> Discard = new();
+    public List<ObservableCollection<int>> DisplayRacks = new() { new(), new(), new(), new() };
+    public ObservableCollection<int> PrivateRack = new();
 
-    // only counts shared by host
+    // counts shared by host (for lists of hidden tiles)
     public int[] PrivateRackCounts = new int[4];
     public int WallCount;
 
     // everything not shared by host (contents of Wall and PrivateRacks)
     public List<int> TilePool;
 
-    public Dictionary<int, List<int>> TileLocations;
-
-    private List<int> privateRack;
-    public List<int> PrivateRack
+    public void ReceiveGameState(int newWallCount, int[] newDiscard, int[] newPrivateRack
+        , int[] newPrivateRackCounts, int[] newDisplayRack0, int[] newDisplayRack1
+        , int[] newDisplayRack2, int[] newDisplayRack3)
     {
-        get => privateRack;
-        set
+        int[][] newDisplayRacks = new int[][] { newDisplayRack0, newDisplayRack1, newDisplayRack2, newDisplayRack3 };
+
+        WallCount = newWallCount;
+        ApplyAdd(newDiscard, Discard);
+        for (int i = 0; i < 4; i++)
         {
-            if (privateRack != value)
+            ApplyAdd(newDisplayRacks[i], DisplayRacks[i]);
+        }
+
+        if (Changed(newPrivateRack, PrivateRack))
+        {
+            PrivateRack = new(newPrivateRack);
+            mono.UpdateRack(PrivateRack.ToList());
+        }
+        PrivateRackCounts = newPrivateRackCounts;
+
+        bool Changed(int[] newList, ObservableCollection<int> curList)
+        {
+            return !curList.SequenceEqual(new ObservableCollection<int>(newList));
+        }
+
+        void ApplyAdd(int[] newList, ObservableCollection<int> curList)
+        {
+            // check that the already-existing items didn't change
+            for (int i = 0; i < curList.Count; i++)
             {
-                privateRack = value;
-                OnPropertyChanged();
+                Debug.Assert(newList[i] == curList[i]);
+            }
+
+            for (int i = curList.Count; i < newList.Count(); i++)
+            {
+                curList.Add(newList[i]);
             }
         }
+
     }
 
-    private List<int> displayRack;
-    public List<int> DisplayRack
+    void DiscardChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        get => displayRack;
-        set
+        // the only event that should happen to discard is add (handle calling later)
+        Debug.Assert(sender == Discard);
+        Debug.Assert(e.Action == NotifyCollectionChangedAction.Add);
+
+        int tileId = (int)e.NewItems[0];
+        mono.MoveTile(tileId, MonoObject.Discard);
+    }
+
+    void LocalRackChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        // TODO: use Moved when rearranging tiles
+        mono.UpdateRack(new List<int>(PrivateRack));
+    }
+
+    void DisplayRacksChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        // the only events that should happen to display racks are Add or Replace
+        Debug.Assert(DisplayRacks.Contains(sender));
+        Debug.Assert(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace);
+
+        // player exposes
+        if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            if (displayRack != value)
-            {
-                displayRack = value;
-                OnPropertyChanged();
-            }
+            ObservableCollection<int> rack = (ObservableCollection<int>)sender;
+            int tileId = (int)e.NewItems[0];
+            mono.ExposeOtherPlayerTile(DisplayRacks.IndexOf(rack), tileId);
+        }
+
+        // player exchanges a joker
+        if (e.Action == NotifyCollectionChangedAction.Replace)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+
+    /*
+    void VerifyWallCount(int newWallCount)
+    {
+        Debug.Assert(newWallCount > WallCount);
+    }
+    void VerifyDiscard(int[] newDiscard)
+    {
+        for (int i = 0; i < Discard.Count; i++)
+        {
+            // the existing Discard list on the client should equal newDiscard up until the newer tile(s)
+            Debug.Assert(Discard[i] == newDiscard[i]);
         }
     }
-
-    // TODO: switch to custom event handlers to track each property separately
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    public void ReceiveGameState(int wallCount, int[] discard, int[] privateRack
-        , int[] privateRackCounts, int[] displayRack0, int[] displayRack1
-        , int[] displayRack2, int[] displayRack3)
-    {
-        WallCount = wallCount;
-        Discard = discard.ToList();
-        PrivateRack = privateRack.ToList();
-        PrivateRackCounts = privateRackCounts;
-        DisplayRacks[0] = displayRack0.ToList();
-        DisplayRacks[1] = displayRack1.ToList();
-        DisplayRacks[2] = displayRack2.ToList();
-        DisplayRacks[3] = displayRack3.ToList();
-    }
+    */
 }

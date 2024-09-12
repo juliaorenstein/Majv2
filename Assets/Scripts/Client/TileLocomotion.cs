@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 public class TileLocomotion
 {
@@ -69,7 +70,7 @@ public class TileLocomotion
             DropOnRack();
             return;
         }
-        if (Charlestonable(raycastTargets)) 
+        if (Charlestonable(raycastTargets))
         {
             DropOnCharleston();
             return;
@@ -92,10 +93,10 @@ public class TileLocomotion
         {
             Debug.Assert(FusionManager.GamePhase > GamePhase.Setup);
 
-            List<int> rack = refs.TileTrackerClient.PrivateRack;
+            ObservableCollection<int> rack = refs.TileTrackerClient.PrivateRack;
 
             int curIx = rack.IndexOf(tileId);
-            bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId); 
+            bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId);
 
             int newIx = dropIx;
             if (!comingFromCharles)

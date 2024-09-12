@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,12 +17,12 @@ public class TileLocomotionTests
         (TileTrackerClient tileTracker
             , CharlestonClient charles
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
-        
+
         tileLoco.OnPointerClick(true);
 
-        List<int> expectedRack = TestRack.GetRange(1, 4).ToList();
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
         int[] expectedPassArr = new int[] { 0, -1, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -38,9 +39,9 @@ public class TileLocomotionTests
 
         tileLoco.OnPointerClick(true);
 
-        List<int> expectedRack = TestRack.GetRange(1, 4).ToList();
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
         int[] expectedPassArr = new int[] { 94, 0, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -57,10 +58,10 @@ public class TileLocomotionTests
 
         tileLoco.OnPointerClick(true);
 
-        List<int> expectedRack = TestRack.GetRange(1, 4).ToList();
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
         expectedRack.Add(13);
         int[] expectedPassArr = new int[] { 11, 12, 0 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -77,10 +78,10 @@ public class TileLocomotionTests
 
         tileLoco.OnPointerClick(true);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Add(11);
         int[] expectedPassArr = new int[] { -1, 12, 13 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -116,8 +117,8 @@ public class TileLocomotionTests
         bool rightOfTile = true;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
-        List<int> expectedRack = new() { 1, 2, 3, 0, 4 };
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = new() { 1, 2, 3, 0, 4 };
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -134,8 +135,8 @@ public class TileLocomotionTests
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
-        List<int> expectedRack = new() { 1, 2, 0, 3, 4 };
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = new() { 1, 2, 0, 3, 4 };
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -152,8 +153,8 @@ public class TileLocomotionTests
         bool rightOfTile = true;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
-        List<int> expectedRack = new() { 0, 1, 2, 4, 3 };
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = new() { 0, 1, 2, 4, 3 };
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -170,8 +171,8 @@ public class TileLocomotionTests
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
-        List<int> expectedRack = new() { 0, 1, 4, 2, 3 };
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = new() { 0, 1, 4, 2, 3 };
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -188,8 +189,8 @@ public class TileLocomotionTests
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
-        List<int> expectedRack = new() { 1, 2, 3, 4, 0 };
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = new() { 1, 2, 3, 4, 0 };
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -205,9 +206,9 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack.GetRange(1, 4).ToList();
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
         int[] expectedPassArr = new int[] { -1, 0, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
         CollectionAssert.AreEqual(expectedRack, actualRack);
         CollectionAssert.AreEqual(expectedPassArr, actualPassArr);
@@ -224,10 +225,10 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack.GetRange(1, 4).ToList();
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
         expectedRack.Add(84);
         int[] expectedPassArr = new int[] { -1, 0, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -246,10 +247,10 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Add(jokerId);
         int[] expectedPassArr = new int[] { -1, -1, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -267,10 +268,10 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets, -1);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Add(84);
         int[] expectedPassArr = new int[] { -1, -1, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -288,10 +289,10 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets, 2, true);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Insert(3, 84);
         int[] expectedPassArr = new int[] { -1, -1, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -309,10 +310,10 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets, 2, false);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Insert(2, 84);
         int[] expectedPassArr = new int[] { -1, -1, -1 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -330,9 +331,9 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         int[] expectedPassArr = new int[] { -1, -1, 84 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -351,9 +352,9 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         int[] expectedPassArr = new int[] { -1, 4, 84 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -372,9 +373,9 @@ public class TileLocomotionTests
 
         tileLoco.OnEndDrag(raycastTargets);
 
-        List<int> expectedRack = TestRack;
+        ObservableCollection<int> expectedRack = TestRack;
         int[] expectedPassArr = new int[] { -1, 84, 4 };
-        (List<int> actualRack, int[] actualPassArr) =
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -410,14 +411,14 @@ public class TileLocomotionTests
         tileTracker.PrivateRack = TestRack;
 
         tileLoco.OnEndDrag(raycastResults);
-        List<int> expectedRack = TestRack;
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> expectedRack = TestRack;
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
 
     // Utility functions
-    List<int> TestRack { get => new(Enumerable.Range(0, 5).ToList()); }
+    ObservableCollection<int> TestRack { get => new(Enumerable.Range(0, 5)); }
     int[] TestClientPassArr { get => new int[] { -1, -1, -1 }; }
 
     (TileTrackerClient, CharlestonClient, TileLocomotion)
@@ -434,10 +435,10 @@ public class TileLocomotionTests
         return (tileTracker, charleston, tileLoco);
     }
 
-    (List<int>, int[]) GetActualVarsForCharlestons(
+    (ObservableCollection<int>, int[]) GetActualVarsForCharlestons(
         TileTrackerClient tileTracker, CharlestonClient charles)
     {
-        List<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
         int[] actualPassArr = charles.ClientPassArr;
 
         return (actualRack, actualPassArr);

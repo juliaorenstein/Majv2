@@ -12,7 +12,6 @@ public class SetupClient
     {
         refs.GManager = new(refs)
         {
-            //LocalPlayerId = Refs.Fusion.LocalPlayerId, // FIXME: deprecate this property in favor of GameManagerClient.LocalPlayer
             DealerId = 3 // TODO: rotate dealer each game
         };
 
@@ -22,11 +21,11 @@ public class SetupClient
         };
         new TileTrackerClient(refs);
         new GameManagerClient(refs);
-        new EventMonitor(refs);
 
         //Refs.EventSystem.gameObject.AddComponent<Navigation>(); // TODO: remove this?
 
         HideButtons();                      // hide start buttons
+
         // show the other player's racks
         bool isDealer = refs.GManager.DealerId == refs.GManager.LocalPlayerId;
         setupMono.PopulateOtherRacks(isDealer);

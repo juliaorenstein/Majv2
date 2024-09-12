@@ -94,8 +94,5 @@ public class TileMono : MonoBehaviour
     {
         // add locomotive abilities
         transform.GetChild(0).gameObject.AddComponent<TileLocomotionMono>();
-
-        // send to GameManager
-        Tile.TileList.Add(tile);
     }
 }

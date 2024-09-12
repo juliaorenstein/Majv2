@@ -12,6 +12,6 @@ public class ReceiveGameState
 
     public void ReceiveRackUpdate(int[] newRack)
     {
-        Refs.TileTrackerClient.PrivateRack = newRack.ToList();
+        Refs.TileTrackerClient.PrivateRack = new(newRack);
     }
 }

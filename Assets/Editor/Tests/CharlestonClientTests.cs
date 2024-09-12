@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using NUnit.Framework;
 
 public class CharlestonClientTests
@@ -94,7 +93,7 @@ public class CharlestonClientTests
 
         CharlestonClient CClient = new(refs)
         {
-            ClientPassArr = new int[3] {1, 2, 3}
+            ClientPassArr = new int[3] { 1, 2, 3 }
         };
         mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
 
@@ -120,8 +119,8 @@ public class CharlestonClientTests
 
         // ACT
         ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
-        List<int> expected = new() { 4, 5, 6, 7, 8 };
-        List<int> actual = tileTracker.PrivateRack;
+        ObservableCollection<int> expected = new() { 4, 5, 6, 7, 8 };
+        ObservableCollection<int> actual = tileTracker.PrivateRack;
 
         // ASSERT
         CollectionAssert.AreEqual(expected, actual);

@@ -4,11 +4,9 @@ using System.Linq;
 
 public class TurnManager
 {
-    readonly ClassReferences Refs;
+    readonly ClassReferences refs;
     readonly IMonoWrapper mono;
     readonly IFusionWrapper fusion;
-
-    readonly FusionManager fusionManager;
     readonly GameManager gameManager;
     readonly TileTracker tileTracker;
 
@@ -28,11 +26,12 @@ public class TurnManager
     // instantiated in SetupHost
     public TurnManager(ClassReferences refs)
     {
-        Refs = refs;
+        this.refs = refs;
         refs.TManager = this;
         mono = refs.Mono;
         fusion = refs.Fusion;
         gameManager = refs.GManager;
+        tileTracker = refs.TileTracker;
         playersWaiting = new();
         playersCalling = new();
     }
@@ -41,7 +40,7 @@ public class TurnManager
     public void C_StartGamePlay()
     {
         mono.SetActive(MonoObject.Discard, true);
-        
+
         if (gameManager.DealerId == gameManager.LocalPlayerId)
         {
             mono.SetRaycastTarget(MonoObject.Discard, true);
@@ -98,7 +97,7 @@ public class TurnManager
         // but also clients because they never have a timer set
         if (!fusion.IsTimerRunning) { return; }
 
-        foreach ((int playerId, InputCollection playerInput) in fusionManager.InputDict)
+        foreach ((int playerId, InputCollection playerInput) in refs.FManager.InputDict)
         {
             if (playerInput.wait) { playersWaiting.Add(playerId); }
             if (playerInput.pass) { playersWaiting.Remove(playerId); }
@@ -108,7 +107,7 @@ public class TurnManager
                 playersCalling.Add(playerId);
             }
         }
-        
+
         if (AnyPlayerWaiting) { return; }                           // if any player says wait, don't do anything
         else if (AnyPlayerCalling && fusion.IsTimerExpired)         // if any players call and timer is done/not running, do logic
         {
@@ -161,7 +160,7 @@ public class TurnManager
         int nextPlayer = H_InitializeNextTurn();
         int nextTileId = tileTracker.Wall.Last();
         mono.SetRaycastTargetOnTile(nextTileId, true);
-        
+
         tileTracker.PrivateRacks[fusion.TurnPlayerId].Add(nextTileId);                 // add that tile to the player's rack list
         if (fusion.IsPlayerAI(nextPlayer))                         // AI turn
         {
