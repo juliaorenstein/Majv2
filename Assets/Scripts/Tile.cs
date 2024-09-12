@@ -94,9 +94,6 @@ public class Tile : IComparable<Tile>
 
     public override string ToString()
     {
-        UnityEngine.Debug.Log("Kind: " + kind);
-        UnityEngine.Debug.Log("Suit: " + suit);
-
         switch (kind)
         {
             case Kind.flowerwind:
