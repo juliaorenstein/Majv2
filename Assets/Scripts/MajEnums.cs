@@ -20,13 +20,15 @@ public enum Suit
     bam,
     crak,
     dot,
+    none,
 }
 
 public enum Col
 {
     green,
     red,
-    blue
+    blue,
+    none,
 }
 
 public enum Direction
@@ -36,4 +38,5 @@ public enum Direction
     west,
     south,
     flower,
+    none,
 }

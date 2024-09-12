@@ -22,7 +22,7 @@ using System.Text;
 public class Permutation
 {
     public List<PermutationGroup> groups;
-    
+
     public Permutation(CardHand cardHand, int suitPerm, int valPerm)
     {
         // TODO: in one-suit hands we make 6 permutations instead of 3.
@@ -35,7 +35,7 @@ public class Permutation
             switch (cg.kind)
             {
                 case Kind.flowerwind:
-                    tile = new(null, null, cg.dir);
+                    tile = new(-1, Suit.none, cg.dir);
                     break;
                 case Kind.number:
                 case Kind.dragon:

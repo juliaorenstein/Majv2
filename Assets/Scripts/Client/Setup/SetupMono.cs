@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public class SetupMono : MonoBehaviour
@@ -19,6 +20,13 @@ public class SetupMono : MonoBehaviour
             Tile tile = tileTF.GetComponent<TileMono>().tile;
             Tile.TileList.Add(tile);
         }
+
+        StringBuilder debugTileList = new();
+        for (int i = 0; i < 5; i++)
+        {
+            debugTileList.Append(Tile.TileList[i] + ", ");
+        }
+        Debug.Log("Tile List: " + debugTileList);
     }
     public void PopulateOtherRacks(bool isDealer)
     {

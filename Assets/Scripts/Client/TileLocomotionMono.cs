@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -78,11 +79,17 @@ public class TileLocomotionMono : MonoBehaviour
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Debug.Log("TileLocomotionMono.OnEndDrag");
+        Debug.Log("Dropped tile: " + eventData.pointerDrag.name);
+
         transform.SetParent(TileTF);        // undo OnBeginDrag things
 
         List<RaycastResult> raycastResults = new();
-
         ESystem.RaycastAll(eventData, raycastResults);
+        StringBuilder debugRes = new();
+        foreach (var res in raycastResults) debugRes.Append(res.gameObject.name + ", ");
+        Debug.Log("Raycast resuts: " + debugRes);
+
         List<MonoObject> raycastTargets = new();
         bool rightOfTile = false;
 
@@ -109,6 +116,7 @@ public class TileLocomotionMono : MonoBehaviour
         }
 
         int dropIx = transform.GetSiblingIndex();
+
         tileLoco.OnEndDrag(raycastTargets, dropIx, rightOfTile);
     }
 

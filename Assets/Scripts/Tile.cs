@@ -5,27 +5,27 @@ using System.Collections.Generic;
 public class Tile : IComparable<Tile>
 {
     public Kind kind;
-    public Suit? suit;
-    public int? value;
-    public Direction? direction;
+    public Suit suit;
+    public int value;
+    public Direction direction;
     public bool isVirtual;
     public TileMono tileMono;
     public static List<Tile> TileList = new();
 
     public int Id;
 
-    public Tile(int? v = null, Suit? s = null, Direction? dir = null, bool virt = true)
+    public Tile(int v = -1, Suit s = Suit.none, Direction dir = Direction.none, bool virt = true)
     {
         SetValues(v, s, dir);
     }
 
-    public Tile(int id, int? v = null, Suit? s = null, Direction? dir = null, bool virt = true)
+    public Tile(int id, int v = -1, Suit s = Suit.none, Direction dir = Direction.none, bool virt = true)
     {
         Id = id;
         SetValues(v, s, dir);
     }
 
-    public Tile(TileMono tm, int id, int? v = null, Suit? s = null, Direction? dir = null, bool virt = false)
+    public Tile(TileMono tm, int id, int v = -1, Suit s = Suit.none, Direction dir = Direction.none, bool virt = false)
     {
         tileMono = tm;
         tileMono.tile = this;
@@ -37,21 +37,24 @@ public class Tile : IComparable<Tile>
         tileMono.Init();
     }
 
-    void SetValues(int? v = null, Suit? s = null, Direction? dir = null)
+    void SetValues(int v = -1, Suit s = Suit.none, Direction dir = Direction.none)
     {
+        value = v;
+        suit = s;
+        direction = dir;
+
         // Numbers and Dragons
-        if (v != null)
+        if (v > -1)
         {
             kind = v == 0 ? Kind.dragon : Kind.number;
-            value = v;
-            suit = s;
         }
+
         // Flowers and Winds
-        else if (dir != null)
+        else if (dir != Direction.none)
         {
             kind = Kind.flowerwind;
-            direction = dir;
         }
+
         // Jokers
         else kind = Kind.joker;
     }
@@ -91,6 +94,9 @@ public class Tile : IComparable<Tile>
 
     public override string ToString()
     {
+        UnityEngine.Debug.Log("Kind: " + kind);
+        UnityEngine.Debug.Log("Suit: " + suit);
+
         switch (kind)
         {
             case Kind.flowerwind:
@@ -142,19 +148,19 @@ public class Tile : IComparable<Tile>
         {
             for (int id = 0; id < 4; id++)
             {
-                tiles.Add(new(tileId++, null, null, dir));
+                tiles.Add(new(tileId++, -1, Suit.none, dir));
             }
         }
 
         for (int id = 0; id < 4; id++)
         {
-            tiles.Add(new(tileId++, null, null, Direction.flower));
+            tiles.Add(new(tileId++, -1, Suit.none, Direction.flower));
         }
 
         // Jokers
         for (int id = 0; id < 8; id++)
         {
-            tiles.Add(new(tileId++));
+            tiles.Add(new(tileId++, -1, Suit.none, Direction.none));
         }
 
         return tiles;

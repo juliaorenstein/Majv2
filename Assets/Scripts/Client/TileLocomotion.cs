@@ -64,6 +64,10 @@ public class TileLocomotion
 
     public void OnEndDrag(List<MonoObject> raycastTargets, int dropIx = -1, bool rightOfTile = false)
     {
+        UnityEngine.Debug.Log("TileLocomotion.OnEndDrag");
+        UnityEngine.Debug.Log("dropIx: " + dropIx);
+        UnityEngine.Debug.Log("rightOfTile: " + rightOfTile);
+
         refs.Mono.SetRaycastTargetOnTile(tileId, true);
         if (TileIsOnTopOfRack(raycastTargets))
         {

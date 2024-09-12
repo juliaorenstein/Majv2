@@ -42,14 +42,14 @@ public class CardHand
             char last = groupStr[^1];
             CardGroup group = first switch
             {
-                'F' => new CardGroup(groupStr.Length, Kind.flowerwind, null, null, Direction.flower),
-                'N' => new CardGroup(groupStr.Length, Kind.flowerwind, null, null, Direction.north),
-                'E' => new CardGroup(groupStr.Length, Kind.flowerwind, null, null, Direction.east),
-                'W' => new CardGroup(groupStr.Length, Kind.flowerwind, null, null, Direction.west),
-                'S' => new CardGroup(groupStr.Length, Kind.flowerwind, null, null, Direction.south),
-                'G' => new CardGroup(groupStr.Length, Kind.dragon, Col.green, null, null, true),
-                'R' => new CardGroup(groupStr.Length, Kind.dragon, Col.red, null, null, true),
-                '0' => new CardGroup(groupStr.Length, Kind.dragon, Col.blue, null, null, true),
+                'F' => new CardGroup(groupStr.Length, Kind.flowerwind, Col.none, -1, Direction.flower),
+                'N' => new CardGroup(groupStr.Length, Kind.flowerwind, Col.none, -1, Direction.north),
+                'E' => new CardGroup(groupStr.Length, Kind.flowerwind, Col.none, -1, Direction.east),
+                'W' => new CardGroup(groupStr.Length, Kind.flowerwind, Col.none, -1, Direction.west),
+                'S' => new CardGroup(groupStr.Length, Kind.flowerwind, Col.none, -1, Direction.south),
+                'G' => new CardGroup(groupStr.Length, Kind.dragon, Col.green, -1, Direction.none, true),
+                'R' => new CardGroup(groupStr.Length, Kind.dragon, Col.red, -1, Direction.none, true),
+                '0' => new CardGroup(groupStr.Length, Kind.dragon, Col.blue, -1, Direction.none, true),
                 'D' => new CardGroup(groupStr.Length - 1, Kind.dragon, GetColorFromNumberStr(groupStr), 0),
                 _ => new CardGroup(groupStr.Length - 1, Kind.number, GetColorFromNumberStr(groupStr), first - '0'),
             };
@@ -130,9 +130,9 @@ public class CardHand
 
             // else, do value permutations
             else for (int valPerm = 0; valPerm < 10 - highVal; valPerm += delta)
-            {
-                permList.Add(new Permutation(this, suitPerm, valPerm));
-            }
+                {
+                    permList.Add(new Permutation(this, suitPerm, valPerm));
+                }
         }
 
         return permList;
@@ -224,12 +224,12 @@ public struct CardGroup
 {
     public int length;
     public Kind kind;
-    public Col? col;
-    public int? relVal;
-    public Direction? dir;
+    public Col col;
+    public int relVal;
+    public Direction dir;
     public bool colIsSuit;
 
-    public CardGroup(int l, Kind k, Col? c = null, int? v = null, Direction? d = null, bool cs = false)
+    public CardGroup(int l, Kind k, Col c = Col.none, int v = -1, Direction d = Direction.none, bool cs = false)
     {
         length = l;
         kind = k;

@@ -39,6 +39,7 @@ public class TileGenerator : EditorWindow
 
         foreach (Suit suit in suits)
         {
+            if (suit == Suit.none) break;
             for (int num = 0; num < 10; num++)
             {
                 for (int i = 0; i < 4; i++)
@@ -57,11 +58,12 @@ public class TileGenerator : EditorWindow
 
         foreach (Direction dir in directions)
         {
+            if (dir == Direction.none) break;
             for (int id = 0; id < 4; id++)
             {
                 GameObject tileGO = Instantiate(TilePF, TilePool);
                 TileMono tileMono = tileGO.GetComponent<TileMono>();
-                tileMono.tile = new(tileMono, tileID++, null, null, dir);
+                tileMono.tile = new(tileMono, tileID++, -1, Suit.none, dir);
             }
         }
 
@@ -70,7 +72,7 @@ public class TileGenerator : EditorWindow
         {
             GameObject tileGO = Instantiate(TilePF, TilePool);
             TileMono tileMono = tileGO.GetComponent<TileMono>();
-            tileMono.tile = new(tileMono, tileID++, null, null, Direction.flower);
+            tileMono.tile = new(tileMono, tileID++, -1, Suit.none, Direction.flower);
         }
     }
 
