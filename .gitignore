@@ -486,3 +486,6 @@ Unity.Fusion.*
 # TextMeshPro
 [Aa]ssets/TextMesh Pro
 [Aa]ssets/TextMesh Pro.meta
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/settings.json
