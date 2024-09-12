@@ -16,8 +16,10 @@ public class ClassReferences
     public ICharlestonFusion CFusion;
     public TurnManager TManager;
     public IFusionManager FManager;
-    public GameManager GManager;
-    public GameManagerClient GManagerClient;
+    public GameManager GManager;            // TODO: deprecate
+    public GameManagerClient GManagerClient;// TODO: deprecate
+    public TileTracker TileTracker;
+    public TileTrackerClient TileTrackerClient;
     public IMonoWrapper Mono;
     public IFusionWrapper Fusion;
     public SendGameState SendGame;

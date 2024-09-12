@@ -52,8 +52,8 @@ public class ObjectReferences : MonoBehaviour
         CallWaitButtons = GameObject.Find("Board").transform.GetChild(7);
         CharlestonPassButton = GameObject.Find("Charleston Pass Button").transform;
         TurnIndicator = GameObject.Find("Turn Indicator").transform;
-        PrivateRack = GameObject.Find("Rack - Private").transform;
-        PublicRack = GameObject.Find("Rack - Display").transform;
+        PrivateRack = LocalRack.GetChild(1);
+        PublicRack = LocalRack.GetChild(0);
         Dragging = GameObject.Find("Dragging").transform;
 
         ObjectDict = new()

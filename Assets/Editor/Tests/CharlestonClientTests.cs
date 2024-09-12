@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using NUnit.Framework;
 
 public class CharlestonClientTests
@@ -9,11 +8,7 @@ public class CharlestonClientTests
     public void CheckReadyToPass_ThreeValidTiles_ReturnsTrue()
     {
         // ARRANGE
-        ClassReferences refs = new()
-        {
-            Mono = new FakeMonoWrapper(),
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, _, _) = CreateVariables();
 
         CharlestonClient CClient = new(refs)
         {
@@ -33,11 +28,7 @@ public class CharlestonClientTests
     public void CheckReadyToPass_FewerThanThreeTiles_ReturnsFalse(int tile1, int tile2, int tile3)
     {
         // ARRANGE
-        ClassReferences refs = new()
-        {
-            Mono = new FakeMonoWrapper(),
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, _, _) = CreateVariables();
 
         CharlestonClient CClient = new(refs)
         {
@@ -57,11 +48,7 @@ public class CharlestonClientTests
     public void CheckReadyToPass_FewerThanThreeTilesOnSteal_ReturnsTrue(int tile1, int tile2, int tile3)
     {
         // ARRANGE
-        ClassReferences refs = new()
-        {
-            Mono = new FakeMonoWrapper(),
-            CFusion = new FakeCharlestonFusion() { Counter = 2 },
-        };
+        var (refs, _, _) = CreateVariables(2);
 
         CharlestonClient CClient = new(refs)
         {
@@ -81,12 +68,7 @@ public class CharlestonClientTests
     public void InitiatePass_ButtonIsInteractable_ButtonDeactivatedAndTilesMoved()
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
 
         CharlestonClient CClient = new(refs)
         {
@@ -107,16 +89,11 @@ public class CharlestonClientTests
     public void InitiatePass_ButtonNotInteractable_NothingHappens()
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
 
         CharlestonClient CClient = new(refs)
         {
-            ClientPassArr = new int[3] {1, 2, 3}
+            ClientPassArr = new int[3] { 1, 2, 3 }
         };
         mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
 
@@ -133,21 +110,17 @@ public class CharlestonClientTests
     public void ReceiveRackUpdate_ReceiveNewRack_RackIsUpdated()
     {
         // ARRANGE
-        ClassReferences Refs = new()
-        {
-            Mono = new FakeMonoWrapper(),
-            CFusion = new FakeCharlestonFusion()
-        };
-        GameManagerClient gManagerClient = new(Refs)
+        var (refs, mono, _) = CreateVariables();
+        TileTrackerClient tileTracker = new(refs)
         {
             PrivateRack = new() { 1, 2, 3, 4, 5 }
         };
-        ReceiveGameState ReceiveGame = new(Refs);
+        ReceiveGameState ReceiveGame = new(refs);
 
         // ACT
         ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
-        List<int> expected = new() { 4, 5, 6, 7, 8 };
-        List<int> actual = gManagerClient.PrivateRack;
+        ObservableCollection<int> expected = new() { 4, 5, 6, 7, 8 };
+        ObservableCollection<int> actual = tileTracker.PrivateRack;
 
         // ASSERT
         CollectionAssert.AreEqual(expected, actual);
@@ -158,12 +131,7 @@ public class CharlestonClientTests
     public void UpdateButton_RightPass_ButtonTextUpdated(int counter)
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
         CharlestonClient CClient = new(refs);
 
         // ACT
@@ -178,12 +146,7 @@ public class CharlestonClientTests
     public void UpdateButton_AcrossPass_ButtonTextUpdated(int counter)
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
         CharlestonClient CClient = new(refs);
 
         // ACT
@@ -198,12 +161,7 @@ public class CharlestonClientTests
     public void UpdateButton_LeftPass_ButtonTextUpdated(int counter)
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
         CharlestonClient CClient = new(refs);
 
         // ACT
@@ -223,12 +181,7 @@ public class CharlestonClientTests
     public void UpdateButton_WhenDone_DeactivateButton(int counter)
     {
         // ARRANGE
-        FakeMonoWrapper mono = new();
-        ClassReferences refs = new()
-        {
-            Mono = mono,
-            CFusion = new FakeCharlestonFusion()
-        };
+        var (refs, mono, _) = CreateVariables();
         refs.GManager = new(refs);
         refs.TManager = new(refs);
         CharlestonClient CClient = new(refs);
@@ -239,5 +192,11 @@ public class CharlestonClientTests
 
         // ASSERT
         CollectionAssert.DoesNotContain(mono.ActiveList, MonoObject.CharlestonBox);
+    }
+
+    (ClassReferences, FakeMonoWrapper, FakeCharlestonFusion) CreateVariables(int counter = 0)
+    {
+        ClassReferences refs = new();
+        return (refs, new(refs), new(refs) { Counter = counter });
     }
 }

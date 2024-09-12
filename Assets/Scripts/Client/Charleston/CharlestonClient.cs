@@ -2,16 +2,17 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System;
+using System.Collections.ObjectModel;
 
-public class CharlestonClient 
+public class CharlestonClient
 {
     readonly ClassReferences refs;
-    readonly GameManagerClient gameManagerClient;
+    readonly TileTrackerClient tileTracker;
     readonly IMonoWrapper mono;
     readonly ICharlestonFusion charlestonFusion;
-    List<int> Rack { get => gameManagerClient.PrivateRack; }
+    ObservableCollection<int> Rack { get => tileTracker.PrivateRack; }
 
-    public int[] ClientPassArr;
+    public int[] ClientPassArr = new int[3];
     readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate
     bool BlindAllowed { get => StealPasses.Contains(charlestonFusion.Counter); }
 
@@ -28,7 +29,7 @@ public class CharlestonClient
         this.refs = refs;
         mono = refs.Mono;
         charlestonFusion = refs.CFusion;
-        gameManagerClient = refs.GManagerClient;
+        tileTracker = refs.TileTrackerClient;
     }
 
     public bool CheckReadyToPass()
@@ -172,6 +173,7 @@ public class CharlestonClient
 
     public void MoveTileFromCharlestonToRack(int tileId, int newIx = -1)
     {
+        // LEFTOFF: we're getting here when we should be rearrange tiles on the rack...
         // TODO: change passArr to nullable and replace -1s with null
         ClientPassArr[Array.IndexOf(ClientPassArr, tileId)] = -1;
         if (newIx == -1) Rack.Add(tileId);

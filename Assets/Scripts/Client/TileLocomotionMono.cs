@@ -11,7 +11,6 @@ public class TileLocomotionMono : MonoBehaviour
     , IEndDragHandler
     , ITileLocomotionMono
 {
-    // TODO: REFACTOR
     public TileLocomotion tileLoco;
     ObjectReferences objRefs;
     ClassReferences classRefs;
@@ -47,9 +46,9 @@ public class TileLocomotionMono : MonoBehaviour
     private void Start()
     {
         TileId = GetComponentInParent<TileMono>().tile.Id;
-        tileLoco = new(classRefs, this);
         objRefs = ObjectReferences.Instance;
         classRefs = objRefs.ClassRefs;
+        tileLoco = new(classRefs, this);
         ESystem = objRefs.EventSystem.GetComponent<EventSystem>();
         TileTF = transform.parent;
         RackPrivateTF = objRefs.LocalRack.transform.GetChild(1);
@@ -82,21 +81,34 @@ public class TileLocomotionMono : MonoBehaviour
         transform.SetParent(TileTF);        // undo OnBeginDrag things
 
         List<RaycastResult> raycastResults = new();
-        List<MonoObject> raycastTargets = new();
+
         ESystem.RaycastAll(eventData, raycastResults);
+        List<MonoObject> raycastTargets = new();
+        bool rightOfTile = false;
+
+        // check for tile hits
+
         foreach (RaycastResult res in raycastResults)
         {
+            // FIXME: rearrange this so all the appropriate info gets through whether dropping on a tile on the rack,
+            // dropping on a tile off the rack, or not dropping on a tile
+
+            // check for MonoObject hits
             if (objRefs.ReverseObjectDict.TryGetValue(
                 res.gameObject.transform, out MonoObject obj))
             {
                 raycastTargets.Add(obj);
             }
+
+            // check for tile hits
+            if (res.gameObject.transform.parent.CompareTag("Tile"))
+            {
+                Transform droppedOnTile = res.gameObject.transform;
+                rightOfTile = transform.position.x > droppedOnTile.position.x;
+            }
         }
 
-        Transform droppedOnTile = raycastResults.Find(res => res.gameObject.tag == "Tile").gameObject.transform;
         int dropIx = transform.GetSiblingIndex();
-        bool rightOfTile = transform.position.x > droppedOnTile.position.x;
-
         tileLoco.OnEndDrag(raycastTargets, dropIx, rightOfTile);
     }
 

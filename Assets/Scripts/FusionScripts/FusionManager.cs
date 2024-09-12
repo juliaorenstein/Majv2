@@ -13,6 +13,7 @@ public class FusionManager : NetworkBehaviour, IFusionManager
 
     public override void Spawned()
     {
+        ObjectReferences.Instance.ClassRefs.FManager = this;
         PlayerDict = new();
         InputDict = new();
         for (int playerID = 0; playerID < 4; playerID++)

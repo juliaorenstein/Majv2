@@ -3,18 +3,20 @@ using System.Linq;
 
 public class SetupHost
 {
-    ClassReferences Refs;
+    readonly ClassReferences refs;
     bool ShuffledAndDealt;
+    readonly TileTracker tileTracker;
 
     public SetupHost(ClassReferences refs)
     {
-        Refs = refs;
+        this.refs = refs;
         ShuffledAndDealt = false;
+        tileTracker = new(refs);
     }
 
     public void SetupDriver()
     {
-        Refs.TManager = new(Refs); // TODO: rename to TManagerHost?
+        refs.TManager = new(refs); // TODO: rename to TManagerHost?
 
         if (!ShuffledAndDealt)
         {
@@ -41,31 +43,25 @@ public class SetupHost
         }
 
         // CREATE THE WALL
-        Refs.GManager.Wall = new(shuffleTileList);
+        tileTracker.Wall = new(shuffleTileList);
+        foreach (int tileId in tileTracker.Wall)
+        {
+            tileTracker.TileLocations[tileId] = tileTracker.Wall;
+        }
     }
 
     void Deal()
     {
-        List<int> rack;
-
         for (int i = 0; i < 4; i++)
-        {   
-            rack = new();
-            Refs.GManager.PrivateRacks.Add(rack);
-
+        {
+            List<int> rack = tileTracker.PrivateRacks[i];
             for (int j = 0; j < 13; j++)
-            {   
-                rack.Add(Refs.GManager.Wall.Pop());
+            {
+                tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), rack);
             }
         }
 
         // one more tile to the dealer
-        Refs.GManager.PrivateRacks[Refs.GManager.DealerId].Add(Refs.GManager.Wall.Pop());
-    }
-
-    public void SendRack(int playerId)
-    {
-        int[] rack = Refs.GManager.PrivateRacks[playerId].ToArray();
-        Refs.Fusion.RPC_H2C_SendRack(playerId, rack);
+        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.GManager.DealerId]);
     }
 }

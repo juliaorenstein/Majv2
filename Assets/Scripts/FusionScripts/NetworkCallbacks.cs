@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 {
     // GAME OBJECTS
-    ClassReferences Refs;
+    ClassReferences refs;
     NetworkRunner runner;
 
     GameObject Scripts;
@@ -22,8 +22,8 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
         inputStruct = new();
-        Refs = ObjectReferences.Instance.ClassRefs;
-        Refs.NetworkCallbacks = this;
+        refs = ObjectReferences.Instance.ClassRefs;
+        refs.NetworkCallbacks = this;
     }
 
     public async void StartGame(GameMode mode)
@@ -55,7 +55,9 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
     // INetworkRunnerCallbacks
 
+#pragma warning disable UNT0006 // Incorrect message signature
     public void OnConnectedToServer(NetworkRunner runner)
+#pragma warning restore UNT0006 // Incorrect message signature
     {
         // logged on client with client joins (after OnPlayerJoined)
     }
@@ -64,7 +66,9 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+#pragma warning disable UNT0006 // Incorrect message signature
     public void OnDisconnectedFromServer(NetworkRunner runner) { }
+#pragma warning restore UNT0006 // Incorrect message signature
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -74,7 +78,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
- 
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {   // logged on host when host joins
         // logged on host when client joins
@@ -88,29 +92,30 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
             Resources.Load<GameObject>("Prefabs/ScriptObjects")).gameObject;
         }
         SetupMono setupMono = Scripts.GetComponentInChildren<SetupMono>();
-        setupClient = new(Refs, setupMono);
+        setupClient = new(refs, setupMono);
         setupClient.SetupDriver();
 
         if (runner.IsServer)
         {   // code for host
+            fManager = Scripts.GetComponentInChildren<FusionManager>();
+            fManager.InitializePlayer(player);
 
             if (player == runner.LocalPlayer) // host sets up variables the first time
             {   // code for host when host joins
 
                 // Initialize Setup variables
-                fManager = Scripts.GetComponentInChildren<FusionManager>();
-                setupHost = new(Refs);
+                setupHost = new(refs);
 
                 // shuffle and deal
                 setupHost.SetupDriver();
             }
 
             // Do the rest of the setup for all clients
-            fManager.InitializePlayer(player);
-            setupHost.SendRack(player.PlayerId);
+
+            refs.TileTracker.SendGameStateToAll();
         }
     }
-    
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
@@ -129,7 +134,9 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
         throw new NotImplementedException();
     }
 
+#pragma warning disable UNT0006 // Incorrect message signature
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+#pragma warning restore UNT0006 // Incorrect message signature
     {
         throw new NotImplementedException();
     }
