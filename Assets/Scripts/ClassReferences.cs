@@ -23,5 +23,4 @@ public class ClassReferences
     public IMonoWrapper Mono;
     public IFusionWrapper Fusion;
     public SendGameState SendGame;
-    public ReceiveGameState ReceiveGame;
 }

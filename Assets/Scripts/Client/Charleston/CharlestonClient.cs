@@ -10,7 +10,7 @@ public class CharlestonClient
     readonly TileTrackerClient tileTracker;
     readonly IMonoWrapper mono;
     readonly ICharlestonFusion charlestonFusion;
-    ObservableCollection<int> Rack { get => tileTracker.PrivateRack; }
+    ObservableCollection<int> Rack { get => tileTracker.LocalPrivateRack; }
 
     public int[] ClientPassArr = new int[3];
     readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate

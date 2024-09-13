@@ -11,6 +11,7 @@ public class TileLocomotion
     readonly ITileLocomotionMono tileLocoMono;
     readonly int tileId;
 
+    // initiated in tileLocoMono
     public TileLocomotion(ClassReferences refs, ITileLocomotionMono tileLocoMono)
     {
         Debug.Assert(Tile.IsValidTileId(tileId));
@@ -64,10 +65,6 @@ public class TileLocomotion
 
     public void OnEndDrag(List<MonoObject> raycastTargets, int dropIx = -1, bool rightOfTile = false)
     {
-        UnityEngine.Debug.Log("TileLocomotion.OnEndDrag");
-        UnityEngine.Debug.Log("dropIx: " + dropIx);
-        UnityEngine.Debug.Log("rightOfTile: " + rightOfTile);
-
         refs.Mono.SetRaycastTargetOnTile(tileId, true);
         if (TileIsOnTopOfRack(raycastTargets))
         {
@@ -95,11 +92,12 @@ public class TileLocomotion
 
         void DropOnRack()
         {
+            UnityEngine.Debug.Log("TileLoco.DropOnRack");
             Debug.Assert(FusionManager.GamePhase > GamePhase.Setup);
 
-            ObservableCollection<int> rack = refs.TileTrackerClient.PrivateRack;
+            ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
 
-            int curIx = rack.IndexOf(tileId);
+            int curIxOnRack = rack.IndexOf(tileId);
             bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId);
 
             int newIx = dropIx;
@@ -112,21 +110,23 @@ public class TileLocomotion
                     rack.Add(tileId);
                     return;
                 }
-                if (curIx < dropIx) newIx--; // moving right - decrease final index
+                if (curIxOnRack < dropIx) newIx--; // moving right - decrease final index
             }
             if (rightOfTile) newIx++; // dropped to the right of the center of the tile - increase final index
 
             // assumes only two cases are rack to rack and charleston to rack. not sure if others will come up
-            if (curIx < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId, newIx);
+            if (curIxOnRack < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId, newIx);
             else
             {
-                rack.Remove(tileId);
-                rack.Insert(newIx, tileId);
+                UnityEngine.Debug.Log("rack.Move");
+                refs.TileTrackerClient.LocalPrivateRack.Move(curIxOnRack, newIx);
+                UnityEngine.Debug.Log($"LocalPrivateRack reference: {refs.TileTrackerClient.LocalPrivateRack.GetHashCode()}");
             }
         }
 
         void DropOnCharleston()
         {
+            UnityEngine.Debug.Log("TileLoco.DropOnCharleston");
             Debug.Assert(!Tile.IsJoker(tileId));
 
             MonoObject start;
@@ -138,7 +138,7 @@ public class TileLocomotion
                 start = refs.CClient.CharlestonSpots[Array.IndexOf(refs.CClient.ClientPassArr, tileId)];
             }
 
-            else if (refs.TileTrackerClient.PrivateRack.Contains(tileId))
+            else if (refs.TileTrackerClient.LocalPrivateRack.Contains(tileId))
             {
                 start = MonoObject.PrivateRack;
             }

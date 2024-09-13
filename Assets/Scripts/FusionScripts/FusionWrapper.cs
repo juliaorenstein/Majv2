@@ -87,7 +87,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     public void RPC_S2A_NeverMind() => TManager.C_NeverMind();
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
-    public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.ReceiveGame.ReceiveRackUpdate(tileArr); // TODO: game state updates
+    public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.TileTrackerClient.ReceiveRackUpdate(tileArr); // TODO: game state updates
 
     // Player Input
 

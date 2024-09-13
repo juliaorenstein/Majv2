@@ -113,14 +113,13 @@ public class CharlestonClientTests
         var (refs, mono, _) = CreateVariables();
         TileTrackerClient tileTracker = new(refs)
         {
-            PrivateRack = new() { 1, 2, 3, 4, 5 }
+            LocalPrivateRack = new() { 1, 2, 3, 4, 5 }
         };
-        ReceiveGameState ReceiveGame = new(refs);
 
         // ACT
-        ReceiveGame.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
+        tileTracker.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
         ObservableCollection<int> expected = new() { 4, 5, 6, 7, 8 };
-        ObservableCollection<int> actual = tileTracker.PrivateRack;
+        ObservableCollection<int> actual = tileTracker.LocalPrivateRack;
 
         // ASSERT
         CollectionAssert.AreEqual(expected, actual);

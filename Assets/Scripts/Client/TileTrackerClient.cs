@@ -10,6 +10,18 @@ public class TileTrackerClient
     private ClassReferences refs;
     private IMonoWrapper mono;
 
+    // lists owned and shared by the host
+    public ObservableCollection<int> Discard = new();
+    public List<ObservableCollection<int>> DisplayRacks = new() { new(), new(), new(), new() };
+    public ObservableCollection<int> LocalPrivateRack = new();
+
+    // counts shared by host (for lists of hidden tiles)
+    public int[] PrivateRackCounts = new int[4];
+    public int WallCount;
+
+    // everything not shared by host (contents of Wall and PrivateRacks)
+    public List<int> TilePool;
+
     // initiated in SetupClient
     public TileTrackerClient(ClassReferences refs)
     {
@@ -21,20 +33,9 @@ public class TileTrackerClient
         {
             rack.CollectionChanged += DisplayRacksChanged;
         }
-        //LocalPrivateRack.CollectionChanged += PrivateRackChanged;
+        LocalPrivateRack.CollectionChanged += LocalPrivateRackChanged;
     }
 
-    // lists owned and shared by the host
-    public ObservableCollection<int> Discard = new();
-    public List<ObservableCollection<int>> DisplayRacks = new() { new(), new(), new(), new() };
-    public ObservableCollection<int> PrivateRack = new();
-
-    // counts shared by host (for lists of hidden tiles)
-    public int[] PrivateRackCounts = new int[4];
-    public int WallCount;
-
-    // everything not shared by host (contents of Wall and PrivateRacks)
-    public List<int> TilePool;
 
     public void ReceiveGameState(int newWallCount, int[] newDiscard, int[] newPrivateRack
         , int[] newPrivateRackCounts, int[] newDisplayRack0, int[] newDisplayRack1
@@ -49,10 +50,9 @@ public class TileTrackerClient
             ApplyAdd(newDisplayRacks[i], DisplayRacks[i]);
         }
 
-        if (Changed(newPrivateRack, PrivateRack))
+        if (Changed(newPrivateRack, LocalPrivateRack))
         {
-            PrivateRack = new(newPrivateRack);
-            mono.UpdateRack(PrivateRack.ToList());
+            ReceiveRackUpdate(newPrivateRack);
         }
         PrivateRackCounts = newPrivateRackCounts;
 
@@ -77,6 +77,28 @@ public class TileTrackerClient
 
     }
 
+    public void ReceiveRackUpdate(int[] newRack)
+    {
+        // we don't want to just reassign the whole list because that makes observable collections harder to use
+        // analyze differences between the incoming list and the existing list and apply them.
+        // note: we don't care about the order of newRack  or therefore any "move" actions because it's none of the 
+        // server's business what order the client keeps their tiles in
+
+        ObservableCollection<int> curRack = LocalPrivateRack;
+
+        // removals
+        foreach (int tileId in curRack)
+        {
+            if (!newRack.Contains(tileId)) curRack.Remove(tileId);
+        }
+
+        // additions
+        foreach (int tileId in newRack)
+        {
+            if (!curRack.Contains(tileId)) curRack.Add(tileId);
+        }
+    }
+
     void DiscardChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         // the only event that should happen to discard is add (handle calling later)
@@ -87,10 +109,11 @@ public class TileTrackerClient
         mono.MoveTile(tileId, MonoObject.Discard);
     }
 
-    void LocalRackChanged(object sender, NotifyCollectionChangedEventArgs e)
+    void LocalPrivateRackChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        UnityEngine.Debug.Log("TileTrackerClient.LocalPrivateRackChanged");
         // TODO: use Moved when rearranging tiles
-        mono.UpdateRack(new List<int>(PrivateRack));
+        mono.UpdateRack(new List<int>(LocalPrivateRack));
     }
 
     void DisplayRacksChanged(object sender, NotifyCollectionChangedEventArgs e)

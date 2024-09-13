@@ -86,11 +86,9 @@ public class TileLocomotionMono : MonoBehaviour
 
         List<RaycastResult> raycastResults = new();
         ESystem.RaycastAll(eventData, raycastResults);
-        StringBuilder debugRes = new();
-        foreach (var res in raycastResults) debugRes.Append(res.gameObject.name + ", ");
-        Debug.Log("Raycast resuts: " + debugRes);
 
         List<MonoObject> raycastTargets = new();
+        int dropIx = -1;
         bool rightOfTile = false;
 
         // check for tile hits
@@ -108,14 +106,18 @@ public class TileLocomotionMono : MonoBehaviour
             }
 
             // check for tile hits
+            // FIXME: dropIx doesn't work if dropped perfectly between two tiles
             if (res.gameObject.transform.parent.CompareTag("Tile"))
             {
-                Transform droppedOnTile = res.gameObject.transform;
+                Transform droppedOnTile = res.gameObject.transform.parent;
                 rightOfTile = transform.position.x > droppedOnTile.position.x;
+                dropIx = droppedOnTile.GetSiblingIndex();
+                Debug.Log("droppedOnTile: " + droppedOnTile);
             }
         }
-
-        int dropIx = transform.GetSiblingIndex();
+        StringBuilder debugRes = new();
+        foreach (var res in raycastTargets) debugRes.Append(res + ", ");
+        Debug.Log("Raycast resuts: " + debugRes);
 
         tileLoco.OnEndDrag(raycastTargets, dropIx, rightOfTile);
     }

@@ -112,13 +112,13 @@ public class TileLocomotionTests
             , CharlestonClient _
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 3;
         bool rightOfTile = true;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
         ObservableCollection<int> expectedRack = new() { 1, 2, 3, 0, 4 };
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -130,13 +130,13 @@ public class TileLocomotionTests
             , CharlestonClient _
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 3;
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
         ObservableCollection<int> expectedRack = new() { 1, 2, 0, 3, 4 };
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -148,13 +148,13 @@ public class TileLocomotionTests
             , CharlestonClient _
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;
         bool rightOfTile = true;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
         ObservableCollection<int> expectedRack = new() { 0, 1, 2, 4, 3 };
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -166,13 +166,13 @@ public class TileLocomotionTests
             , CharlestonClient _
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
         ObservableCollection<int> expectedRack = new() { 0, 1, 4, 2, 3 };
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -184,13 +184,13 @@ public class TileLocomotionTests
             , CharlestonClient _
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
         int dropIx = -1;
         bool rightOfTile = false;
 
         tileLoco.OnEndDrag(raycastResults, dropIx, rightOfTile);
         ObservableCollection<int> expectedRack = new() { 1, 2, 3, 4, 0 };
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -242,7 +242,7 @@ public class TileLocomotionTests
         (TileTrackerClient tileTracker
             , CharlestonClient charles
             , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(jokerId);
-        tileTracker.PrivateRack.Add(jokerId);
+        tileTracker.LocalPrivateRack.Add(jokerId);
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot0 };
 
         tileLoco.OnEndDrag(raycastTargets);
@@ -408,11 +408,11 @@ public class TileLocomotionTests
            , CharlestonClient _
            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new();
-        tileTracker.PrivateRack = TestRack;
+        tileTracker.LocalPrivateRack = TestRack;
 
         tileLoco.OnEndDrag(raycastResults);
         ObservableCollection<int> expectedRack = TestRack;
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
 
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
@@ -428,7 +428,7 @@ public class TileLocomotionTests
         new GameManagerClient(refs);
         new FakeFusionManager(refs) { GamePhase = GamePhase.Charleston };
         new FakeMonoWrapper(refs);
-        TileTrackerClient tileTracker = new(refs) { PrivateRack = TestRack };
+        TileTrackerClient tileTracker = new(refs) { LocalPrivateRack = TestRack };
         CharlestonClient charleston = new(refs) { ClientPassArr = TestClientPassArr };
         TileLocomotion tileLoco = new(refs, new FakeTileLocomotionMono(tileId));
 
@@ -438,7 +438,7 @@ public class TileLocomotionTests
     (ObservableCollection<int>, int[]) GetActualVarsForCharlestons(
         TileTrackerClient tileTracker, CharlestonClient charles)
     {
-        ObservableCollection<int> actualRack = tileTracker.PrivateRack;
+        ObservableCollection<int> actualRack = tileTracker.LocalPrivateRack;
         int[] actualPassArr = charles.ClientPassArr;
 
         return (actualRack, actualPassArr);
@@ -450,7 +450,7 @@ public class TileLocomotionTests
         ClassReferences refs = new();
         new FakeFusionManager(refs) { GamePhase = GamePhase.Charleston };
         new FakeMonoWrapper(refs);
-        TileTrackerClient tileTracker = new(refs) { PrivateRack = TestRack };
+        TileTrackerClient tileTracker = new(refs) { LocalPrivateRack = TestRack };
         TileLocomotion tileLoco = new(refs, new FakeTileLocomotionMono(tileId));
 
         return (tileTracker, tileLoco);
