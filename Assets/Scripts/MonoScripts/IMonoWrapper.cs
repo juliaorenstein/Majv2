@@ -5,7 +5,7 @@ public interface IMonoWrapper
 {
     void ExposeOtherPlayerTile(int rackId, int tileId);
     bool IsButtonInteractable(MonoObject monoObject);
-    void MoveTile(int tileId, MonoObject destination);
+    void MoveTile(int tileId, MonoObject destination, int pos = -1);
     void UpdateRack(List<int> tileIds);
     void SetActive(MonoObject monoObject, bool value);
     void SetButtonInteractable(MonoObject monoObject, bool value);

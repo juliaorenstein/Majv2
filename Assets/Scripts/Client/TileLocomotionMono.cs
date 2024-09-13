@@ -113,7 +113,6 @@ public class TileLocomotionMono : MonoBehaviour
         }
         StringBuilder debugRes = new();
         foreach (var res in raycastTargets) debugRes.Append(res + ", ");
-        Debug.Log("Raycast resuts: " + debugRes);
 
         tileLoco.OnEndDrag(raycastTargets, dropIx, rightOfTile);
     }
@@ -124,7 +123,7 @@ public class TileLocomotionMono : MonoBehaviour
     void MoveTile(MonoObject newParent, int newSibIx) =>
         MoveTile(objRefs.ObjectDict[newParent], newSibIx);
 
-    void MoveTile(Transform newParentTF, int newSibIx)
+    public void MoveTile(Transform newParentTF, int newSibIx)
     {
         if (transform.IsChildOf(objRefs.TilePool.transform))
         {

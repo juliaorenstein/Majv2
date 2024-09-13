@@ -56,9 +56,16 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
         objRefs.ObjectDict[monoObject].GetComponent<Button>().interactable = value;
     }
 
-    public void MoveTile(int tileId, MonoObject destination)
+    public void MoveTile(int tileId, MonoObject destination, int pos = -1)
     {
-        MoveTile(tileId, objRefs.ObjectDict[destination].transform);
+        // Move to non-rack destination or to end of rack
+        if (pos == -1)
+        {
+            MoveTile(tileId, objRefs.ObjectDict[destination].transform);
+            return;
+        }
+        // Move to rack - specific position
+        MoveTileToRack(tileId, pos);
     }
 
     private void MoveTile(int tileId, Transform destination)
@@ -69,20 +76,29 @@ public class MonoWrapper : MonoBehaviour, IMonoWrapper
                    .MoveTile(destination);
     }
 
-    public void UpdateRack(List<int> tileIds)
+    public void MoveTileToRack(int tileId, int pos)
     {
-        List<int> currentTileIds = objRefs.LocalRack
-            .GetComponentsInChildren<TileMono>()
-            .Select(tileMono => tileMono.tile.Id).ToList();
-        // remove old tiles
-        foreach (int tileId in currentTileIds)
+        Debug.Assert(Tile.IsValidTileId(tileId));
+        Debug.Assert(pos > -1 && pos < 14);
+        Tile.TileList[tileId].tileMono
+                   .GetComponentInChildren<TileLocomotionMono>()
+                   .MoveTile(objRefs.PrivateRack, pos);
+    }
+
+    // TODO: Spaghetti between TileTrackerClient, TileLocoMono, and MonoWrapper
+    public void UpdateRack(List<int> newTileIds)
+    {
+        // put newTileIds on rack in that order
+        for (int i = 0; i < newTileIds.Count; i++)
         {
-            if (!tileIds.Contains(tileId)) MoveTile(tileId, objRefs.TilePool);
+            MoveTileToRack(newTileIds[i], i);
         }
 
-        foreach (int tileId in tileIds)
+        // remove any extra tiles
+        for (int i = newTileIds.Count; i < objRefs.PrivateRack.childCount; i++)
         {
-            if (!currentTileIds.Contains(tileId)) MoveTile(tileId, objRefs.LocalRack.GetChild(1));
+            int tileId = objRefs.PrivateRack.GetChild(i).GetComponent<TileMono>().tile.Id;
+            MoveTile(tileId, MonoObject.TilePool);
         }
     }
 

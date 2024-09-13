@@ -14,7 +14,7 @@ class FakeMonoWrapper : IMonoWrapper
     }
 
     public Dictionary<int, MonoObject> TileLocations = new();
-    public void MoveTile(int tileId, MonoObject destination)
+    public void MoveTile(int tileId, MonoObject destination, int post = -1)
     {
         TileLocations[tileId] = destination;
     }
