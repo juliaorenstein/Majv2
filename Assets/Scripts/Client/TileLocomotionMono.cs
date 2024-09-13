@@ -79,9 +79,6 @@ public class TileLocomotionMono : MonoBehaviour
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("TileLocomotionMono.OnEndDrag");
-        Debug.Log("Dropped tile: " + eventData.pointerDrag.name);
-
         transform.SetParent(TileTF);        // undo OnBeginDrag things
 
         List<RaycastResult> raycastResults = new();
@@ -112,7 +109,6 @@ public class TileLocomotionMono : MonoBehaviour
                 Transform droppedOnTile = res.gameObject.transform.parent;
                 rightOfTile = transform.position.x > droppedOnTile.position.x;
                 dropIx = droppedOnTile.GetSiblingIndex();
-                Debug.Log("droppedOnTile: " + droppedOnTile);
             }
         }
         StringBuilder debugRes = new();

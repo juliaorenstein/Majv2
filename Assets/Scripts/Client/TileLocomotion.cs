@@ -92,7 +92,6 @@ public class TileLocomotion
 
         void DropOnRack()
         {
-            UnityEngine.Debug.Log("TileLoco.DropOnRack");
             Debug.Assert(FusionManager.GamePhase > GamePhase.Setup);
 
             ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
@@ -118,9 +117,7 @@ public class TileLocomotion
             if (curIxOnRack < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId, newIx);
             else
             {
-                UnityEngine.Debug.Log("rack.Move");
                 refs.TileTrackerClient.LocalPrivateRack.Move(curIxOnRack, newIx);
-                UnityEngine.Debug.Log($"LocalPrivateRack reference: {refs.TileTrackerClient.LocalPrivateRack.GetHashCode()}");
             }
         }
 

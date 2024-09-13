@@ -111,8 +111,6 @@ public class TileTrackerClient
 
     void LocalPrivateRackChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        UnityEngine.Debug.Log("TileTrackerClient.LocalPrivateRackChanged");
-        // TODO: use Moved when rearranging tiles
         mono.UpdateRack(new List<int>(LocalPrivateRack));
     }
 

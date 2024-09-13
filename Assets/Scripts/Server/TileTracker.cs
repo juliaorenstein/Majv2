@@ -35,7 +35,7 @@ public class TileTracker
     }
 
     // Simple move just removes tile from previous location and adds it onto the end of the new location.
-    // Might not be suitable for all tile moves (like dropping to specific location on rack.
+    // Might not be suitable for all tile moves (like dropping to specific location on rack).
     public void SimpleMoveTile(int tileId, List<int> location)
     {
         Debug.Assert(LocationIsValid(location));
@@ -64,7 +64,7 @@ public class TileTracker
             if (refs.Fusion.IsPlayerAI(playerId)) continue;
             refs.Fusion.RPC_S2C_SendGameState(playerId, NetworkTileLocs(playerId));
         }
-    } 
+    }
 }
 
 public struct NetworkableTileLocations // TODO: figure out if you can rpc structs of primitives

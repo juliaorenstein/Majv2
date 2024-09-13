@@ -22,8 +22,6 @@ public class SetupClient
         new TileTrackerClient(refs);
         new GameManagerClient(refs);
 
-        //Refs.EventSystem.gameObject.AddComponent<Navigation>(); // TODO: remove this?
-
         HideButtons();                      // hide start buttons
 
         // show the other player's racks
