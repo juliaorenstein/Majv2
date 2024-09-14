@@ -19,7 +19,6 @@ public class GameManager
 public enum GamePhase
 { // FIXME: set these in the appropriate places so they work in TileLocomotion
     Pregame,
-    Setup,
     Charleston,
     Gameplay,
     Endgame

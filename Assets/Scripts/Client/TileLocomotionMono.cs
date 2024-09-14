@@ -44,6 +44,8 @@ public class TileLocomotionMono : MonoBehaviour
     readonly float TotalLerpTime = 0.2f;
     float CurrentLerpTime = 0.2f;
 
+
+    // FIXME: when dragging a tile on the rack, it moves smoothly from twice the distance it was dragged instead of from where it was dropped
     private void Start()
     {
         TileId = GetComponentInParent<TileMono>().tile.Id;

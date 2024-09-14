@@ -7,7 +7,6 @@ using Fusion;
 public class ClassReferences
 {
     // Initiated in ObjectReferences
-
     public NetworkCallbacks NetworkCallbacks;
     public Navigation Nav;
     public NetworkRunner Runner;

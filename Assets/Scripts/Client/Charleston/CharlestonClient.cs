@@ -3,13 +3,14 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
+using UnityEngine.Rendering;
 
 public class CharlestonClient
 {
     readonly ClassReferences refs;
-    readonly TileTrackerClient tileTracker;
-    readonly IMonoWrapper mono;
-    readonly ICharlestonFusion charlestonFusion;
+    TileTrackerClient tileTracker { get => refs.TileTrackerClient; }
+    IMonoWrapper mono { get => refs.Mono; }
+    ICharlestonFusion charlestonFusion { get => refs.CFusion; }
     ObservableCollection<int> Rack { get => tileTracker.LocalPrivateRack; }
 
     public int[] ClientPassArr = new int[3];
@@ -27,9 +28,6 @@ public class CharlestonClient
     {
         refs.CClient = this;
         this.refs = refs;
-        mono = refs.Mono;
-        charlestonFusion = refs.CFusion;
-        tileTracker = refs.TileTrackerClient;
     }
 
     public bool CheckReadyToPass()

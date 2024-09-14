@@ -1,11 +1,10 @@
 using Fusion;
-using System.Collections.Generic;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
     ClassReferences refs;
     FusionManager FManager { get => (FusionManager)refs.FManager; }
-    TurnManager TManager;
+    TurnManager TManager { get => refs.TManager; }
 
     // Info about players
     public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }
@@ -31,7 +30,6 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     {
         refs = ObjectReferences.Instance.ClassRefs;
         refs.Fusion = this;
-        TManager = refs.TManager;
         // TODO: make sure TurnPlayerId is dealt with
         CallPlayerId = -1;
     }

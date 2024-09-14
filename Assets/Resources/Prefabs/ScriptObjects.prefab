@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf93ce3fb3c6f440f9a89d06ab3dcaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Counter: 0
 --- !u!114 &2168466158291125513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0935e7c309a7443beaa7aa68c9ec0b5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Refs: {fileID: 0}
 --- !u!114 &4209182235203969451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4c1fb1428e64b358d3ac8dddb84295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PassButton: {fileID: 0}
 --- !u!1 &5270958023178365850
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +127,6 @@ GameObject:
   - component: {fileID: 7379344965580212575}
   - component: {fileID: 4734336265342997289}
   - component: {fileID: 5536819964314363800}
-  - component: {fileID: 5385670345349505344}
   - component: {fileID: 2875401402182990875}
   m_Layer: 0
   m_Name: Utility
@@ -191,36 +189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15093fae7b5bf447cb89e0d4d16c125e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5385670345349505344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5270958023178365850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73898f02c3dfe4bdab59a806daaeb62a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  setupMono: {fileID: 0}
-  Mono: {fileID: 0}
-  Fusion: {fileID: 0}
-  FManager: {fileID: 0}
-  SendGame: {fileID: 0}
-  NetworkCallbacks: {fileID: 0}
-  Runner: {fileID: 0}
-  Discard: {fileID: 0}
-  TilePool: {fileID: 0}
-  LocalRack: {fileID: 0}
-  OtherRacks: {fileID: 0}
-  EventSystem: {fileID: 0}
-  StartButtons: {fileID: 0}
-  CharlestonBox: {fileID: 0}
-  CallWaitButtons: {fileID: 0}
-  CharlestonPassButton: {fileID: 0}
-  TurnIndicator: {fileID: 0}
-  Dragging: {fileID: 0}
+  _GamePhase: 0
+  _TurnPhase: 0
 --- !u!114 &2875401402182990875
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,7 +7,10 @@ using System.Collections.ObjectModel;
 public class TileLocomotion
 {
     readonly ClassReferences refs;
-    IFusionManager FusionManager { get => refs.FManager; }
+    IFusionManager FusionManager
+    {
+        get => refs.FManager;
+    }
     readonly ITileLocomotionMono tileLocoMono;
     readonly int tileId;
 
@@ -92,7 +95,7 @@ public class TileLocomotion
 
         void DropOnRack()
         {
-            Debug.Assert(FusionManager.GamePhase > GamePhase.Setup);
+            Debug.Assert(FusionManager.GamePhase > GamePhase.Pregame);
 
             ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
 
@@ -123,7 +126,6 @@ public class TileLocomotion
 
         void DropOnCharleston()
         {
-            UnityEngine.Debug.Log("TileLoco.DropOnCharleston");
             Debug.Assert(!Tile.IsJoker(tileId));
 
             MonoObject start;
@@ -152,7 +154,7 @@ public class TileLocomotion
     bool Charlestonable()
     {
         if (Tile.IsJoker(tileId)) return false;
-        return (FusionManager.GamePhase == GamePhase.Charleston);
+        return FusionManager.GamePhase == GamePhase.Charleston;
     }
 
     bool Charlestonable(List<MonoObject> raycastTargets)

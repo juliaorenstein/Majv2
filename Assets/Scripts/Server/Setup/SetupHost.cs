@@ -24,6 +24,9 @@ public class SetupHost
             Deal();
             ShuffledAndDealt = true;
         }
+
+        refs.FManager.GamePhase = GamePhase.Charleston;
+        // TODO: eventually make this conditional based on whether all players have joined.
     }
 
     void Shuffle()
