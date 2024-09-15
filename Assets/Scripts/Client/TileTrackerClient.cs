@@ -87,9 +87,14 @@ public class TileTrackerClient
         ObservableCollection<int> curRack = LocalPrivateRack;
 
         // removals
+        List<int> removeList = new();
         foreach (int tileId in curRack)
         {
-            if (!newRack.Contains(tileId)) curRack.Remove(tileId);
+            if (!newRack.Contains(tileId)) removeList.Add(tileId);
+        }
+        foreach (int tileId in removeList)
+        {
+            curRack.Remove(tileId);
         }
 
         // additions

@@ -13,7 +13,7 @@ public class CharlestonClient
     ICharlestonFusion charlestonFusion { get => refs.CFusion; }
     ObservableCollection<int> Rack { get => tileTracker.LocalPrivateRack; }
 
-    public int[] ClientPassArr = new int[3];
+    public int[] ClientPassArr = new int[3] { -1, -1, -1 };
     readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate
     bool BlindAllowed { get => StealPasses.Contains(charlestonFusion.Counter); }
 
@@ -120,8 +120,7 @@ public class CharlestonClient
         {
             if (!Tile.IsValidTileId(ClientPassArr[i]))
             {
-                ClientPassArr[i] = tileId;
-                Rack.Remove(tileId);
+                MoveTileFromRackToCharleston(tileId, i);
                 return;
             }
         }
@@ -137,10 +136,7 @@ public class CharlestonClient
         if (CharlestonSpots.Contains(start))
         {
             Debug.Assert(ClientPassArr.Contains(tileId));
-
-            int startIx = SpotIx(start);
-            int endIx = SpotIx(end);
-            (ClientPassArr[endIx], ClientPassArr[startIx]) = (ClientPassArr[startIx], ClientPassArr[endIx]);
+            SwapCharles(SpotIx(start), SpotIx(end));
             return;
         }
 
@@ -167,6 +163,7 @@ public class CharlestonClient
     {
         ClientPassArr[spotIx] = tileId;
         Rack.Remove(tileId);
+        mono.MoveTile(tileId, CharlestonSpots[spotIx]);
     }
 
     public void MoveTileFromCharlestonToRack(int tileId, int newIx = -1)
@@ -176,6 +173,19 @@ public class CharlestonClient
         ClientPassArr[Array.IndexOf(ClientPassArr, tileId)] = -1;
         if (newIx == -1) Rack.Add(tileId);
         else Rack.Insert(newIx, tileId);
+    }
+
+    void SwapCharles(int spotIx1, int spotIx2)
+    {
+        (ClientPassArr[spotIx1], ClientPassArr[spotIx2]) = (ClientPassArr[spotIx2], ClientPassArr[spotIx1]);
+        if (ClientPassArr[spotIx1] > -1)
+        {
+            mono.MoveTile(ClientPassArr[spotIx1], CharlestonSpots[spotIx1]);
+        }
+        if (ClientPassArr[spotIx2] > -1)
+        {
+            mono.MoveTile(ClientPassArr[spotIx2], CharlestonSpots[spotIx2]);
+        }
     }
 
     int SpotIx(MonoObject spot)

@@ -124,6 +124,8 @@ public class TileLocomotion
             }
         }
 
+        // TODO: if using logging in the future, this class would be a good place to start
+
         void DropOnCharleston()
         {
             Debug.Assert(!Tile.IsJoker(tileId));
