@@ -174,7 +174,6 @@ public class TileLocomotion
         return true;
     }
 
-    // TODO: come back to this stuff when working on TurnManager
     bool Discardable(List<MonoObject> raycastTargets)
     {
         if (!Discardable()) return false;

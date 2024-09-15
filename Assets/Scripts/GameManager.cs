@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-public class GameManager
+﻿public class GameManager
 {
     public int LocalPlayerId;
     public int DealerId;

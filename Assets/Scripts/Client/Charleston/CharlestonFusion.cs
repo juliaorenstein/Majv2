@@ -4,14 +4,15 @@ public class CharlestonFusion : NetworkBehaviour, ICharlestonFusion
 {
     CharlestonHost CHost;
     CharlestonClient CClient;
-    ObjectReferences Refs;
+    ObjectReferences objRefs;
     [Networked] public int Counter { get; set; }
 
     public override void Spawned()
     {
-        Refs = ObjectReferences.Instance;
-        CHost = new(Refs.ClassRefs);
-        CClient = new(Refs.ClassRefs);
+        objRefs = ObjectReferences.Instance;
+        objRefs.ClassRefs.CFusion = this;
+        CHost = new(objRefs.ClassRefs);
+        CClient = new(objRefs.ClassRefs);
         Counter = 0;
     }
 

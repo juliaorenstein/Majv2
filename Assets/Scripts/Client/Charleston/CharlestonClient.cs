@@ -3,19 +3,18 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
-using UnityEngine.Rendering;
 
 public class CharlestonClient
 {
     readonly ClassReferences refs;
-    TileTrackerClient tileTracker { get => refs.TileTrackerClient; }
-    IMonoWrapper mono { get => refs.Mono; }
-    ICharlestonFusion charlestonFusion { get => refs.CFusion; }
-    ObservableCollection<int> Rack { get => tileTracker.LocalPrivateRack; }
+    TileTrackerClient TileTracker { get => refs.TileTrackerClient; }
+    IMonoWrapper Mono { get => refs.Mono; }
+    ICharlestonFusion CharlestonFusion { get => refs.CFusion; }
+    ObservableCollection<int> Rack { get => TileTracker.LocalPrivateRack; }
 
     public int[] ClientPassArr = new int[3] { -1, -1, -1 };
-    readonly int[] StealPasses = new int[2] { 2, 5 }; // FIXME: figure out how to make this constant if appropriate
-    bool BlindAllowed { get => StealPasses.Contains(charlestonFusion.Counter); }
+    readonly int[] StealPasses = new int[2] { 2, 5 };
+    bool BlindAllowed { get => StealPasses.Contains(CharlestonFusion.Counter); }
 
     public List<MonoObject> CharlestonSpots = new()
         {
@@ -32,53 +31,58 @@ public class CharlestonClient
 
     public bool CheckReadyToPass()
     {
-        // TODO: instead of joker validation here, just make it impossible to drop a joker on the charleston box
         return ClientPassArr.All(tileId => Tile.IsValidTileId(tileId)) || BlindAllowed;
     }
 
     public void InitiatePass()
     {
-        if (!mono.IsButtonInteractable(MonoObject.CharlestonPassButton))
+        if (!Mono.IsButtonInteractable(MonoObject.CharlestonPassButton))
         {
             return; // quit out right away if somebody clicked the button when
             // it shouldn't be interactable
         }
 
         // gray out the button and set the text
-        mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
-        mono.SetButtonText(MonoObject.CharlestonPassButton, "Waiting for others");
+        Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
+        Mono.SetButtonText(MonoObject.CharlestonPassButton, "Waiting for others");
 
         // move the tiles off the screen
         foreach (int tileId in ClientPassArr)
         {
-            mono.MoveTile(tileId, MonoObject.TilePool);
+            Mono.MoveTile(tileId, MonoObject.TilePool);
         }
 
         // give the tiles to the host
-        charlestonFusion.RPC_C2H_StartPass(ClientPassArr);
+        CharlestonFusion.RPC_C2H_StartPass(ClientPassArr);
     }
 
-    void UpdateButton() { UpdateButton(charlestonFusion.Counter); }
+    void UpdateButton() { UpdateButton(CharlestonFusion.Counter); }
 
     public void UpdateButton(int counter)
     {
         // if Counter is -1 or 7, remove the button and start main gameplay
+        if (!CheckReadyToPass())
+        {
+            Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
+            return;
+        }
+
         if (counter == -1 || counter == 7)
         {
-            mono.SetActive(MonoObject.CharlestonBox, false);
+            Mono.SetActive(MonoObject.CharlestonBox, false);
             refs.TManager.C_StartGamePlay();
             return;
         }
 
-        mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
+        Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, true);
 
         // set the direction text
-        mono.SetButtonText(MonoObject.CharlestonBox, $"Pass {Direction(counter)}");
+        Mono.SetButtonText(MonoObject.CharlestonPassButton, $"Pass {Direction(counter)}");
     }
 
     string Direction()
     {
-        return Direction(charlestonFusion.Counter);
+        return Direction(CharlestonFusion.Counter);
     }
 
     string Direction(int counter)
@@ -163,16 +167,16 @@ public class CharlestonClient
     {
         ClientPassArr[spotIx] = tileId;
         Rack.Remove(tileId);
-        mono.MoveTile(tileId, CharlestonSpots[spotIx]);
+        Mono.MoveTile(tileId, CharlestonSpots[spotIx]);
+        UpdateButton();
     }
 
     public void MoveTileFromCharlestonToRack(int tileId, int newIx = -1)
     {
-        // LEFTOFF: we're getting here when we should be rearrange tiles on the rack...
-        // TODO: change passArr to nullable and replace -1s with null
         ClientPassArr[Array.IndexOf(ClientPassArr, tileId)] = -1;
         if (newIx == -1) Rack.Add(tileId);
         else Rack.Insert(newIx, tileId);
+        UpdateButton();
     }
 
     void SwapCharles(int spotIx1, int spotIx2)
@@ -180,12 +184,13 @@ public class CharlestonClient
         (ClientPassArr[spotIx1], ClientPassArr[spotIx2]) = (ClientPassArr[spotIx2], ClientPassArr[spotIx1]);
         if (ClientPassArr[spotIx1] > -1)
         {
-            mono.MoveTile(ClientPassArr[spotIx1], CharlestonSpots[spotIx1]);
+            Mono.MoveTile(ClientPassArr[spotIx1], CharlestonSpots[spotIx1]);
         }
         if (ClientPassArr[spotIx2] > -1)
         {
-            mono.MoveTile(ClientPassArr[spotIx2], CharlestonSpots[spotIx2]);
+            Mono.MoveTile(ClientPassArr[spotIx2], CharlestonSpots[spotIx2]);
         }
+        UpdateButton();
     }
 
     int SpotIx(MonoObject spot)

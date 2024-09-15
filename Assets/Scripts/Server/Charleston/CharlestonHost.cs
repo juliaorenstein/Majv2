@@ -6,10 +6,10 @@ using System.Diagnostics;
 public class CharlestonHost
 {
     readonly ClassReferences refs;
-    readonly IFusionWrapper fusion;
-    readonly ICharlestonFusion charlesFusion;
-    readonly TileTracker tileTracker;
-    
+    IFusionWrapper Fusion { get => refs.Fusion; }
+    ICharlestonFusion CharlesFusion { get => refs.CFusion; }
+    TileTracker TileTracker { get => refs.TileTracker; }
+
     public readonly List<List<int>> PassList;
     public readonly List<List<int>> RecList;
 
@@ -19,7 +19,7 @@ public class CharlestonHost
     {
         get
         {
-            return charlesFusion.Counter switch
+            return CharlesFusion.Counter switch
             {
                 0 or 5 => 3, // right
                 1 or 4 => 2, // over
@@ -32,11 +32,7 @@ public class CharlestonHost
     public CharlestonHost(ClassReferences refs)
     {
         this.refs = refs;
-        this.refs.CHost = this;
-     
-        fusion = refs.Fusion;
-        charlesFusion = refs.CFusion;
-        tileTracker = refs.TileTracker;
+        refs.CHost = this;
 
         PassList = new() { new(), new(), new(), new() };
         RecList = new() { new(), new(), new(), new() };
@@ -51,7 +47,6 @@ public class CharlestonHost
         {
             Debug.Assert(Tile.IsValidTileId(tile)); // valid tiles
             Debug.Assert(!Tile.IsJoker(tile));      // not jokers
-            Debug.Assert(tileTracker.PrivateRacks[sourcePlayerId].Contains(tile)); // tile is in player's rack
         }
 
         if (!AiPassed) AiTilesToPass();
@@ -68,10 +63,10 @@ public class CharlestonHost
         // loop through players and for AIs select first three tiles to pass
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            if (!fusion.IsPlayerAI(playerId)) continue;
+            if (!Fusion.IsPlayerAI(playerId)) continue;
 
             // This player's HostPassArr entry is the first three tiles of their rack
-            PassList[playerId] = tileTracker.PrivateRacks[playerId].GetRange(0, 3);
+            PassList[playerId] = TileTracker.PrivateRacks[playerId].GetRange(0, 3);
             PlayersReady++;
         }
         AiPassed = true;
@@ -118,11 +113,11 @@ public class CharlestonHost
         {
             foreach (int tileId in PassList[playerId])
             {
-                tileTracker.PrivateRacks[playerId].Remove(tileId);
+                TileTracker.PrivateRacks[playerId].Remove(tileId);
             }
             foreach (int tileId in RecList[playerId])
             {
-                tileTracker.PrivateRacks[playerId].Add(tileId);
+                TileTracker.PrivateRacks[playerId].Add(tileId);
             }
         }
     }
@@ -131,7 +126,7 @@ public class CharlestonHost
     {
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            fusion.RPC_S2C_SendRack(playerId, RecList[playerId].ToArray());
+            Fusion.RPC_S2C_SendRack(playerId, RecList[playerId].ToArray());
         }
     }
 
@@ -144,7 +139,7 @@ public class CharlestonHost
         }
         AiPassed = false;
         PlayersReady = 0;
-        charlesFusion.Counter++;
+        CharlesFusion.Counter++;
     }
 
     int TargetPlayerId(int sourcePlayerId) =>

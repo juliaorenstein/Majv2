@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class TurnManager
+public class TurnManagerServer
 {
     readonly ClassReferences refs;
     readonly IMonoWrapper mono;
@@ -24,7 +24,7 @@ public class TurnManager
     { get { return playersCalling.Count > 0; } }
 
     // instantiated in SetupHost
-    public TurnManager(ClassReferences refs)
+    public TurnManagerServer(ClassReferences refs)
     {
         this.refs = refs;
         refs.TManager = this;

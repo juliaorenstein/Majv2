@@ -49,7 +49,6 @@ public class TileTracker
     // does not verify that the move itself is valid.
     bool LocationIsValid(List<int> location)
     {
-        // TODO: figure out why a switch statement won't work here (lists aren't constant values?)
         if (location == Wall) return true;
         if (location == Discard) return true;
         if (PrivateRacks.Contains(location)) return true;
@@ -67,7 +66,7 @@ public class TileTracker
     }
 }
 
-public struct NetworkableTileLocations // TODO: figure out if you can rpc structs of primitives
+public struct NetworkableTileLocations
 {
     public int WallCount;
     public int[] Discard;

@@ -13,7 +13,7 @@ public class ClassReferences
     public CharlestonHost CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
-    public TurnManager TManager;
+    public TurnManagerServer TManager;
     public IFusionManager FManager;
     public GameManager GManager;            // TODO: deprecate
     public GameManagerClient GManagerClient;// TODO: deprecate

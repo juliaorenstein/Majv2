@@ -4,7 +4,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
     ClassReferences refs;
     FusionManager FManager { get => (FusionManager)refs.FManager; }
-    TurnManager TManager { get => refs.TManager; }
+    TurnManagerServer TManager { get => refs.TManager; }
 
     // Info about players
     public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }

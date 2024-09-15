@@ -16,7 +16,7 @@ public class SetupHost
 
     public void SetupDriver()
     {
-        refs.TManager = new(refs); // TODO: rename to TManagerHost?
+        refs.TManager = new(refs);
 
         if (!ShuffledAndDealt)
         {

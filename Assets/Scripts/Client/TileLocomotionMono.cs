@@ -94,9 +94,6 @@ public class TileLocomotionMono : MonoBehaviour
 
         foreach (RaycastResult res in raycastResults)
         {
-            // FIXME: rearrange this so all the appropriate info gets through whether dropping on a tile on the rack,
-            // dropping on a tile off the rack, or not dropping on a tile
-
             // check for MonoObject hits
             if (objRefs.ReverseObjectDict.TryGetValue(
                 res.gameObject.transform, out MonoObject obj))
