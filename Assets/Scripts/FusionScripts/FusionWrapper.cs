@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Fusion;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
@@ -5,6 +6,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     ClassReferences refs;
     FusionManager FManager { get => (FusionManager)refs.FManager; }
     TurnManagerServer TManager { get => refs.TManager; }
+    TileTracker TileTracker { get => refs.TileTracker; }
 
     // Info about players
     public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }
@@ -41,8 +43,9 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     }
 
     // RPCs
-    public void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs)
+    public void RPC_S2C_SendGameState(int playerId)
     {
+        NetworkableTileLocations tileLocs = TileTracker.NetworkTileLocs(playerId);
         RPC_S2C_SendGameState(FManager.PlayerDict[playerId], tileLocs.WallCount
             , tileLocs.Discard, tileLocs.PrivateRack, tileLocs.PrivateRackCounts
             , tileLocs.DisplayRacks[0], tileLocs.DisplayRacks[1]
@@ -53,6 +56,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
         , int[] privateRack, int[] privateRackCounts, int[] displayRack0
         , int[] displayRack1, int[] displayRack2, int[] displayRack3)
     {
+        UnityEngine.Debug.Log($"RPC receivied for player {player}");
         refs.TileTrackerClient.ReceiveGameState(wallCount, discard, privateRack
             , privateRackCounts, displayRack0, displayRack1, displayRack2
             , displayRack3);

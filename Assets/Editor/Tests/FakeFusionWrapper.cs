@@ -38,9 +38,9 @@ class FakeFusionWrapper : IFusionWrapper
         throw new System.NotImplementedException();
     }
 
-    public void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs)
+    public void RPC_S2C_SendGameState(int playerId)
     {
-        
+
     }
 
     public void RPC_C2A_Expose(int exposeTileId)

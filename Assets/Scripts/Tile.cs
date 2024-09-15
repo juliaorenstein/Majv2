@@ -92,6 +92,8 @@ public class Tile : IComparable<Tile>
         return Id.CompareTo(that.Id);
     }
 
+    public static string ToString(int tileId) => TileList[tileId].ToString();
+
     public override string ToString()
     {
         switch (kind)

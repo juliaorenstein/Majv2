@@ -43,19 +43,25 @@ public class CharlestonHost
 
     public void PassDriver(int sourcePlayerId, int[] tileIdsToPass)
     {
+        // assertions
         foreach (int tile in tileIdsToPass)
         {
             Debug.Assert(Tile.IsValidTileId(tile)); // valid tiles
             Debug.Assert(!Tile.IsJoker(tile));      // not jokers
         }
 
+        // logging
+        UnityEngine.Debug.Log("BEFORE PASS\n" + TileTracker.PrivateRacksToString());
+
         if (!AiPassed) AiTilesToPass();
         AddClientTilesToPassList(sourcePlayerId, tileIdsToPass);
         if (PlayersReady != 4) return; //don't continue until everybody's ready
         CalculateRecList();
-        UpdateGameManagerRacks();
-        SendNewRacksToClients();
+        UpdateTileTracker();
+        TileTracker.SendGameStateToAll();
         Reset();
+
+        UnityEngine.Debug.Log("AFTER PASS\n" + TileTracker.PrivateRacksToString());
     }
 
     void AiTilesToPass()
@@ -105,7 +111,7 @@ public class CharlestonHost
         }
     }
 
-    void UpdateGameManagerRacks()
+    void UpdateTileTracker()
     {
         // Each player needs the tiles they passed removed from their rack and
         // the tiles they received added to their rack
@@ -119,14 +125,6 @@ public class CharlestonHost
             {
                 TileTracker.PrivateRacks[playerId].Add(tileId);
             }
-        }
-    }
-
-    void SendNewRacksToClients()
-    {
-        for (int playerId = 0; playerId < 4; playerId++)
-        {
-            Fusion.RPC_S2C_SendRack(playerId, RecList[playerId].ToArray());
         }
     }
 

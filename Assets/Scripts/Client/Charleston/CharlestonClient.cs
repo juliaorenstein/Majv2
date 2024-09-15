@@ -198,4 +198,12 @@ public class CharlestonClient
         Debug.Assert(CharlestonSpots.Contains(spot));
         return CharlestonSpots.IndexOf(spot);
     }
+
+    public void ClearClientPassArr()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            ClientPassArr[i] = -1;
+        }
+    }
 }

@@ -20,7 +20,6 @@ public class SetupClient
             LocalPlayer = refs.Fusion.LocalPlayerId,
         };
         new TileTrackerClient(refs);
-        new GameManagerClient(refs);
 
         HideButtons();                      // hide start buttons
 

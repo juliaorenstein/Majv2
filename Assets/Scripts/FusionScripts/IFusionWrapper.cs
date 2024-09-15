@@ -14,7 +14,7 @@ public interface IFusionWrapper
     void FixedUpdateNetwork();
     bool IsPlayerAI(int playerID);
     void ResetTimer();
-    void RPC_S2C_SendGameState(int playerId, NetworkableTileLocations tileLocs);
+    void RPC_S2C_SendGameState(int playerId);
     void RPC_C2A_Expose(int exposeTileId);
     void RPC_C2S_Discard(int discardTileId);
     void RPC_S2A_NeverMind();

@@ -43,24 +43,32 @@ public class TileTrackerClient
     {
         int[][] newDisplayRacks = new int[][] { newDisplayRack0, newDisplayRack1, newDisplayRack2, newDisplayRack3 };
 
-        WallCount = newWallCount;
-        ApplyAdd(newDiscard, Discard);
+        WallCount = newWallCount;       // update wall count
+        ApplyAdd(newDiscard, Discard);  // update discard pile
+
+        // update all display racks
         for (int i = 0; i < 4; i++)
         {
             ApplyAdd(newDisplayRacks[i], DisplayRacks[i]);
         }
 
+        // update local private rack
         if (Changed(newPrivateRack, LocalPrivateRack))
         {
             ReceiveRackUpdate(newPrivateRack);
         }
-        PrivateRackCounts = newPrivateRackCounts;
 
+        // update counts of other player's private racks
+        PrivateRackCounts = newPrivateRackCounts;
         bool Changed(int[] newList, ObservableCollection<int> curList)
         {
             return !curList.SequenceEqual(new ObservableCollection<int>(newList));
         }
 
+        // clear client pass array
+        refs.CClient.ClearClientPassArr();
+
+        // helper function for steps above
         void ApplyAdd(int[] newList, ObservableCollection<int> curList)
         {
             // check that the already-existing items didn't change
