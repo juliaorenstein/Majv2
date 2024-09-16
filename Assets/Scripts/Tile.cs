@@ -92,7 +92,12 @@ public class Tile : IComparable<Tile>
         return Id.CompareTo(that.Id);
     }
 
-    public static string ToString(int tileId) => TileList[tileId].ToString();
+    public static string ToString(int tileId)
+    {
+        if (IsValidTileId(tileId)) return TileList[tileId].ToString();
+        UnityEngine.Debug.Log("Logging invalid tile");
+        return "Invalid Tile";
+    }
 
     public override string ToString()
     {

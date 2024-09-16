@@ -116,8 +116,9 @@ public class CharlestonHostTests
         }
     }
 
+    // FIXME: tests didn't indicate when steals were actually working incorrectlly
     [TestCase(
-        new int[] { 0, 1, 2 }, new int[] {20, 21, 22}, new int[] { 40, 41, 42 }, new int[] { 60, 61 },
+        new int[] { 0, 1, 2 }, new int[] { 20, 21, 22 }, new int[] { 40, 41, 42 }, new int[] { 60, 61 },
         new int[] { 20, 21, 22 }, new int[] { 40, 41, 42 }, new int[] { 60, 61, 2 }, new int[] { 0, 1 })]
     [TestCase(
         new int[] { 0, 1, 2 }, new int[] { 20, 21 }, new int[] { 40, 41, 42 }, new int[] { 60, 61, 62 },

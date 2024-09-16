@@ -36,24 +36,27 @@ public class CharlestonClient
 
     public void InitiatePass()
     {
-        if (!Mono.IsButtonInteractable(MonoObject.CharlestonPassButton))
-        {
-            return; // quit out right away if somebody clicked the button when
-            // it shouldn't be interactable
-        }
+        // quit out right away if somebody clicked the button when
+        // it shouldn't be interactable
+        if (!Mono.IsButtonInteractable(MonoObject.CharlestonPassButton)) return;
 
         // gray out the button and set the text
         Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
         Mono.SetButtonText(MonoObject.CharlestonPassButton, "Waiting for others");
 
-        // move the tiles off the screen
+        // move the tiles off the screen and create array that will be passed (w/out invalid tiles)
+        List<int> toPass = new();
         foreach (int tileId in ClientPassArr)
         {
-            Mono.MoveTile(tileId, MonoObject.TilePool);
+            if (Tile.IsValidTileId(tileId))
+            {
+                Mono.MoveTile(tileId, MonoObject.TilePool);
+                toPass.Add(tileId);
+            }
         }
 
         // give the tiles to the host
-        CharlestonFusion.RPC_C2H_StartPass(ClientPassArr);
+        CharlestonFusion.RPC_C2H_StartPass(toPass.ToArray());
     }
 
     void UpdateButton() { UpdateButton(CharlestonFusion.Counter); }
@@ -182,11 +185,11 @@ public class CharlestonClient
     void SwapCharles(int spotIx1, int spotIx2)
     {
         (ClientPassArr[spotIx1], ClientPassArr[spotIx2]) = (ClientPassArr[spotIx2], ClientPassArr[spotIx1]);
-        if (ClientPassArr[spotIx1] > -1)
+        if (Tile.IsValidTileId(ClientPassArr[spotIx1]))
         {
             Mono.MoveTile(ClientPassArr[spotIx1], CharlestonSpots[spotIx1]);
         }
-        if (ClientPassArr[spotIx2] > -1)
+        if (Tile.IsValidTileId(ClientPassArr[spotIx2]))
         {
             Mono.MoveTile(ClientPassArr[spotIx2], CharlestonSpots[spotIx2]);
         }
