@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
+using Codice.Client.BaseCommands;
 
 public class CharlestonClient
 {
@@ -64,23 +65,36 @@ public class CharlestonClient
     public void UpdateButton(int counter)
     {
         // if Counter is -1 or 7, remove the button and start main gameplay
+        if (counter == -1 || counter == 7)
+        {
+            FinishCharleston();
+            return;
+        }
+
+        // if client isn't ready to pass, quit out
         if (!CheckReadyToPass())
         {
             Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
             return;
         }
 
-        if (counter == -1 || counter == 7)
+        // FIXME: you can double-click and space bar a joker onto the charleston box
+
+        // otherwise, get button ready for next pass
+        NextPass();
+
+        void FinishCharleston()
         {
             Mono.SetActive(MonoObject.CharlestonBox, false);
+            Mono.SetActive(MonoObject.CharlestonPassButton, false);
             refs.TManager.C_StartGamePlay();
-            return;
         }
 
-        Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, true);
-
-        // set the direction text
-        Mono.SetButtonText(MonoObject.CharlestonPassButton, $"Pass {Direction(counter)}");
+        void NextPass()
+        {
+            Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, true);
+            Mono.SetButtonText(MonoObject.CharlestonPassButton, $"Pass {Direction(counter)}");
+        }
     }
 
     string Direction()

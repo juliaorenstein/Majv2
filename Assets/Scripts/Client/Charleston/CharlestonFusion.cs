@@ -1,4 +1,5 @@
 using Fusion;
+using UnityEngine.Rendering;
 
 public class CharlestonFusion : NetworkBehaviour, ICharlestonFusion
 {
@@ -24,4 +25,9 @@ public class CharlestonFusion : NetworkBehaviour, ICharlestonFusion
     {
         CHost.PassDriver(info.Source.PlayerId, tileIDsToPass);
     }
+
+    // for debugging, host can skip charlestons and send that out to clients
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_H2A_SkipCharlestons() => CClient.UpdateButton(-1);
+
 }

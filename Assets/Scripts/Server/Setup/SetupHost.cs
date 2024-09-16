@@ -25,8 +25,11 @@ public class SetupHost
             ShuffledAndDealt = true;
         }
 
-        refs.FManager.GamePhase = GamePhase.Charleston;
         // TODO: eventually make this conditional based on whether all players have joined.
+        refs.FManager.GamePhase = GamePhase.Charleston;
+
+        // just for host, allow skipping charlestons for debugging
+        ObjectReferences.Instance.CharlestonBox.parent.GetChild(2).gameObject.SetActive(true);
     }
 
     void Shuffle()

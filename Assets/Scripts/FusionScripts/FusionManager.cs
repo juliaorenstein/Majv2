@@ -31,3 +31,11 @@ public class FusionManager : NetworkBehaviour, IFusionManager
         InputDict.Add(player.PlayerId, newInputObj.GetComponent<InputCollection>());
     }
 }
+
+public enum GamePhase
+{ // FIXME: set these in the appropriate places so they work in TileLocomotion
+    Pregame,
+    Charleston,
+    Gameplay,
+    Endgame
+}

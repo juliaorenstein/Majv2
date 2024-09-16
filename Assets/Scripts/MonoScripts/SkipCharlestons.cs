@@ -5,7 +5,8 @@ public class SkipCharlestons : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        ObjectReferences.Instance.ClassRefs.CClient.UpdateButton(-1);
         gameObject.SetActive(false);
+        CharlestonFusion cFusion = (CharlestonFusion)ObjectReferences.Instance.ClassRefs.CFusion;
+        cFusion.RPC_H2A_SkipCharlestons();
     }
 }

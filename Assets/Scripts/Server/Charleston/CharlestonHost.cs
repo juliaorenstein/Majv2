@@ -22,7 +22,7 @@ public class CharlestonHost
             return CharlesFusion.Counter switch
             {
                 0 or 5 => 3, // right
-                1 or 4 => 2, // over
+                1 or 4 or 6 => 2, // over
                 2 or 3 => 1, // left
                 _ => throw new Exception("invalid Counter")
             };
@@ -138,6 +138,7 @@ public class CharlestonHost
         AiPassed = false;
         PlayersReady = 0;
         CharlesFusion.Counter++;
+        if (CharlesFusion.Counter == 7) refs.FManager.GamePhase = GamePhase.Gameplay;
     }
 
     int TargetPlayerId(int sourcePlayerId) =>

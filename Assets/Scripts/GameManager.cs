@@ -14,14 +14,6 @@
     }
 }
 
-public enum GamePhase
-{ // FIXME: set these in the appropriate places so they work in TileLocomotion
-    Pregame,
-    Charleston,
-    Gameplay,
-    Endgame
-}
-
 public enum TurnPhase
 {
     Discarding,

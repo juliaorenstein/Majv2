@@ -58,6 +58,7 @@ public class TurnManagerServer
         mono.SetRaycastTarget(MonoObject.Discard, false);
     }
 
+    // FIXME: need to update gamephase to gameplay before we get here
     // Server does next turn logic
     public void H_Discard(int discardTileId)
     {
