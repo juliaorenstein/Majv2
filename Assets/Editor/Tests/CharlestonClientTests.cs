@@ -181,7 +181,6 @@ public class CharlestonClientTests
     {
         // ARRANGE
         var (refs, mono, _) = CreateVariables();
-        refs.GManager = new(refs);
         refs.TManager = new(refs);
         CharlestonClient CClient = new(refs);
         mono.SetActive(MonoObject.CharlestonBox, true);

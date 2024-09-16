@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
-public class CharlestonHostTests
+public class CharlestonServerTests
 {
     [TestCase(0, new int[] { 3 })]
     [TestCase(0, new int[] { 2, 3 })]

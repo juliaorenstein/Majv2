@@ -47,8 +47,7 @@ public class TurnManagerClient
 
     public void ResetButtons()
     {
-        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
-        mono.SetTurnIndicatorText((int)fusionManager.ActivePlayer);
+        mono.SetTurnIndicatorText(fusionManager.ActivePlayer);
         mono.SetActive(MonoObject.WaitButton, true);
         mono.SetActive(MonoObject.PassButton, false);
         mono.SetActive(MonoObject.CallWaitButtons, false);
@@ -78,8 +77,7 @@ public class TurnManagerClient
 
     public void ExposeOtherPlayer(int exposeTileId)
     {
-        UnityEngine.Debug.Assert(fusionManager.ExposingPlayer != null);
-        int rackId = ((int)fusionManager.ExposingPlayer - fusionManager.LocalPlayer + 4) % 4 - 1;
+        int rackId = (fusionManager.ExposingPlayer - fusionManager.LocalPlayer + 4) % 4 - 1;
         mono.ExposeOtherPlayerTile(rackId, exposeTileId);
 
         // FIXME: not working

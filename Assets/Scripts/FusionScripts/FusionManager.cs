@@ -15,14 +15,15 @@ public class FusionManager : NetworkBehaviour, IFusionManager
     [Networked] public int LocalPlayer { get; set; }
     [Networked] public int Dealer { get; set; }
     public bool IsDealer { get => LocalPlayer == Dealer; }
-    [Networked] public int? ActivePlayer { get; set; }
+    [Networked] public int ActivePlayer { get; set; } = -1;
     public bool IsActivePlayer { get => ActivePlayer == LocalPlayer; }
-    [Networked] public int? ExposingPlayer { get; set; }
+    [Networked] public int ExposingPlayer { get; set; } = -1;
     public bool IsExposingPlayer { get => ExposingPlayer == LocalPlayer; }
 
     public override void Spawned()
     {
         ObjectReferences.Instance.ClassRefs.FManager = this;
+        Dealer = 3; // TODO: make this rotate
         PlayerDict = new();
         InputDict = new();
         for (int playerID = 0; playerID < 4; playerID++)

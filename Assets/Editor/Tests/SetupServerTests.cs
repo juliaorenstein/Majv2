@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 
-public class SetupHostTests
+public class SetupServerTests
 {
     [Test]
     public void SetupDriver_WhenCalled_PopulatesWall()
@@ -11,7 +11,6 @@ public class SetupHostTests
         SetupServer setupHost = new(refs);
         new FakeFusionWrapper(refs);
         new FakeFusionManager(refs);
-        new GameManager(refs);
 
         // ACT
         setupHost.SetupDriver();
@@ -29,7 +28,6 @@ public class SetupHostTests
         SetupServer setupHost = new(refs);
         new FakeFusionWrapper(refs);
         new FakeFusionManager(refs);
-        new GameManager(refs);
 
         // ACT
         setupHost.SetupDriver();

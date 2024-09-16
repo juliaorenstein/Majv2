@@ -17,10 +17,6 @@ public class SetupServer
     public void SetupDriver()
     {
         refs.TManager = new(refs);
-        refs.GManager = new(refs)
-        {
-            Dealer = 3 // TODO: rotate dealer each game
-        };
 
         if (!ShuffledAndDealt)
         {
@@ -72,6 +68,6 @@ public class SetupServer
         }
 
         // one more tile to the dealer
-        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.GManager.Dealer]);
+        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.FManager.Dealer]);
     }
 }

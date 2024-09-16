@@ -8,7 +8,6 @@ public class TurnManagerServer
     readonly ClassReferences refs;
     readonly IFusionWrapper fusion;
     readonly IFusionManager fusionManager;
-    readonly GameManager gameManager;
     readonly TileTrackerServer tileTracker;
     public int DiscardTile;
     int callTile;
@@ -30,7 +29,6 @@ public class TurnManagerServer
         refs.TManager = this;
         fusion = refs.Fusion;
         fusionManager = refs.FManager;
-        gameManager = refs.GManager;
         tileTracker = refs.TileTracker;
         playersWaiting = new();
         playersCalling = new();
@@ -39,8 +37,10 @@ public class TurnManagerServer
     public void StartGamePlay()
     {
         UnityEngine.Debug.Assert(fusion.IsServer);
-        if (!fusion.IsPlayerAI(gameManager.Dealer)) return;
-        H_AITurn(tileTracker.PrivateRacks[gameManager.Dealer].Last());
+
+        fusionManager.ActivePlayer = fusionManager.Dealer;
+        if (!fusion.IsPlayerAI(fusionManager.Dealer)) return;
+        AITurn(tileTracker.PrivateRacks[fusionManager.Dealer].Last());
     }
 
     public void Discard(int discardTileId)
@@ -61,7 +61,7 @@ public class TurnManagerServer
             fusion.RPC_S2A_ShowButtons(discardPlayerId);
         }
         // FIXME: host can't use mono's startnewcoroutine
-        else { mono.StartNewCoroutine(WaitForJoker()); }
+        //else { mono.StartNewCoroutine(WaitForJoker()); }
     }
 
     public void TileCallingMonitor()
@@ -121,25 +121,25 @@ public class TurnManagerServer
         H_NextTurn();
     }
 
-    IEnumerator WaitForJoker()
-    {
-        yield return mono.WaitForSeconds(2);
-        fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
-        // TODO: figure out if activePlayer and co need to be nullable or not
-        H_NextTurn();
-    }
+    /*
+        IEnumerator WaitForJoker()
+        {
+            yield return mono.WaitForSeconds(2);
+            fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
+            H_NextTurn();
+        }
+        */
 
     void H_NextTurn()
     {
-        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         int nextPlayer = H_InitializeNextTurn();
         int nextTileId = tileTracker.Wall.Last();
-        fusionManager.ExposingPlayer = null;
+        fusionManager.ExposingPlayer = -1;
 
-        tileTracker.PrivateRacks[(int)fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
+        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
         if (fusion.IsPlayerAI(nextPlayer))                         // AI turn
         {
-            H_AITurn(nextTileId);
+            AITurn(nextTileId);
             return;
         }
         fusion.RPC_S2C_NextTurn(nextPlayer, nextTileId);         // if it's a person, hand it over to that client
@@ -147,28 +147,26 @@ public class TurnManagerServer
 
     void H_CallTurn()
     {
-        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         callTile = DiscardTile;
         exposePlayerId = H_InitializeNextTurn();
 
-        tileTracker.PrivateRacks[(int)fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
+        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
         // TODO: AI support for calling
         fusion.RPC_S2C_CallTurn(exposePlayerId, callTile);
     }
 
     int H_InitializeNextTurn()
     {
-        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         fusion.ResetTimer();
         playersWaiting.Clear(); // this shouldn't be needed
         playersCalling.Clear();
         fusion.RPC_S2A_ResetButtons();
-        return (int)fusionManager.ActivePlayer;   // set next player
+        return fusionManager.ActivePlayer;   // set next player
     }
 
 
 
-    void H_AITurn(int newTileId)
+    void AITurn(int newTileId)
     {
         int discardTileId = newTileId; // for now just discard what was picked up
         Discard(discardTileId);

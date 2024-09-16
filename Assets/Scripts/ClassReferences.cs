@@ -16,7 +16,6 @@ public class ClassReferences
     public TurnManagerServer TManager;
     public TurnManagerClient TManagerClient;
     public IFusionManager FManager;
-    public GameManager GManager;            // TODO: deprecate
     public TileTrackerServer TileTracker;
     public TileTrackerClient TileTrackerClient;
     public IMonoWrapper Mono;

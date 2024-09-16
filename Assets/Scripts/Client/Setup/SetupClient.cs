@@ -15,8 +15,7 @@ public class SetupClient
         HideButtons();                      // hide start buttons
 
         // show the other player's racks
-        bool isDealer = refs.GManager.Dealer == refs.GManager.LocalPlayerId;
-        setupMono.PopulateOtherRacks(isDealer);
+        setupMono.PopulateOtherRacks(refs.FManager.IsDealer);
         refs.Nav.SetNetworkCallbacks(refs.NetworkCallbacks);
     }
 

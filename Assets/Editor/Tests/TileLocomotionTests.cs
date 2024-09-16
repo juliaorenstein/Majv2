@@ -425,7 +425,6 @@ public class TileLocomotionTests
         MakeVariablesForCharlestonTest(int tileId = 0)
     {
         ClassReferences refs = new();
-        new GameManagerClient(refs);
         new FakeFusionManager(refs) { GamePhase = GamePhase.Charleston };
         new FakeMonoWrapper(refs);
         TileTrackerClient tileTracker = new(refs) { LocalPrivateRack = TestRack };

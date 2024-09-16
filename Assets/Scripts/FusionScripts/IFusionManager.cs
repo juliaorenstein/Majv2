@@ -10,9 +10,9 @@ public interface IFusionManager
     public int LocalPlayer { get; set; }
     public int Dealer { get; set; }
     public bool IsDealer { get; }
-    public int? ActivePlayer { get; set; }
+    public int ActivePlayer { get; set; }
     public bool IsActivePlayer { get; }
-    public int? ExposingPlayer { get; set; }
+    public int ExposingPlayer { get; set; }
     public bool IsExposingPlayer { get; }
 
 
