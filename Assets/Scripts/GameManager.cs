@@ -1,7 +1,7 @@
 ﻿public class GameManager
 {
     public int LocalPlayerId;
-    public int DealerId;
+    public int Dealer;
 
     public int WaitTime { get; set; } = 2000;
 
@@ -12,11 +12,4 @@
     {
         Refs.GManager = this;
     }
-}
-
-public enum TurnPhase
-{
-    Discarding,
-    LoggingCallers,
-    Exposing,
 }

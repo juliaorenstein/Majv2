@@ -11,6 +11,15 @@ public class FusionManager : NetworkBehaviour, IFusionManager
     [Networked] public GamePhase GamePhase { get; set; }
     [Networked] public TurnPhase TurnPhase { get; set; }
 
+    // players
+    [Networked] public int LocalPlayer { get; set; }
+    [Networked] public int Dealer { get; set; }
+    public bool IsDealer { get => LocalPlayer == Dealer; }
+    [Networked] public int? ActivePlayer { get; set; }
+    public bool IsActivePlayer { get => ActivePlayer == LocalPlayer; }
+    [Networked] public int? ExposingPlayer { get; set; }
+    public bool IsExposingPlayer { get => ExposingPlayer == LocalPlayer; }
+
     public override void Spawned()
     {
         ObjectReferences.Instance.ClassRefs.FManager = this;
@@ -38,4 +47,11 @@ public enum GamePhase
     Charleston,
     Gameplay,
     Endgame
+}
+
+public enum TurnPhase
+{
+    Discarding,
+    LoggingCallers,
+    Exposing,
 }

@@ -189,17 +189,17 @@ public class CharlestonHostTests
 
 
     // factory method to set up all the useful variables for the unit tests
-    (CharlestonHost
+    (CharlestonServer
         , ClassReferences
         , FakeFusionWrapper
         , FakeCharlestonFusion
-        , TileTracker) CreateTestVariables()
+        , TileTrackerServer) CreateTestVariables()
     {
         ClassReferences refs = new();
         FakeFusionWrapper fusion = new(refs);
         FakeCharlestonFusion cFusion = new(refs);
-        TileTracker tileTracker = new(refs) { PrivateRacks = TestRacks() };
-        CharlestonHost cHost = new(refs);
+        TileTrackerServer tileTracker = new(refs) { PrivateRacks = TestRacks() };
+        CharlestonServer cHost = new(refs);
 
         return (cHost, refs, fusion, cFusion, tileTracker);
     }

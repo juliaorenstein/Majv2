@@ -8,7 +8,7 @@ public class SetupHostTests
     {
         // ARRANGE
         ClassReferences refs = new();
-        SetupHost setupHost = new(refs);
+        SetupServer setupHost = new(refs);
         new FakeFusionWrapper(refs);
         new FakeFusionManager(refs);
         new GameManager(refs);
@@ -26,7 +26,7 @@ public class SetupHostTests
     {
         // ARRANGE
         ClassReferences refs = new();
-        SetupHost setupHost = new(refs);
+        SetupServer setupHost = new(refs);
         new FakeFusionWrapper(refs);
         new FakeFusionManager(refs);
         new GameManager(refs);

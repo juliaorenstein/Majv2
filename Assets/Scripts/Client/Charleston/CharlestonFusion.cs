@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 
 public class CharlestonFusion : NetworkBehaviour, ICharlestonFusion
 {
-    CharlestonHost CHost;
+    CharlestonServer CHost;
     CharlestonClient CClient;
     ObjectReferences objRefs;
     [Networked] public int Counter { get; set; }

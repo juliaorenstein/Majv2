@@ -13,7 +13,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
 
     GameObject Scripts;
     FusionManager fManager;
-    SetupHost setupHost;
+    SetupServer setupHost;
     SetupClient setupClient;
 
     public CallInputStruct inputStruct;

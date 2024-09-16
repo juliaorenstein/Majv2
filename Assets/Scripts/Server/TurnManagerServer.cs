@@ -4,12 +4,12 @@ using System.Linq;
 
 public class TurnManagerServer
 {
+    // TODO: should I make client and server into separate assemblies?
     readonly ClassReferences refs;
-    readonly IMonoWrapper mono;
     readonly IFusionWrapper fusion;
+    readonly IFusionManager fusionManager;
     readonly GameManager gameManager;
-    readonly TileTracker tileTracker;
-
+    readonly TileTrackerServer tileTracker;
     public int DiscardTile;
     int callTile;
     int discardPlayerId;
@@ -28,44 +28,30 @@ public class TurnManagerServer
     {
         this.refs = refs;
         refs.TManager = this;
-        mono = refs.Mono;
         fusion = refs.Fusion;
+        fusionManager = refs.FManager;
         gameManager = refs.GManager;
         tileTracker = refs.TileTracker;
         playersWaiting = new();
         playersCalling = new();
     }
 
-    // Setup first turn
-    public void C_StartGamePlay()
+    public void StartGamePlay()
     {
-        mono.SetActive(MonoObject.Discard, true);
-
-        if (gameManager.DealerId == gameManager.LocalPlayerId)
-        {
-            mono.SetRaycastTarget(MonoObject.Discard, true);
-        }
-        else if (fusion.IsPlayerAI(gameManager.DealerId) && fusion.IsServer)
-        {
-            H_AITurn(tileTracker.PrivateRacks[gameManager.DealerId].Last());
-        }
+        UnityEngine.Debug.Assert(fusion.IsServer);
+        if (!fusion.IsPlayerAI(gameManager.Dealer)) return;
+        H_AITurn(tileTracker.PrivateRacks[gameManager.Dealer].Last());
     }
 
-    // Client discards a tile
-    public void C_RequestDiscard(int discardTileId)
+    public void Discard(int discardTileId)
     {
-        fusion.RPC_C2S_Discard(discardTileId);
-        mono.SetRaycastTarget(MonoObject.Discard, false);
-    }
-
-    // FIXME: need to update gamephase to gameplay before we get here
-    // Server does next turn logic
-    public void H_Discard(int discardTileId)
-    {
-        // update lists
-        discardPlayerId = fusion.TurnPlayerId;
+        // housekeeping
+        fusionManager.TurnPhase = TurnPhase.Discarding;
         DiscardTile = discardTileId;
+
+        // update lists
         tileTracker.PrivateRacks[discardPlayerId].Remove(discardTileId);
+        tileTracker.Discard.Add(discardTileId);
         fusion.RPC_S2A_ShowDiscard(discardTileId);
 
         // wait for callers
@@ -74,25 +60,11 @@ public class TurnManagerServer
             fusion.CreateTimer();
             fusion.RPC_S2A_ShowButtons(discardPlayerId);
         }
+        // FIXME: host can't use mono's startnewcoroutine
         else { mono.StartNewCoroutine(WaitForJoker()); }
     }
 
-    // All clients show discarded tile
-    void C_ShowDiscard(int discardTileId)
-    {
-        mono.MoveTile(discardTileId, MonoObject.Discard);
-        mono.SetRaycastTargetOnTile(discardTileId, false);
-    }
-
-    public void C_ShowButtons()
-    {
-        if (gameManager.LocalPlayerId != discardPlayerId)
-        { mono.SetActive(MonoObject.CallWaitButtons, true); }
-
-        // TODO: verify that this is working on clients now
-    }
-
-    public void H_TileCallingMonitor()
+    public void TileCallingMonitor()
     {
         // this check rules out times when players aren't calling
         // but also clients because they never have a timer set
@@ -113,7 +85,7 @@ public class TurnManagerServer
         else if (AnyPlayerCalling && fusion.IsTimerExpired)         // if any players call and timer is done/not running, do logic
         {
             // sort PlayersCalling by going around from current player
-            playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, fusion.TurnPlayerId));
+            playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, discardPlayerId));
 
             //int closestPlayerDelta = PlayersCalling.Select(playerId => playerId - fusion.TurnPlayerId).Min();
             //fusion.TurnPlayerId = (fusion.TurnPlayerId + closestPlayerDelta + 4) % 4;
@@ -145,24 +117,26 @@ public class TurnManagerServer
 
     void Pass()
     {
-        fusion.TurnPlayerId = (fusion.TurnPlayerId + 1) % 4;
+        fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
         H_NextTurn();
     }
 
     IEnumerator WaitForJoker()
     {
         yield return mono.WaitForSeconds(2);
-        fusion.TurnPlayerId = (fusion.TurnPlayerId + 1) % 4;
+        fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
+        // TODO: figure out if activePlayer and co need to be nullable or not
         H_NextTurn();
     }
 
     void H_NextTurn()
     {
+        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         int nextPlayer = H_InitializeNextTurn();
         int nextTileId = tileTracker.Wall.Last();
-        mono.SetRaycastTargetOnTile(nextTileId, true);
+        fusionManager.ExposingPlayer = null;
 
-        tileTracker.PrivateRacks[fusion.TurnPlayerId].Add(nextTileId);                 // add that tile to the player's rack list
+        tileTracker.PrivateRacks[(int)fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
         if (fusion.IsPlayerAI(nextPlayer))                         // AI turn
         {
             H_AITurn(nextTileId);
@@ -173,72 +147,31 @@ public class TurnManagerServer
 
     void H_CallTurn()
     {
+        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         callTile = DiscardTile;
         exposePlayerId = H_InitializeNextTurn();
 
-        tileTracker.PrivateRacks[fusion.TurnPlayerId].Add(callTile); // TODO: track public tiles separately
+        tileTracker.PrivateRacks[(int)fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
         // TODO: AI support for calling
         fusion.RPC_S2C_CallTurn(exposePlayerId, callTile);
     }
 
     int H_InitializeNextTurn()
     {
+        UnityEngine.Debug.Assert(fusionManager.ActivePlayer != null);
         fusion.ResetTimer();
         playersWaiting.Clear(); // this shouldn't be needed
         playersCalling.Clear();
         fusion.RPC_S2A_ResetButtons();
-        return fusion.TurnPlayerId;   // set next player
+        return (int)fusionManager.ActivePlayer;   // set next player
     }
 
-    public void C_ResetButtons()
-    {
-        mono.SetTurnIndicatorText(fusion.TurnPlayerId);
-        mono.SetActive(MonoObject.WaitButton, true);
-        mono.SetActive(MonoObject.PassButton, false);
-        mono.SetActive(MonoObject.CallWaitButtons, false);
-    }
 
-    // Client starts turn
-    public void C_NextTurn(int nextTileId)
-    {
-        exposePlayerId = -1;
-        mono.MoveTile(nextTileId, MonoObject.PrivateRack);
-        mono.SetRaycastTarget(MonoObject.Discard, true);
-    }
-
-    public void C_CallTurn(int CallTile)
-    {
-        C_Expose(CallTile);
-
-        // FIXME: if a player puts an exposed tile back on their rack, remove it from screen
-    }
-
-    public void C_Expose(int exposeTileId)
-    {
-        mono.MoveTile(exposeTileId, MonoObject.PublicRack);
-        fusion.RPC_C2A_Expose(exposeTileId);
-        if (ReadyToContinue()) { mono.SetRaycastTarget(MonoObject.Discard, true); }
-    }
-
-    public void C_ExposeOtherPlayer(int exposeTileId)
-    {
-        int rackId = (exposePlayerId - gameManager.LocalPlayerId + 4) % 4 - 1;
-        mono.ExposeOtherPlayerTile(rackId, exposeTileId);
-
-        // FIXME: not working
-    }
-
-    public void C_NeverMind()
-    {
-
-    }
-
-    bool ReadyToContinue() { return true; } // TODO: later make sure it's >2 and valid group
 
     void H_AITurn(int newTileId)
     {
         int discardTileId = newTileId; // for now just discard what was picked up
-        H_Discard(discardTileId);
+        Discard(discardTileId);
     }
 
     // FIXME: when client calls host doesn't see the first exposed tile

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 
-public class CharlestonHost
+public class CharlestonServer
 {
     readonly ClassReferences refs;
     IFusionWrapper Fusion { get => refs.Fusion; }
     ICharlestonFusion CharlesFusion { get => refs.CFusion; }
-    TileTracker TileTracker { get => refs.TileTracker; }
+    TileTrackerServer TileTracker { get => refs.TileTracker; }
 
     public readonly List<List<int>> PassList;
     public readonly List<List<int>> RecList;
@@ -29,7 +28,7 @@ public class CharlestonHost
         }
     }
 
-    public CharlestonHost(ClassReferences refs)
+    public CharlestonServer(ClassReferences refs)
     {
         this.refs = refs;
         refs.CHost = this;
@@ -46,8 +45,8 @@ public class CharlestonHost
         // assertions
         foreach (int tile in tileIdsToPass)
         {
-            Debug.Assert(Tile.IsValidTileId(tile)); // valid tiles
-            Debug.Assert(!Tile.IsJoker(tile));      // not jokers
+            UnityEngine.Debug.Assert(Tile.IsValidTileId(tile)); // valid tiles
+            UnityEngine.Debug.Assert(!Tile.IsJoker(tile));      // not jokers
         }
 
         // logging
@@ -138,7 +137,11 @@ public class CharlestonHost
         AiPassed = false;
         PlayersReady = 0;
         CharlesFusion.Counter++;
-        if (CharlesFusion.Counter == 7) refs.FManager.GamePhase = GamePhase.Gameplay;
+        if (CharlesFusion.Counter == 7)
+        {
+            refs.FManager.GamePhase = GamePhase.Gameplay;
+            refs.TManager.StartGamePlay();
+        }
     }
 
     int TargetPlayerId(int sourcePlayerId) =>

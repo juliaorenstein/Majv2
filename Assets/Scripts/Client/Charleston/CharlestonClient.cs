@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
@@ -87,7 +86,7 @@ public class CharlestonClient
         {
             Mono.SetActive(MonoObject.CharlestonBox, false);
             Mono.SetActive(MonoObject.CharlestonPassButton, false);
-            refs.TManager.C_StartGamePlay();
+            refs.TManagerClient.C_StartGamePlay();
         }
 
         void NextPass()
@@ -156,7 +155,7 @@ public class CharlestonClient
         // swap two tiles in Charleston
         if (CharlestonSpots.Contains(start))
         {
-            Debug.Assert(ClientPassArr.Contains(tileId));
+            UnityEngine.Debug.Assert(ClientPassArr.Contains(tileId));
             SwapCharles(SpotIx(start), SpotIx(end));
             return;
         }
@@ -164,7 +163,7 @@ public class CharlestonClient
         // drag - move tile from rack to charleston
         if (start == MonoObject.PrivateRack)
         {
-            Debug.Assert(Rack.Contains(tileId));
+            UnityEngine.Debug.Assert(Rack.Contains(tileId));
 
             // check if that spot is already populated
             int tileAlreadyInSpot = ClientPassArr[SpotIx(end)];
@@ -212,7 +211,7 @@ public class CharlestonClient
 
     int SpotIx(MonoObject spot)
     {
-        Debug.Assert(CharlestonSpots.Contains(spot));
+        UnityEngine.Debug.Assert(CharlestonSpots.Contains(spot));
         return CharlestonSpots.IndexOf(spot);
     }
 

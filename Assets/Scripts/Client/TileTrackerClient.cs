@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 
 public class TileTrackerClient
@@ -74,7 +73,7 @@ public class TileTrackerClient
             // check that the already-existing items didn't change
             for (int i = 0; i < curList.Count; i++)
             {
-                Debug.Assert(newList[i] == curList[i]);
+                UnityEngine.Debug.Assert(newList[i] == curList[i]);
             }
 
             for (int i = curList.Count; i < newList.Count(); i++)
@@ -115,8 +114,8 @@ public class TileTrackerClient
     void DiscardChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         // the only event that should happen to discard is add (handle calling later)
-        Debug.Assert(sender == Discard);
-        Debug.Assert(e.Action == NotifyCollectionChangedAction.Add);
+        UnityEngine.Debug.Assert(sender == Discard);
+        UnityEngine.Debug.Assert(e.Action == NotifyCollectionChangedAction.Add);
 
         int tileId = (int)e.NewItems[0];
         mono.MoveTile(tileId, MonoObject.Discard);
@@ -130,8 +129,8 @@ public class TileTrackerClient
     void DisplayRacksChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         // the only events that should happen to display racks are Add or Replace
-        Debug.Assert(DisplayRacks.Contains(sender));
-        Debug.Assert(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace);
+        UnityEngine.Debug.Assert(DisplayRacks.Contains(sender));
+        UnityEngine.Debug.Assert(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace);
 
         // player exposes
         if (e.Action == NotifyCollectionChangedAction.Add)
@@ -153,14 +152,14 @@ public class TileTrackerClient
     /*
     void VerifyWallCount(int newWallCount)
     {
-        Debug.Assert(newWallCount > WallCount);
+        UnityEngine.Debug.Assert(newWallCount > WallCount);
     }
     void VerifyDiscard(int[] newDiscard)
     {
         for (int i = 0; i < Discard.Count; i++)
         {
             // the existing Discard list on the client should equal newDiscard up until the newer tile(s)
-            Debug.Assert(Discard[i] == newDiscard[i]);
+            UnityEngine.Debug.Assert(Discard[i] == newDiscard[i]);
         }
     }
     */

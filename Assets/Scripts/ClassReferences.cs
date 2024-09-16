@@ -10,14 +10,14 @@ public class ClassReferences
     public NetworkCallbacks NetworkCallbacks;
     public Navigation Nav;
     public NetworkRunner Runner;
-    public CharlestonHost CHost;
+    public CharlestonServer CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
     public TurnManagerServer TManager;
+    public TurnManagerClient TManagerClient;
     public IFusionManager FManager;
     public GameManager GManager;            // TODO: deprecate
-    public GameManagerClient GManagerClient;// TODO: deprecate
-    public TileTracker TileTracker;
+    public TileTrackerServer TileTracker;
     public TileTrackerClient TileTrackerClient;
     public IMonoWrapper Mono;
     public IFusionWrapper Fusion;

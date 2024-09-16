@@ -3,8 +3,6 @@
 public interface IFusionWrapper
 {
     int LocalPlayerId { get; }
-    int TurnPlayerId { get; set; }
-    int CallPlayerId { get; set; }
     bool IsServer { get; }
     int ActiveDiscardTileId { get; set; }
     bool IsTimerExpired { get; }

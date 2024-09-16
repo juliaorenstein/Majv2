@@ -1,17 +1,15 @@
-using System.Diagnostics;
 using Fusion;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
     ClassReferences refs;
     FusionManager FManager { get => (FusionManager)refs.FManager; }
-    TurnManagerServer TManager { get => refs.TManager; }
-    TileTracker TileTracker { get => refs.TileTracker; }
+    TurnManagerServer TurnManagerServer { get => refs.TManager; }
+    TurnManagerClient TurnManagerClient { get => refs.TManagerClient; }
+    TileTrackerServer TileTracker { get => refs.TileTracker; }
 
     // Info about players
     public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }
-    [Networked] public int TurnPlayerId { get; set; }
-    [Networked] public int CallPlayerId { get; set; }
 
     public bool IsServer { get => Runner.IsServer; }
     public bool IsPlayerAI(int playerID)
@@ -32,14 +30,12 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     {
         refs = ObjectReferences.Instance.ClassRefs;
         refs.Fusion = this;
-        // TODO: make sure TurnPlayerId is dealt with
-        CallPlayerId = -1;
     }
 
     // Frame based update stuff
     public override void FixedUpdateNetwork()
     {
-        TManager.H_TileCallingMonitor();
+        TurnManagerServer.TileCallingMonitor();
     }
 
     // RPCs
@@ -63,30 +59,30 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_C2S_Discard(int discardTileId) => TManager.H_Discard(discardTileId);
+    public void RPC_C2S_Discard(int discardTileId) => TurnManagerServer.Discard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2A_ShowDiscard(int discardTileId) => TManager.C_RequestDiscard(discardTileId);
+    public void RPC_S2A_ShowDiscard(int discardTileId) => TurnManagerClient.ShowDiscard(discardTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2A_ShowButtons(int discardPlayerId) => TManager.C_ShowButtons();
+    public void RPC_S2A_ShowButtons(int discardPlayerId) => TurnManagerClient.ShowButtons();
 
     public void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId) => RPC_S2C_NextTurn(FManager.PlayerDict[nextPlayerId], nextPlayerId);
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2C_NextTurn(PlayerRef _, int nextTileId) => TManager.C_NextTurn(nextTileId);
+    public void RPC_S2C_NextTurn(PlayerRef _, int nextTileId) => TurnManagerClient.NextTurn(nextTileId);
 
     public void RPC_S2C_CallTurn(int callPlayerId, int callTileId) => RPC_S2C_CallTurn(FManager.PlayerDict[callPlayerId], callTileId);
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2C_CallTurn(PlayerRef _, int callTileId) => TManager.C_CallTurn(callTileId);
+    public void RPC_S2C_CallTurn(PlayerRef _, int callTileId) => TurnManagerClient.CallTurn(callTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2A_ResetButtons() => TManager.C_ResetButtons();
+    public void RPC_S2A_ResetButtons() => TurnManagerClient.ResetButtons();
 
     [Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_C2A_Expose(int exposeTileId) => TManager.C_ExposeOtherPlayer(exposeTileId);
+    public void RPC_C2A_Expose(int exposeTileId) => TurnManagerClient.ExposeOtherPlayer(exposeTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2A_NeverMind() => TManager.C_NeverMind();
+    public void RPC_S2A_NeverMind() => TurnManagerClient.NeverMind();
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
     public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.TileTrackerClient.ReceiveRackUpdate(tileArr); // TODO: game state updates

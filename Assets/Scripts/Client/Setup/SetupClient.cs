@@ -10,21 +10,12 @@ public class SetupClient
 
     public void SetupDriver()
     {
-        refs.GManager = new(refs)
-        {
-            DealerId = 3 // TODO: rotate dealer each game
-        };
-
-        refs.GManagerClient = new(refs)
-        {
-            LocalPlayer = refs.Fusion.LocalPlayerId,
-        };
         new TileTrackerClient(refs);
 
         HideButtons();                      // hide start buttons
 
         // show the other player's racks
-        bool isDealer = refs.GManager.DealerId == refs.GManager.LocalPlayerId;
+        bool isDealer = refs.GManager.Dealer == refs.GManager.LocalPlayerId;
         setupMono.PopulateOtherRacks(isDealer);
         refs.Nav.SetNetworkCallbacks(refs.NetworkCallbacks);
     }

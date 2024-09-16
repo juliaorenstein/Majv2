@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class SetupHost
+public class SetupServer
 {
     readonly ClassReferences refs;
     bool ShuffledAndDealt;
-    readonly TileTracker tileTracker;
+    readonly TileTrackerServer tileTracker;
 
-    public SetupHost(ClassReferences refs)
+    public SetupServer(ClassReferences refs)
     {
         this.refs = refs;
         ShuffledAndDealt = false;
@@ -17,6 +17,10 @@ public class SetupHost
     public void SetupDriver()
     {
         refs.TManager = new(refs);
+        refs.GManager = new(refs)
+        {
+            Dealer = 3 // TODO: rotate dealer each game
+        };
 
         if (!ShuffledAndDealt)
         {
@@ -68,6 +72,6 @@ public class SetupHost
         }
 
         // one more tile to the dealer
-        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.GManager.DealerId]);
+        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.GManager.Dealer]);
     }
 }

@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
 
 public class TileLocomotion
@@ -17,7 +16,7 @@ public class TileLocomotion
     // initiated in tileLocoMono
     public TileLocomotion(ClassReferences refs, ITileLocomotionMono tileLocoMono)
     {
-        Debug.Assert(Tile.IsValidTileId(tileId));
+        UnityEngine.Debug.Assert(Tile.IsValidTileId(tileId));
         this.tileLocoMono = tileLocoMono;
         tileId = tileLocoMono.TileId;
         this.refs = refs;
@@ -64,7 +63,7 @@ public class TileLocomotion
 
     public void DoubleClickCharleston() => refs.CClient.DoubleClickCharlestonTileMover(tileId);
 
-    public void DoubleClickDiscard() => refs.TManager.C_RequestDiscard(tileId);
+    public void DoubleClickDiscard() => refs.TManagerClient.RequestDiscard(tileId);
 
     public void OnEndDrag(List<MonoObject> raycastTargets, int dropIx = -1, bool rightOfTile = false)
     {
@@ -95,7 +94,7 @@ public class TileLocomotion
 
         void DropOnRack()
         {
-            Debug.Assert(FusionManager.GamePhase > GamePhase.Pregame);
+            UnityEngine.Debug.Assert(FusionManager.GamePhase > GamePhase.Pregame);
 
             ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
 
@@ -128,7 +127,7 @@ public class TileLocomotion
 
         void DropOnCharleston()
         {
-            Debug.Assert(!Tile.IsJoker(tileId));
+            UnityEngine.Debug.Assert(!Tile.IsJoker(tileId));
 
             MonoObject start;
             MonoObject end = raycastTargets.First(target
@@ -170,7 +169,7 @@ public class TileLocomotion
     public bool Discardable()
     {
         if (FusionManager.TurnPhase != TurnPhase.Discarding) return false; // FIXME: deal with expose turn discards
-        if (!refs.GManagerClient.IsActivePlayer) return false;
+        if (!refs.FManager.IsActivePlayer) return false;
         return true;
     }
 
@@ -184,7 +183,7 @@ public class TileLocomotion
     public bool Exposable()
     {
         if (FusionManager.TurnPhase != TurnPhase.Exposing) return false;
-        if (!refs.GManagerClient.IsExposingPlayer) return false;
+        if (!refs.FManager.IsExposingPlayer) return false;
         if (!Tile.TileList[tileId].Equals(refs.TManager.DiscardTile)) return false;
         return true;
     }
@@ -196,7 +195,7 @@ public class TileLocomotion
         return true;
     }
 
-    public void Discard() => refs.TManager.C_RequestDiscard(tileId);
+    public void Discard() => refs.TManagerClient.RequestDiscard(tileId);
 
     public void Expose() => throw new NotImplementedException();
 

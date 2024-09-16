@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 using System.Text;
 using System;
 
-public class TileTracker
+public class TileTrackerServer
 {
     readonly ClassReferences refs;
 
     // initialized in SetupHost
-    public TileTracker(ClassReferences refs)
+    public TileTrackerServer(ClassReferences refs)
     {
         refs.TileTracker = this;
         this.refs = refs;
@@ -40,7 +39,7 @@ public class TileTracker
     // Might not be suitable for all tile moves (like dropping to specific location on rack).
     public void SimpleMoveTile(int tileId, List<int> location)
     {
-        Debug.Assert(LocationIsValid(location));
+        UnityEngine.Debug.Assert(LocationIsValid(location));
         TileLocations[tileId].Remove(tileId);   // remove tile from the list it's currently on
         location.Add(tileId);                   // add tile to its new location
         TileLocations[tileId] = location;       // update dictionary entry
