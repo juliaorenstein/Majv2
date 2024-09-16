@@ -9,9 +9,10 @@ public class CharlestonServerTests
     [TestCase(1, new int[] { 2, 3 })]
     public void PassDriver_AiPass_WhenCalledWithAis_PassListUpdatedForAis(int sourcePlayerId, int[] aiPlayers)
     {
+        // FIXME: this is failing because TileList isn't populated for unit tests.
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
-        fusion.AiPlayers = aiPlayers.ToList();
+        var (CHost, _, fusionManager, _, _, tileTracker) = CreateTestVariables();
+        fusionManager.AiPlayers = aiPlayers.ToList();
 
         // ACT
         CHost.PassDriver(sourcePlayerId,
@@ -29,7 +30,7 @@ public class CharlestonServerTests
     public void PassDriver_AiPass_WhenCalledWithoutAis_AiPassedTrueAnyway()
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
+        var (CHost, _, _, _, _, tileTracker) = CreateTestVariables();
 
         // ACT
         CHost.PassDriver(0,
@@ -46,7 +47,7 @@ public class CharlestonServerTests
     public void PassDriver_NotEverybodyReady_DontPass(int[] playersPassing, int[] aiPlayers)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
+        var (CHost, Refs, fusionManager, fusionWrapper, CFusion, tileTracker) = CreateTestVariables();
 
         // ACT
         foreach (int playerId in playersPassing)
@@ -66,8 +67,8 @@ public class CharlestonServerTests
     public void PassDriver_EverybodyReady_Pass(int[] playersPassing, int[] aiPlayers)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
-        fusion.AiPlayers = aiPlayers.ToList();
+        var (CHost, Refs, fusionManager, fusionWrapper, CFusion, tileTracker) = CreateTestVariables();
+        fusionManager.AiPlayers = aiPlayers.ToList();
 
         // ACT
         foreach (int playerId in playersPassing)
@@ -90,7 +91,7 @@ public class CharlestonServerTests
     public void PassDriver_SimplePasses_RacksAreUpdated(int counter, int shift)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
+        var (CHost, _, _, _, CFusion, tileTracker) = CreateTestVariables();
         CFusion.Counter = counter;
 
         // ACT
@@ -144,7 +145,7 @@ public class CharlestonServerTests
         int[] rec0, int[] rec1, int[] rec2, int[] rec3)
     {
         // ARRANGE
-        var (CHost, Refs, fusion, CFusion, tileTracker) = CreateTestVariables();
+        var (CHost, _, _, _, _, tileTracker) = CreateTestVariables();
         List<int[]> testPasses = new() { pass0, pass1, pass2, pass3 };
 
         // ACT
@@ -169,7 +170,7 @@ public class CharlestonServerTests
     public void PassDriver_AfterPass_VariablesAreReset()
     {
         // ARRANGE
-        var (CHost, _, _, _, _) = CreateTestVariables();
+        var (CHost, _, _, _, _, _) = CreateTestVariables();
 
         // ACT
         for (int playerId = 0; playerId < 4; playerId++)
@@ -191,17 +192,21 @@ public class CharlestonServerTests
     // factory method to set up all the useful variables for the unit tests
     (CharlestonServer
         , ClassReferences
+        , FakeFusionManager
         , FakeFusionWrapper
         , FakeCharlestonFusion
-        , TileTrackerServer) CreateTestVariables()
+        , TileTrackerServer)
+        CreateTestVariables()
     {
         ClassReferences refs = new();
-        FakeFusionWrapper fusion = new(refs);
+        FakeFusionManager fusionManager = new(refs);
+        FakeFusionWrapper fusionWrapper = new(refs);
         FakeCharlestonFusion cFusion = new(refs);
         TileTrackerServer tileTracker = new(refs) { PrivateRacks = TestRacks() };
         CharlestonServer cHost = new(refs);
+        Tile.TileList = Tile.GenerateTiles();
 
-        return (cHost, refs, fusion, cFusion, tileTracker);
+        return (cHost, refs, fusionManager, fusionWrapper, cFusion, tileTracker);
     }
 
     // shortening to ten tiles per rack to allow output of unit tests to be more readable

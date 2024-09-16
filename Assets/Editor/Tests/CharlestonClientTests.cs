@@ -181,7 +181,8 @@ public class CharlestonClientTests
     {
         // ARRANGE
         var (refs, mono, _) = CreateVariables();
-        refs.TManager = new(refs);
+        FakeFusionManager fusionManager = new(refs);
+        TurnManagerClient turnManagerClient = new(refs);
         CharlestonClient CClient = new(refs);
         mono.SetActive(MonoObject.CharlestonBox, true);
 

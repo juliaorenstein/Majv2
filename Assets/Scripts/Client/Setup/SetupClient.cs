@@ -17,7 +17,13 @@ public class SetupClient
         // show the other player's racks
         setupMono.PopulateOtherRacks(refs.FManager.IsDealer);
         refs.Nav.SetNetworkCallbacks(refs.NetworkCallbacks);
-    }
 
-    void HideButtons() => refs.Mono.SetActive(MonoObject.StartButtons, false);
+        // just for host, allow skipping charlestons for debugging
+        if (refs.FManager.IsServer)
+        {
+            ObjectReferences.Instance.CharlestonBox.parent.GetChild(2).gameObject.SetActive(true);
+        }
+
+        void HideButtons() => refs.Mono.SetActive(MonoObject.StartButtons, false);
+    }
 }

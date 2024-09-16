@@ -4,16 +4,9 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 {
     ClassReferences refs;
     FusionManager FManager { get => (FusionManager)refs.FManager; }
-    TurnManagerServer TurnManagerServer { get => refs.TManager; }
+    TurnManagerServer TurnManagerServer { get => refs.TManagerServer; }
     TurnManagerClient TurnManagerClient { get => refs.TManagerClient; }
     TileTrackerServer TileTracker { get => refs.TileTracker; }
-
-    // Info about players
-    public int LocalPlayerId { get => Runner.LocalPlayer.PlayerId; }
-
-    public bool IsServer { get => Runner.IsServer; }
-    public bool IsPlayerAI(int playerID)
-    { return FManager.PlayerDict[playerID] == PlayerRef.None; }
 
 
     // Tiles

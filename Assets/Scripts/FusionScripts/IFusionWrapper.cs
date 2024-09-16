@@ -2,15 +2,12 @@
 
 public interface IFusionWrapper
 {
-    int LocalPlayerId { get; }
-    bool IsServer { get; }
     int ActiveDiscardTileId { get; set; }
     bool IsTimerExpired { get; }
     bool IsTimerRunning { get; }
 
     void CreateTimer();
     void FixedUpdateNetwork();
-    bool IsPlayerAI(int playerID);
     void ResetTimer();
     void RPC_S2C_SendGameState(int playerId);
     void RPC_C2A_Expose(int exposeTileId);

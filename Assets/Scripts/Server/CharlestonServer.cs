@@ -68,7 +68,7 @@ public class CharlestonServer
         // loop through players and for AIs select first three tiles to pass
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            if (!Fusion.IsPlayerAI(playerId)) continue;
+            if (!refs.FManager.IsPlayerAI(playerId)) continue;
 
             // This player's HostPassArr entry is the first three tiles of their rack
             PassList[playerId] = TileTracker.PrivateRacks[playerId].GetRange(0, 3);
@@ -140,7 +140,7 @@ public class CharlestonServer
         if (CharlesFusion.Counter == 7)
         {
             refs.FManager.GamePhase = GamePhase.Gameplay;
-            refs.TManager.StartGamePlay();
+            refs.TManagerServer.StartGamePlay();
         }
     }
 

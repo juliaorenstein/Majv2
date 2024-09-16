@@ -15,7 +15,7 @@ public class TurnManagerClient
     // Setup first turn
     public void C_StartGamePlay()
     {
-        UnityEngine.Debug.Assert(!fusion.IsServer);
+        UnityEngine.Debug.Assert(!fusionManager.IsServer);
         mono.SetActive(MonoObject.Discard, true);
 
         if (fusionManager.IsDealer)

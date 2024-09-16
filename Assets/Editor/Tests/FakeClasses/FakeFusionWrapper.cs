@@ -30,9 +30,6 @@ class FakeFusionWrapper : IFusionWrapper
         throw new System.NotImplementedException();
     }
 
-    public List<int> AiPlayers = new();
-    public bool IsPlayerAI(int playerID) => AiPlayers.Contains(playerID);
-
     public void ResetTimer()
     {
         throw new System.NotImplementedException();

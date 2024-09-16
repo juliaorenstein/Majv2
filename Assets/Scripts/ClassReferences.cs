@@ -13,7 +13,7 @@ public class ClassReferences
     public CharlestonServer CHost;
     public CharlestonClient CClient;
     public ICharlestonFusion CFusion;
-    public TurnManagerServer TManager;
+    public TurnManagerServer TManagerServer;
     public TurnManagerClient TManagerClient;
     public IFusionManager FManager;
     public TileTrackerServer TileTracker;

@@ -14,10 +14,7 @@ public class TileLocomotionTests
     [Test]
     public void OnPointerClick_RackTileDuringCharles_TileMovesToCharles()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
-
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         tileLoco.OnPointerClick(true);
 
         ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
@@ -32,9 +29,7 @@ public class TileLocomotionTests
     [Test]
     public void OnPointerClick_RackTileDuringCharlesNotEmpty_TileMovesToCharles()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         charles.ClientPassArr[0] = 94;
 
         tileLoco.OnPointerClick(true);
@@ -51,15 +46,13 @@ public class TileLocomotionTests
     [Test]
     public void OnPointerClick_RackTileDuringCharlesBoxIsFull_TileReplacesCharles()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         charles.ClientPassArr = new int[] { 11, 12, 13 };
 
         tileLoco.OnPointerClick(true);
 
-        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4));
-        expectedRack.Add(13);
+        ObservableCollection<int> expectedRack = new(TestRack.ToList().GetRange(1, 4)) { 13 };
+
         int[] expectedPassArr = new int[] { 11, 12, 0 };
         (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
@@ -71,9 +64,7 @@ public class TileLocomotionTests
     [Test]
     public void OnPointerClick_CharlesTile_TileMovesToRack()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(11);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(11);
         charles.ClientPassArr = new int[] { 11, 12, 13 };
 
         tileLoco.OnPointerClick(true);
@@ -81,6 +72,25 @@ public class TileLocomotionTests
         ObservableCollection<int> expectedRack = TestRack;
         expectedRack.Add(11);
         int[] expectedPassArr = new int[] { -1, 12, 13 };
+        (ObservableCollection<int> actualRack, int[] actualPassArr) =
+            GetActualVarsForCharlestons(tileTracker, charles);
+
+        CollectionAssert.AreEqual(expectedRack, actualRack);
+        CollectionAssert.AreEqual(expectedPassArr, actualPassArr);
+    }
+
+    [Test]
+    public void OnPointerClick_JokerOnRack_DoesNotGoToCharleston()
+    {
+        int jokerId = 147;
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(147);
+        tileTracker.LocalPrivateRack.Add(jokerId);
+
+        tileLoco.OnPointerClick(true);
+
+        ObservableCollection<int> expectedRack = TestRack;
+        expectedRack.Add(jokerId);
+        int[] expectedPassArr = new int[] { -1, -1, -1 };
         (ObservableCollection<int> actualRack, int[] actualPassArr) =
             GetActualVarsForCharlestons(tileTracker, charles);
 
@@ -108,9 +118,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileRightOnRackRightOfAnotherTile_RackRearranges()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient _
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 3;
@@ -126,9 +134,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileRightOnRackLeftOfAnotherTile_RackRearranges()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient _
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 3;
@@ -144,9 +150,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileLeftOnRackRightOfAnotherTile_RackRearranges()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient _
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;
@@ -162,9 +166,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileLeftOnRackLeftOfAnotherTile_RackRearranges()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient _
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(4);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;
@@ -180,9 +182,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileRightOnRackRightOfAllTiles_RackRearranges()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient _
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = -1;
@@ -199,9 +199,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_RackToEmptyCharlesSpot_TileMovesToCharleston()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot1 };
 
         tileLoco.OnEndDrag(raycastTargets);
@@ -217,9 +215,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_RackToOccupiedCharlesSpot_TileMovesToCharleston()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot1 };
         charles.ClientPassArr[1] = 84;
 
@@ -239,9 +235,7 @@ public class TileLocomotionTests
     public void OnEndDrag_JokerToCharleston_TileMovesBack()
     {
         int jokerId = 147;
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(jokerId);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(jokerId);
         tileTracker.LocalPrivateRack.Add(jokerId);
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot0 };
 
@@ -260,9 +254,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToEndOfRack_TileMovesToRack()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
         charles.ClientPassArr[1] = 84;
 
@@ -281,9 +273,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToMiddleOfRackRightOfTile_TileMovesToRack()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
         charles.ClientPassArr[1] = 84;
 
@@ -302,9 +292,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToMiddleOfRackLeftOfTile_TileMovesToRack()
     {
-        (TileTrackerClient tileTracker
-            , CharlestonClient charles
-            , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { MonoObject.PrivateRack };
         charles.ClientPassArr[1] = 84;
 
@@ -323,9 +311,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToCharlesEmpty_CharlesRearranges()
     {
-        (TileTrackerClient tileTracker
-           , CharlestonClient charles
-           , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, _, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot2 };
         charles.ClientPassArr[1] = 84;
 
@@ -343,9 +329,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToCharlesPopulated_CharlesRearranges()
     {
-        (TileTrackerClient tileTracker
-           , CharlestonClient charles
-           , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { MonoObject.CharlestonSpot2 };
         charles.ClientPassArr[1] = 84;
         charles.ClientPassArr[2] = 4;
@@ -364,9 +348,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_CharlesToNowhere_TileMovesBack()
     {
-        (TileTrackerClient tileTracker
-           , CharlestonClient charles
-           , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest(84);
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(84);
         List<MonoObject> raycastTargets = new() { };
         charles.ClientPassArr[1] = 84;
         charles.ClientPassArr[2] = 4;
@@ -404,9 +386,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_RackToNowhere_TileMovesBack()
     {
-        (TileTrackerClient tileTracker
-           , CharlestonClient _
-           , TileLocomotion tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
         List<MonoObject> raycastResults = new();
         tileTracker.LocalPrivateRack = TestRack;
 
@@ -421,7 +401,7 @@ public class TileLocomotionTests
     ObservableCollection<int> TestRack { get => new(Enumerable.Range(0, 5)); }
     int[] TestClientPassArr { get => new int[] { -1, -1, -1 }; }
 
-    (TileTrackerClient, CharlestonClient, TileLocomotion)
+    (TileTrackerClient, CharlestonClient, FakeCharlestonFusion, TileLocomotion)
         MakeVariablesForCharlestonTest(int tileId = 0)
     {
         ClassReferences refs = new();
@@ -429,9 +409,10 @@ public class TileLocomotionTests
         new FakeMonoWrapper(refs);
         TileTrackerClient tileTracker = new(refs) { LocalPrivateRack = TestRack };
         CharlestonClient charleston = new(refs) { ClientPassArr = TestClientPassArr };
+        FakeCharlestonFusion charlesFusion = new(refs);
         TileLocomotion tileLoco = new(refs, new FakeTileLocomotionMono(tileId));
 
-        return (tileTracker, charleston, tileLoco);
+        return (tileTracker, charleston, charlesFusion, tileLoco);
     }
 
     (ObservableCollection<int>, int[]) GetActualVarsForCharlestons(

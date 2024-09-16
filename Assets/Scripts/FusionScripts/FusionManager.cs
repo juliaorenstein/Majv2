@@ -12,6 +12,10 @@ public class FusionManager : NetworkBehaviour, IFusionManager
     [Networked] public TurnPhase TurnPhase { get; set; }
 
     // players
+    public bool IsServer { get => Runner.IsServer; }
+    public bool IsPlayerAI(int playerID)
+    { return PlayerDict[playerID] == PlayerRef.None; }
+
     [Networked] public int LocalPlayer { get; set; }
     [Networked] public int Dealer { get; set; }
     public bool IsDealer { get => LocalPlayer == Dealer; }

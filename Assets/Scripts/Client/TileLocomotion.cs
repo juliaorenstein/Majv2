@@ -28,6 +28,9 @@ public class TileLocomotion
 
         if (FusionManager.GamePhase == GamePhase.Charleston)
         {
+            // don't fuck with jokers during charlestons
+            if (Tile.IsJoker(tileId)) return;
+
             DoubleClickCharleston();
             return;
         }
@@ -90,7 +93,7 @@ public class TileLocomotion
         }
 
         // if none of the above worked, move tile back to where it came from
-        MoveBack();
+        tileLocoMono.MoveBack();
 
         void DropOnRack()
         {
@@ -184,7 +187,7 @@ public class TileLocomotion
     {
         if (FusionManager.TurnPhase != TurnPhase.Exposing) return false;
         if (!refs.FManager.IsExposingPlayer) return false;
-        if (!Tile.TileList[tileId].Equals(refs.TManager.DiscardTile)) return false;
+        if (!Tile.TileList[tileId].Equals(refs.TManagerServer.DiscardTile)) return false;
         return true;
     }
 
@@ -198,6 +201,4 @@ public class TileLocomotion
     public void Discard() => refs.TManagerClient.RequestDiscard(tileId);
 
     public void Expose() => throw new NotImplementedException();
-
-    void MoveBack() => tileLocoMono.MoveBack();
 }

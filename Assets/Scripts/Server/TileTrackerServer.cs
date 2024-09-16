@@ -61,7 +61,7 @@ public class TileTrackerServer
     {
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            if (refs.Fusion.IsPlayerAI(playerId)) continue;
+            if (refs.FManager.IsPlayerAI(playerId)) continue;
             refs.Fusion.RPC_S2C_SendGameState(playerId);
         }
     }

@@ -73,11 +73,12 @@ public class CharlestonClient
         // if client isn't ready to pass, quit out
         if (!CheckReadyToPass())
         {
+            Mono.SetButtonText(MonoObject.CharlestonPassButton, $"Pass {Direction(counter)}");
             Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, false);
             return;
         }
 
-        // FIXME: you can double-click and space bar a joker onto the charleston box
+        // FIXME: you can space bar a joker onto the charleston box
 
         // otherwise, get button ready for next pass
         NextPass();
@@ -91,8 +92,8 @@ public class CharlestonClient
 
         void NextPass()
         {
-            Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, true);
             Mono.SetButtonText(MonoObject.CharlestonPassButton, $"Pass {Direction(counter)}");
+            Mono.SetButtonInteractable(MonoObject.CharlestonPassButton, true);
         }
     }
 

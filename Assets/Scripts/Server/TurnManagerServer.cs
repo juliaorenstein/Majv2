@@ -26,7 +26,7 @@ public class TurnManagerServer
     public TurnManagerServer(ClassReferences refs)
     {
         this.refs = refs;
-        refs.TManager = this;
+        refs.TManagerServer = this;
         fusion = refs.Fusion;
         fusionManager = refs.FManager;
         tileTracker = refs.TileTracker;
@@ -36,10 +36,10 @@ public class TurnManagerServer
 
     public void StartGamePlay()
     {
-        UnityEngine.Debug.Assert(fusion.IsServer);
+        UnityEngine.Debug.Assert(fusionManager.IsServer);
 
         fusionManager.ActivePlayer = fusionManager.Dealer;
-        if (!fusion.IsPlayerAI(fusionManager.Dealer)) return;
+        if (!fusionManager.IsPlayerAI(fusionManager.Dealer)) return;
         AITurn(tileTracker.PrivateRacks[fusionManager.Dealer].Last());
     }
 
@@ -137,7 +137,7 @@ public class TurnManagerServer
         fusionManager.ExposingPlayer = -1;
 
         tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
-        if (fusion.IsPlayerAI(nextPlayer))                         // AI turn
+        if (fusionManager.IsPlayerAI(nextPlayer))                         // AI turn
         {
             AITurn(nextTileId);
             return;
