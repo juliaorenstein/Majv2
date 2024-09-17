@@ -98,19 +98,6 @@ public class TileLocomotionTests
         CollectionAssert.AreEqual(expectedPassArr, actualPassArr);
     }
 
-    // OnPointerClick, Gameplay
-
-    // The following five tests are out of scope for TileLocomotion, but when TurnManager is tested, those tests should start from this class.
-    // public void OnPointerClick_RackTileWhenDiscardIsValid_TileIsDiscarded()
-
-    // public void OnPointerClick_RackTileWhenExposeIsValid_TileIsExposed()
-
-    // public void OnPointerClick_RackTileWhenDiscardAndExposePossible_Discarded()
-
-    // public void OnPointerClick_RackTileWhenDiscardAndExposePossible_Expose()
-
-    // public void OnPointerClick_DiscardedTileDuringCalling_TileIsCalled()
-
     // OnPointerClick, Nothing Happens - removed these because I'm going to throw exceptions at the end of all known cases for these, which will find invalid cases for me as I go through tileTrackerplay
 
     // OnEndDrag, Rack
@@ -365,23 +352,6 @@ public class TileLocomotionTests
     }
 
     // OnEndDrag, Gameplay
-    // will test some of these in TurnManager
-    /*
-    [Test]
-    public void OnEndDrag_RackToDiscardValid_Discard() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDiscardInvalid_TileMovesBack() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_DiscardToDisplayRack_Expose() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDisplayRackValid_Expose() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDisplayRackInvalid_TileMovesBack() { throw new NotImplementedException(); }
-    */
 
     [Test]
     public void OnEndDrag_RackToNowhere_TileMovesBack()

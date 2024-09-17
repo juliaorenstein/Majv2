@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 class FakeFusionWrapper : IFusionWrapper
 {
     public FakeFusionWrapper(ClassReferences refs)
@@ -16,13 +14,14 @@ class FakeFusionWrapper : IFusionWrapper
 
     public int ActiveDiscardTileId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-    public bool IsTimerExpired => throw new System.NotImplementedException();
+    public bool IsTimerExpired { get; set; }
 
-    public bool IsTimerRunning => throw new System.NotImplementedException();
+    bool isTimerRunning = false;
+    public bool IsTimerRunning => isTimerRunning;
 
     public void CreateTimer()
     {
-        throw new System.NotImplementedException();
+        isTimerRunning = true;
     }
 
     public void FixedUpdateNetwork()
@@ -32,7 +31,7 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void ResetTimer()
     {
-        throw new System.NotImplementedException();
+        isTimerRunning = false;
     }
 
     public void RPC_S2C_SendGameState(int playerId)
@@ -62,12 +61,12 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void RPC_S2A_ShowButtons(int discardPlayerId)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log($"RPC_S2A_ShowButtons({discardPlayerId})");
     }
 
     public void RPC_S2A_ShowDiscard(int discardTileId)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log($"RPC_S2A_ShowDiscard({discardTileId})");
     }
 
     public void RPC_S2C_CallTurn(int callPlayerId, int callTileId)

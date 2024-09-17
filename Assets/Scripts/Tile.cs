@@ -61,7 +61,7 @@ public class Tile : IComparable<Tile>
 
     public static bool IsValidTileId(int tileId) => tileId >= 0 && tileId < 152;
     public bool IsJoker() => kind == Kind.joker;
-    public static bool IsJoker(int tileId) => tileId >= 144;
+    public static bool IsJoker(int tileId) => tileId >= 144 && tileId < 152;
 
     public override int GetHashCode()
     {
