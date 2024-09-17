@@ -18,6 +18,7 @@ public class TileTrackerServer
     public List<int> Wall;
     public List<int> Discard = new();
     public List<List<int>> PrivateRacks = new() { new(), new(), new(), new() };
+    public List<int> ActivePrivateRack { get => PrivateRacks[refs.FManager.ActivePlayer]; }
     public List<List<int>> DisplayRacks = new() { new(), new(), new(), new() };
 
     public Dictionary<int, List<int>> TileLocations = new();

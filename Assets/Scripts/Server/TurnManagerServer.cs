@@ -1,6 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Mono.Cecil.Cil;
 
 public class TurnManagerServer
 {
@@ -11,9 +12,6 @@ public class TurnManagerServer
     readonly TileTrackerServer tileTracker;
     public int DiscardTile;
     int callTile;
-    int discardPlayerId;
-    int exposePlayerId;
-
     readonly List<int> playersWaiting;
     bool AnyPlayerWaiting
     { get { return playersWaiting.Count > 0; } }
@@ -36,32 +34,40 @@ public class TurnManagerServer
 
     public void StartGamePlay()
     {
-        UnityEngine.Debug.Assert(fusionManager.IsServer);
+        UnityEngine.Debug.Log("TurnManagerServer.StartGamePlay()");
+        UnityEngine.Debug.Assert(fusionManager.IsServer, "Reached TurnManagerServer on client.");
 
         fusionManager.ActivePlayer = fusionManager.Dealer;
-        if (!fusionManager.IsPlayerAI(fusionManager.Dealer)) return;
-        AITurn(tileTracker.PrivateRacks[fusionManager.Dealer].Last());
+        if (fusionManager.IsPlayerAI(fusionManager.Dealer))
+        {
+            AITurn();
+        }
     }
 
     public void Discard(int discardTileId)
     {
+        UnityEngine.Debug.Log($"TurnManagerServer.Discard({discardTileId})");
+        UnityEngine.Debug.Assert(
+            tileTracker.ActivePrivateRack.Contains(discardTileId)
+            , "Discard tile not on active player's rack.");
+
         // housekeeping
         fusionManager.TurnPhase = TurnPhase.Discarding;
         DiscardTile = discardTileId;
 
         // update lists
-        tileTracker.PrivateRacks[discardPlayerId].Remove(discardTileId);
+        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Remove(discardTileId);
         tileTracker.Discard.Add(discardTileId);
         fusion.RPC_S2A_ShowDiscard(discardTileId);
 
+        fusion.CreateTimer();
         // wait for callers
-        if (!Tile.IsJoker(discardTileId))
+        if (Tile.IsJoker(discardTileId))
         {
-            fusion.CreateTimer();
-            fusion.RPC_S2A_ShowButtons(discardPlayerId);
+            UnityEngine.Debug.Log("Discarding joker - no buttons.");
+            return;
         }
-        // FIXME: host can't use mono's startnewcoroutine
-        //else { mono.StartNewCoroutine(WaitForJoker()); }
+        fusion.RPC_S2A_ShowButtons(fusionManager.ActivePlayer);
     }
 
     public void TileCallingMonitor()
@@ -81,19 +87,21 @@ public class TurnManagerServer
             }
         }
 
-        if (AnyPlayerWaiting) { return; }                           // if any player says wait, don't do anything
-        else if (AnyPlayerCalling && fusion.IsTimerExpired)         // if any players call and timer is done/not running, do logic
+        if (AnyPlayerWaiting) return;                           // if any player says wait, don't do anything
+        if (fusion.IsTimerExpired)
         {
-            // sort PlayersCalling by going around from current player
-            playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, discardPlayerId));
+            if (AnyPlayerCalling)
+            {   // if any players call and timer is done/not running, do logic
+                // sort PlayersCalling by going around from current player
+                playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, fusionManager.ActivePlayer));
 
-            //int closestPlayerDelta = PlayersCalling.Select(playerId => playerId - fusion.TurnPlayerId).Min();
-            //fusion.TurnPlayerId = (fusion.TurnPlayerId + closestPlayerDelta + 4) % 4;
+                Call();
+                return;
+            }
 
-            Call();
+            // otherwise go to next turn
+            NextTurn();
         }
-
-        else if (fusion.IsTimerExpired) { Pass(); }                 // if nobody waited/called after 2s, pass
     }
 
     // helper function for sorting PlayersCalling
@@ -113,62 +121,52 @@ public class TurnManagerServer
 
     // FIXME: wait call buttons don't go away on clients for next turn
 
-    void Call() { H_CallTurn(); } // silly
-
-    void Pass()
+    void Call()
     {
-        fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
-        H_NextTurn();
+        callTile = DiscardTile;
+        H_InitializeNextTurn();
+
+        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
+        // TODO: AI support for calling
+        fusion.RPC_S2C_CallTurn(fusionManager.ExposingPlayer, callTile);
+    } // silly
+
+    void IncrementActivePlayer()
+    {
+        fusionManager.ActivePlayer = fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
     }
-
-    /*
-        IEnumerator WaitForJoker()
-        {
-            yield return mono.WaitForSeconds(2);
-            fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
-            H_NextTurn();
-        }
-        */
-
-    void H_NextTurn()
+    void NextTurn()
     {
-        int nextPlayer = H_InitializeNextTurn();
+        UnityEngine.Debug.Log("TurnManagerServer.NextTurn()");
+
+        IncrementActivePlayer();
+        H_InitializeNextTurn();
         int nextTileId = tileTracker.Wall.Last();
         fusionManager.ExposingPlayer = -1;
 
         tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
-        if (fusionManager.IsPlayerAI(nextPlayer))                         // AI turn
+        if (fusionManager.IsPlayerAI(fusionManager.ActivePlayer))                         // AI turn
         {
-            AITurn(nextTileId);
+            AITurn();
             return;
         }
-        fusion.RPC_S2C_NextTurn(nextPlayer, nextTileId);         // if it's a person, hand it over to that client
+        fusion.RPC_S2C_NextTurn(fusionManager.ActivePlayer, nextTileId);         // if it's a person, hand it over to that client
     }
 
-    void H_CallTurn()
-    {
-        callTile = DiscardTile;
-        exposePlayerId = H_InitializeNextTurn();
-
-        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
-        // TODO: AI support for calling
-        fusion.RPC_S2C_CallTurn(exposePlayerId, callTile);
-    }
-
-    int H_InitializeNextTurn()
+    void H_InitializeNextTurn()
     {
         fusion.ResetTimer();
         playersWaiting.Clear(); // this shouldn't be needed
         playersCalling.Clear();
         fusion.RPC_S2A_ResetButtons();
-        return fusionManager.ActivePlayer;   // set next player
     }
 
 
 
-    void AITurn(int newTileId)
+    void AITurn()
     {
-        int discardTileId = newTileId; // for now just discard what was picked up
+        // TODO: add more sophisticated ai turn functionality
+        int discardTileId = tileTracker.ActivePrivateRack.Last();
         Discard(discardTileId);
     }
 
