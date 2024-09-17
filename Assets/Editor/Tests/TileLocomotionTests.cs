@@ -137,7 +137,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileLeftOnRackRightOfAnotherTile_RackRearranges()
     {
-        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;
@@ -153,7 +153,7 @@ public class TileLocomotionTests
     [Test]
     public void OnEndDrag_MoveTileLeftOnRackLeftOfAnotherTile_RackRearranges()
     {
-        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest();
+        var (tileTracker, charles, charlesFusion, tileLoco) = MakeVariablesForCharlestonTest(4);
         List<MonoObject> raycastResults = new() { MonoObject.PrivateRack };
         tileTracker.LocalPrivateRack = TestRack;
         int dropIx = 2;

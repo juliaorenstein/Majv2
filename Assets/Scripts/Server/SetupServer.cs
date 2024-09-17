@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Codice.Client.BaseCommands.Merge;
 
 public class SetupServer
 {
@@ -46,10 +47,9 @@ public class SetupServer
         }
 
         // CREATE THE WALL
-        tileTracker.Wall = new(shuffleTileList);
-        foreach (int tileId in tileTracker.Wall)
+        foreach (int tileId in shuffleTileList)
         {
-            tileTracker.TileLocations[tileId] = tileTracker.Wall;
+            tileTracker.MoveTile(tileId, tileTracker.Wall);
         }
     }
 

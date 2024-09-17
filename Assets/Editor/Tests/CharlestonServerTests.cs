@@ -202,7 +202,14 @@ public class CharlestonServerTests
         FakeFusionManager fusionManager = new(refs);
         FakeFusionWrapper fusionWrapper = new(refs);
         FakeCharlestonFusion cFusion = new(refs);
-        TileTrackerServer tileTracker = new(refs) { PrivateRacks = TestRacks() };
+        TileTrackerServer tileTracker = new(refs);
+        for (int i = 0; i < 4; i++)
+        {
+            foreach (int tileId in TestRacks()[i])
+            {
+                tileTracker.MoveTile(tileId, tileTracker.PrivateRacks[i]);
+            }
+        }
         CharlestonServer cHost = new(refs);
         Tile.TileList = Tile.GenerateTiles();
 

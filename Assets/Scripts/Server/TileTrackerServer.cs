@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System;
+using System.Collections;
+using PlasticGui.WorkspaceWindow;
 
 public class TileTrackerServer
 {
@@ -15,9 +17,9 @@ public class TileTrackerServer
     }
 
     // TileLocations
-    public List<int> Wall;
-    public List<int> Discard = new();
-    public List<List<int>> PrivateRacks = new() { new(), new(), new(), new() };
+    public List<int> Wall { get; private set; } = new();
+    public List<int> Discard { get; private set; } = new();
+    public List<List<int>> PrivateRacks { get; private set; } = new() { new(), new(), new(), new() };
     public List<int> ActivePrivateRack { get => PrivateRacks[refs.FManager.ActivePlayer]; }
     public List<List<int>> DisplayRacks = new() { new(), new(), new(), new() };
 
@@ -40,8 +42,9 @@ public class TileTrackerServer
     // Might not be suitable for all tile moves (like dropping to specific location on rack).
     public void MoveTile(int tileId, List<int> location)
     {
-        UnityEngine.Debug.Assert(LocationIsValid(location));
-        TileLocations[tileId].Remove(tileId);   // remove tile from the list it's currently on
+        UnityEngine.Debug.Log($"TileTrackerServer.MoveTile{tileId}, {location}");
+        UnityEngine.Debug.Assert(LocationIsValid(location), "Invalid input for location.");
+        if (TileLocations.ContainsKey(tileId)) TileLocations[tileId].Remove(tileId);   // remove tile from the list it's currently on
         location.Add(tileId);                   // add tile to its new location
         TileLocations[tileId] = location;       // update dictionary entry
         SendGameStateToAll();
@@ -51,6 +54,7 @@ public class TileTrackerServer
     // does not verify that the move itself is valid.
     bool LocationIsValid(List<int> location)
     {
+
         if (location == Wall) return true;
         if (location == Discard) return true;
         if (PrivateRacks.Contains(location)) return true;

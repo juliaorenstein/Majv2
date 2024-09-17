@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
 using System;
-using UnityEngine;
 
 public class TurnManagerTests
 {
@@ -94,7 +93,8 @@ public class TurnManagerTests
 
         vars.turnManager.Discard(discardTile);
 
-        List<int> expectedDiscard = new() { 41 };
+        List<int> expectedDiscard = GetTestDiscard;
+        expectedDiscard.Add(41);
         List<int> actualDiscard = vars.tileTracker.Discard;
         List<int> expectedRack = GetTestRacks[2];
         expectedRack.Remove(41);
@@ -119,7 +119,7 @@ public class TurnManagerTests
     {
         Vars vars = MakeVariablesForTest(activePlayer: 0);
 
-        UnityEngine.TestTools.LogAssert.Expect(LogType.Log, $"RPC_S2A_ShowButtons(0)");
+        UnityEngine.TestTools.LogAssert.Expect(UnityEngine.LogType.Log, $"RPC_S2A_ShowButtons(0)");
 
         vars.turnManager.Discard(0);
     }
@@ -130,7 +130,7 @@ public class TurnManagerTests
         Vars vars = MakeVariablesForTest(activePlayer: 0);
         vars.tileTracker.ActivePrivateRack.Add(147);
 
-        UnityEngine.TestTools.LogAssert.Expect(LogType.Log, "Discarding joker - no buttons.");
+        UnityEngine.TestTools.LogAssert.Expect(UnityEngine.LogType.Log, "Discarding joker - no buttons.");
 
         vars.turnManager.Discard(147);
     }
@@ -249,6 +249,7 @@ public class TurnManagerTests
             AiPlayers = aiPlayerList,
             Dealer = dealer,
             LocalPlayer = localPlayer,
+            ActivePlayer = activePlayer,
             IsServer = true
         };
         vars.fakeFusion = new(refs);
@@ -259,11 +260,26 @@ public class TurnManagerTests
         return vars;
     }
 
-    void PopulateTileTracker(TileTrackerServer tileTrackerServer)
+    void PopulateTileTracker(TileTrackerServer tileTracker)
     {
         Tile.TileList = Tile.GenerateTiles();
-        tileTrackerServer.PrivateRacks = GetTestRacks;
-        tileTrackerServer.Wall = GetTestWall;
+        for (int i = 0; i < 4; i++)
+        {
+            foreach (int tileId in GetTestRacks[i])
+            {
+                tileTracker.MoveTile(tileId, tileTracker.PrivateRacks[i]);
+            }
+        }
+
+        foreach (int tileId in GetTestWall)
+        {
+            tileTracker.MoveTile(tileId, tileTracker.Wall);
+        }
+
+        foreach (int tileId in GetTestDiscard)
+        {
+            tileTracker.MoveTile(tileId, tileTracker.Discard);
+        }
     }
 
     List<List<int>> GetTestRacks
@@ -277,6 +293,8 @@ public class TurnManagerTests
     }
 
     List<int> GetTestWall { get => Enumerable.Range(100, 50).ToList(); }
+
+    List<int> GetTestDiscard { get => Enumerable.Range(80, 10).ToList(); }
 }
 
 struct Vars
