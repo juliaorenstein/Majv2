@@ -60,11 +60,11 @@ public class SetupServer
             List<int> rack = tileTracker.PrivateRacks[i];
             for (int j = 0; j < 13; j++)
             {
-                tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), rack);
+                tileTracker.MoveTile(tileTracker.Wall.Last(), rack);
             }
         }
 
         // one more tile to the dealer
-        tileTracker.SimpleMoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.FManager.Dealer]);
+        tileTracker.MoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.FManager.Dealer]);
     }
 }

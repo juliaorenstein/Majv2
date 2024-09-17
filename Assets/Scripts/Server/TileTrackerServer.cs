@@ -37,7 +37,7 @@ public class TileTrackerServer
 
     // Simple move just removes tile from previous location and adds it onto the end of the new location.
     // Might not be suitable for all tile moves (like dropping to specific location on rack).
-    public void SimpleMoveTile(int tileId, List<int> location)
+    public void MoveTile(int tileId, List<int> location)
     {
         UnityEngine.Debug.Assert(LocationIsValid(location));
         TileLocations[tileId].Remove(tileId);   // remove tile from the list it's currently on
