@@ -6,28 +6,28 @@ using NUnit.Framework;
 
 public class TileTrackerServerTests
 {
-    [TestCase(0, Loc.PrivateRack0, Loc.PrivateRack1)]     // private rack to private rack (charleston)
-    [TestCase(149, Loc.Wall, Loc.PrivateRack1)]           // wall to private rack (next turn)
-    [TestCase(4, Loc.PrivateRack0, Loc.Discard)]          // private rack to discard (discard)
-    [TestCase(89, Loc.Discard, Loc.DisplayRack2)]         // discard to display rack (expose)
-    [TestCase(23, Loc.PrivateRack1, Loc.DisplayRack1)]    // private rack to display rack (expose)
+    [TestCase(0, TileLoc.PrivateRack0, TileLoc.PrivateRack1)]     // private rack to private rack (charleston)
+    [TestCase(149, TileLoc.Wall, TileLoc.PrivateRack1)]           // wall to private rack (next turn)
+    [TestCase(4, TileLoc.PrivateRack0, TileLoc.Discard)]          // private rack to discard (discard)
+    [TestCase(89, TileLoc.Discard, TileLoc.DisplayRack2)]         // discard to display rack (expose)
+    [TestCase(23, TileLoc.PrivateRack1, TileLoc.DisplayRack1)]    // private rack to display rack (expose)
 
     // display rack to discard (never mind)
     // private rack to other display (joker swap)
 
-    public void MoveTile_WhenCalled_MovesTile(int tileId, Loc oldLoc, Loc newLoc)
+    public void MoveTile_WhenCalled_MovesTile(int tileId, TileLoc oldLoc, TileLoc newLoc)
     {
         TileTrackerServerTestVars vars = CreateVariablesForTest();
-        List<int> oldLocation = vars.validLocs[oldLoc];
-        List<int> newLocation = vars.validLocs[newLoc];
+        Dictionary<TileLoc, IReadOnlyList<int>> map = TileLocToListMap(vars.tileTracker);
 
-        CollectionAssert.Contains(oldLocation, tileId); // this is more a check on the test than the code
 
-        vars.tileTracker.MoveTile(tileId, newLocation);
+        CollectionAssert.Contains(map[oldLoc], tileId); // this is more a check on the test than the code
 
-        CollectionAssert.DoesNotContain(oldLocation, tileId);
-        CollectionAssert.Contains(newLocation, tileId);
-        Assert.AreEqual(newLocation, vars.tileTracker.TileLocations[tileId]);
+        vars.tileTracker.MoveTile(tileId, newLoc);
+
+        CollectionAssert.DoesNotContain(map[oldLoc], tileId);
+        CollectionAssert.Contains(map[newLoc], tileId);
+        Assert.AreEqual(newLoc, vars.tileTracker.TileLocations[tileId]);
     }
 
     public void MoveTile_InputRandomList_FailAssertion()
@@ -50,7 +50,6 @@ public class TileTrackerServerTests
         new FakeFusionWrapper(refs);
         vars.tileTracker = new(refs);
         PopulateTileTracker(vars.tileTracker);
-        vars.validLocs = ValidLocations(vars.tileTracker);
 
         return vars;
     }
@@ -62,18 +61,18 @@ public class TileTrackerServerTests
         {
             foreach (int tileId in GetTestRacks[i])
             {
-                tileTracker.MoveTile(tileId, tileTracker.PrivateRacks[i]);
+                tileTracker.MoveTile(tileId, tileTracker.PrivateRackLocations[i]);
             }
         }
 
         foreach (int tileId in GetTestWall)
         {
-            tileTracker.MoveTile(tileId, tileTracker.Wall);
+            tileTracker.MoveTile(tileId, TileLoc.Wall);
         }
 
         foreach (int tileId in GetTestDiscard)
         {
-            tileTracker.MoveTile(tileId, tileTracker.Discard);
+            tileTracker.MoveTile(tileId, TileLoc.Discard);
         }
     }
 
@@ -91,41 +90,26 @@ public class TileTrackerServerTests
 
     List<int> GetTestDiscard { get => Enumerable.Range(80, 10).ToList(); }
 
-    Dictionary<Loc, List<int>> ValidLocations(TileTrackerServer tileTracker)
+    Dictionary<TileLoc, IReadOnlyList<int>> TileLocToListMap(TileTrackerServer tileTracker)
     {
-        return new Dictionary<Loc, List<int>>() {
-            {Loc.Wall, tileTracker.Wall},
-            {Loc.Discard, tileTracker.Discard},
-            {Loc.PrivateRack0, tileTracker.PrivateRacks[0]},
-            {Loc.PrivateRack1, tileTracker.PrivateRacks[1]},
-            {Loc.PrivateRack2, tileTracker.PrivateRacks[2]},
-            {Loc.PrivateRack3, tileTracker.PrivateRacks[3]},
-            {Loc.DisplayRack0, tileTracker.DisplayRacks[0]},
-            {Loc.DisplayRack1, tileTracker.DisplayRacks[1]},
-            {Loc.DisplayRack2, tileTracker.DisplayRacks[2]},
-            {Loc.DisplayRack3, tileTracker.DisplayRacks[3]},
+        return new Dictionary<TileLoc, IReadOnlyList<int>>() {
+            {TileLoc.Wall, tileTracker.Wall},
+            {TileLoc.Discard, tileTracker.Discard},
+            {TileLoc.PrivateRack0, tileTracker.PrivateRacks[0]},
+            {TileLoc.PrivateRack1, tileTracker.PrivateRacks[1]},
+            {TileLoc.PrivateRack2, tileTracker.PrivateRacks[2]},
+            {TileLoc.PrivateRack3, tileTracker.PrivateRacks[3]},
+            {TileLoc.DisplayRack0, tileTracker.DisplayRacks[0]},
+            {TileLoc.DisplayRack1, tileTracker.DisplayRacks[1]},
+            {TileLoc.DisplayRack2, tileTracker.DisplayRacks[2]},
+            {TileLoc.DisplayRack3, tileTracker.DisplayRacks[3]},
         };
-    }
-
-    public enum Loc
-    {
-        Wall,
-        Discard,
-        PrivateRack0,
-        PrivateRack1,
-        PrivateRack2,
-        PrivateRack3,
-        DisplayRack0,
-        DisplayRack1,
-        DisplayRack2,
-        DisplayRack3,
     }
 
     struct TileTrackerServerTestVars
     {
         public TileTrackerServer tileTracker;
         public FakeFusionManager fakeFusionManager;
-        public Dictionary<Loc, List<int>> validLocs;
     }
 }
 

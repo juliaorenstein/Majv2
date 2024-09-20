@@ -49,7 +49,7 @@ public class SetupServer
         // CREATE THE WALL
         foreach (int tileId in shuffleTileList)
         {
-            tileTracker.MoveTile(tileId, tileTracker.Wall);
+            tileTracker.MoveTile(tileId, TileLoc.Wall);
         }
     }
 
@@ -57,7 +57,7 @@ public class SetupServer
     {
         for (int i = 0; i < 4; i++)
         {
-            List<int> rack = tileTracker.PrivateRacks[i];
+            TileLoc rack = tileTracker.PrivateRackLocations[i];
             for (int j = 0; j < 13; j++)
             {
                 tileTracker.MoveTile(tileTracker.Wall.Last(), rack);
@@ -65,6 +65,6 @@ public class SetupServer
         }
 
         // one more tile to the dealer
-        tileTracker.MoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRacks[refs.FManager.Dealer]);
+        tileTracker.MoveTile(tileTracker.Wall.Last(), tileTracker.PrivateRackLocations[refs.FManager.Dealer]);
     }
 }

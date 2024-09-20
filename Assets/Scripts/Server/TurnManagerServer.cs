@@ -10,7 +10,7 @@ public class TurnManagerServer
     readonly IFusionWrapper fusion;
     readonly IFusionManager fusionManager;
     readonly TileTrackerServer tileTracker;
-    public int DiscardTile;
+    public int LastDiscarded => tileTracker.Discard.Last();
     int callTile;
     readonly List<int> playersWaiting;
     bool AnyPlayerWaiting
@@ -44,25 +44,23 @@ public class TurnManagerServer
         }
     }
 
-    public void Discard(int discardTileId)
+    public void Discard(int discardTile)
     {
-        UnityEngine.Debug.Log($"TurnManagerServer.Discard({discardTileId})");
+        UnityEngine.Debug.Log($"TurnManagerServer.Discard({discardTile})");
         UnityEngine.Debug.Assert(
-            tileTracker.ActivePrivateRack.Contains(discardTileId)
+            tileTracker.ActivePrivateRack.Contains(discardTile)
             , "Discard tile not on active player's rack.");
 
         // housekeeping
         fusionManager.TurnPhase = TurnPhase.Discarding;
-        DiscardTile = discardTileId;
 
         // update lists
-        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Remove(discardTileId);
-        tileTracker.Discard.Add(discardTileId);
-        fusion.RPC_S2A_ShowDiscard(discardTileId);
+        tileTracker.MoveTile(discardTile, TileLoc.Discard);
+        fusion.RPC_S2A_ShowDiscard(discardTile);
 
         fusion.CreateTimer();
         // wait for callers
-        if (Tile.IsJoker(discardTileId))
+        if (Tile.IsJoker(discardTile))
         {
             UnityEngine.Debug.Log("Discarding joker - no buttons.");
             return;
@@ -76,15 +74,26 @@ public class TurnManagerServer
         // but also clients because they never have a timer set
         if (!fusion.IsTimerRunning) { return; }
 
-        foreach ((int playerId, InputCollection playerInput) in refs.FManager.InputDict)
+        // update calling and waiting lists
+        for (int playerId = 0; playerId < 3; playerId++)
         {
-            if (playerInput.wait) { playersWaiting.Add(playerId); }
-            if (playerInput.pass) { playersWaiting.Remove(playerId); }
-            if (playerInput.call)
+            if (fusionManager.WaitPressed(playerId)) { playersWaiting.Add(playerId); }
+            if (fusionManager.PassPressed(playerId)) { playersWaiting.Remove(playerId); }
+            if (fusionManager.CallPressed(playerId))
             {
                 playersWaiting.Remove(playerId);
                 playersCalling.Add(playerId);
             }
+        }
+
+        // if there's an exposing player, check for never mind
+        if (fusionManager.ExposingPlayer != -1)
+        {
+            if (fusionManager.NeverMindPressed(fusionManager.ExposingPlayer))
+            {
+                NeverMind(); // don't quit out of function - go to next caller
+            }
+            else return;
         }
 
         if (AnyPlayerWaiting) return;                           // if any player says wait, don't do anything
@@ -94,6 +103,7 @@ public class TurnManagerServer
             {   // if any players call and timer is done/not running, do logic
                 // sort PlayersCalling by going around from current player
                 playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, fusionManager.ActivePlayer));
+                fusionManager.ExposingPlayer = playersCalling[0];
 
                 Call();
                 return;
@@ -123,17 +133,27 @@ public class TurnManagerServer
 
     void Call()
     {
-        callTile = DiscardTile;
+        callTile = LastDiscarded;
         H_InitializeNextTurn();
 
-        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(callTile); // TODO: track public tiles separately
+        TileLoc rack = tileTracker.DisplayRackLocations[fusionManager.ExposingPlayer];
+        tileTracker.MoveTile(callTile, rack);
         // TODO: AI support for calling
         fusion.RPC_S2C_CallTurn(fusionManager.ExposingPlayer, callTile);
-    } // silly
+    }
+
+    void NeverMind()
+    {
+        UnityEngine.Debug.Log($"TurnManagerServer.NeverMind()\n   - exposingPlayer: {fusionManager.ExposingPlayer}");
+        playersCalling.Remove(fusionManager.ExposingPlayer);
+        fusionManager.ExposingPlayer = -1;
+        tileTracker.MoveTile(callTile, TileLoc.Discard);
+    }
 
     void IncrementActivePlayer()
     {
-        fusionManager.ActivePlayer = fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
+        fusionManager.ActivePlayer = (fusionManager.ActivePlayer + 1) % 4;
+        UnityEngine.Debug.Log($"TurnManagerServer.IncrementActivePlayer()\n    - new ActivePlayer: {fusionManager.ActivePlayer}");
     }
     void NextTurn()
     {
@@ -141,10 +161,9 @@ public class TurnManagerServer
 
         IncrementActivePlayer();
         H_InitializeNextTurn();
-        int nextTileId = tileTracker.Wall.Last();
-        fusionManager.ExposingPlayer = -1;
 
-        tileTracker.PrivateRacks[fusionManager.ActivePlayer].Add(nextTileId);                 // add that tile to the player's rack list
+        int nextTileId = tileTracker.Wall.Last();
+        tileTracker.MoveTile(nextTileId, tileTracker.ActivePrivateRackLoc);                // add that tile to the player's rack list
         if (fusionManager.IsPlayerAI(fusionManager.ActivePlayer))                         // AI turn
         {
             AITurn();
@@ -159,6 +178,8 @@ public class TurnManagerServer
         playersWaiting.Clear(); // this shouldn't be needed
         playersCalling.Clear();
         fusion.RPC_S2A_ResetButtons();
+        callTile = -1;
+        fusionManager.ExposingPlayer = -1;
     }
 
 

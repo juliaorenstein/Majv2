@@ -12,8 +12,6 @@ class FakeFusionWrapper : IFusionWrapper
 
     public bool IsServer => throw new System.NotImplementedException();
 
-    public int ActiveDiscardTileId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
     public bool IsTimerExpired { get; set; }
 
     bool isTimerRunning = false;
@@ -56,7 +54,7 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void RPC_S2A_ResetButtons()
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log("RPC_S2A_ResetButtons()");
     }
 
     public void RPC_S2A_ShowButtons(int discardPlayerId)
@@ -71,7 +69,7 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void RPC_S2C_CallTurn(int callPlayerId, int callTileId)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log($"RPC_S2C_CallTurn({callPlayerId}, {callTileId})");
     }
 
     public void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId)

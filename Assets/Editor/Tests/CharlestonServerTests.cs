@@ -16,7 +16,7 @@ public class CharlestonServerTests
 
         // ACT
         CHost.PassDriver(sourcePlayerId,
-            tileTracker.PrivateRacks[sourcePlayerId].GetRange(0, 3).ToArray());
+            tileTracker.PrivateRacks[sourcePlayerId].ToList().GetRange(0, 3).ToArray());
 
         // ASSERT
         foreach (int aiPlayerId in aiPlayers)
@@ -34,7 +34,7 @@ public class CharlestonServerTests
 
         // ACT
         CHost.PassDriver(0,
-            tileTracker.PrivateRacks[0].GetRange(0, 3).ToArray());
+            tileTracker.PrivateRacks[0].ToList().GetRange(0, 3).ToArray());
 
         // ASSERT
         Assert.True(CHost.AiPassed);
@@ -107,13 +107,13 @@ public class CharlestonServerTests
             TestPasses()[(shift + 2) % 4],
             TestPasses()[(shift + 3) % 4],
         };
-        List<List<int>> actualRacks = tileTracker.PrivateRacks;
+        List<IReadOnlyList<int>> actualRacks = tileTracker.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
         {
             CollectionAssert.IsSupersetOf(actualRacks[playerId], expectedSubsets[playerId]);
-            Assert.True(actualRacks[playerId].Count() == 10);
+            Assert.AreEqual(13, actualRacks[playerId].Count());
         }
     }
 
@@ -157,13 +157,13 @@ public class CharlestonServerTests
         // i.e. a right pass is a shift of 1, over is shift of 2, left is shift of 3.
         List<List<int>> expectedSubsets = new()
         { rec0.ToList(), rec1.ToList(), rec2.ToList(), rec3.ToList() };
-        List<List<int>> actualRacks = tileTracker.PrivateRacks;
+        List<IReadOnlyList<int>> actualRacks = tileTracker.PrivateRacks;
 
         // ASSERT
         for (int playerId = 0; playerId < 4; playerId++)
         {
             CollectionAssert.IsSupersetOf(actualRacks[playerId], expectedSubsets[playerId]);
-            Assert.True(actualRacks[playerId].Count() == 10);
+            Assert.AreEqual(13, actualRacks[playerId].Count());
         }
     }
 
@@ -207,7 +207,7 @@ public class CharlestonServerTests
         {
             foreach (int tileId in TestRacks()[i])
             {
-                tileTracker.MoveTile(tileId, tileTracker.PrivateRacks[i]);
+                tileTracker.MoveTile(tileId, tileTracker.PrivateRackLocations[i]);
             }
         }
         CharlestonServer cHost = new(refs);
@@ -217,10 +217,10 @@ public class CharlestonServerTests
     }
 
     // shortening to ten tiles per rack to allow output of unit tests to be more readable
-    List<int> Rack0 { get => new(Enumerable.Range(0, 10).ToList()); }
-    List<int> Rack1 { get => new(Enumerable.Range(20, 10).ToList()); }
-    List<int> Rack2 { get => new(Enumerable.Range(40, 10).ToList()); }
-    List<int> Rack3 { get => new(Enumerable.Range(60, 10).ToList()); }
+    List<int> Rack0 { get => new(Enumerable.Range(0, 13).ToList()); }
+    List<int> Rack1 { get => new(Enumerable.Range(20, 13).ToList()); }
+    List<int> Rack2 { get => new(Enumerable.Range(40, 13).ToList()); }
+    List<int> Rack3 { get => new(Enumerable.Range(60, 13).ToList()); }
 
     List<int> Pass0 { get => new(Enumerable.Range(0, 3).ToList()); }
     List<int> Pass1 { get => new(Enumerable.Range(20, 3).ToList()); }

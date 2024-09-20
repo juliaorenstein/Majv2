@@ -150,7 +150,7 @@ public class Navigation : MonoBehaviour
                     }
                 }
             }
-                
+
 
         }
 
@@ -262,7 +262,7 @@ public class Navigation : MonoBehaviour
 
     void InputWait()
     {
-        NCallbacks.inputStruct.turnOptions.Set(TurnButtons.wait, true);
+        NCallbacks.inputStruct.turnOptions.Set(Buttons.wait, true);
         WaitButton.SetActive(false);
         PassButton.SetActive(true);
         Unselect(); // in if statement to avoid unselecting unrelated things
@@ -270,7 +270,7 @@ public class Navigation : MonoBehaviour
 
     void InputPass()
     {
-        NCallbacks.inputStruct.turnOptions.Set(TurnButtons.pass, true);
+        NCallbacks.inputStruct.turnOptions.Set(Buttons.pass, true);
         PassButton.SetActive(false);
         WaitButton.SetActive(true);
         CallButton.transform.parent.gameObject.SetActive(false);
@@ -279,13 +279,13 @@ public class Navigation : MonoBehaviour
 
     void InputCall()
     {
-        NCallbacks.inputStruct.turnOptions.Set(TurnButtons.call, true);
+        NCallbacks.inputStruct.turnOptions.Set(Buttons.call, true);
         Unselect();
     }
 
     void InputNeverMind()
     {
-        NCallbacks.inputStruct.turnOptions.Set(TurnButtons.nevermind, true);
+        NCallbacks.inputStruct.turnOptions.Set(Buttons.nevermind, true);
         // TODO: not sure yet if these are all needed. Clear once tested
         PassButton.SetActive(false);
         WaitButton.SetActive(true);

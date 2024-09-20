@@ -14,7 +14,7 @@ public class SetupServerTests
 
         // ACT
         setupHost.SetupDriver();
-        List<int> wall = refs.TileTracker.Wall;
+        IReadOnlyList<int> wall = refs.TileTracker.Wall;
 
         // ASSERT
         Assert.True(wall.Count == 152 - (13 * 4 + 1));
@@ -31,11 +31,11 @@ public class SetupServerTests
 
         // ACT
         setupHost.SetupDriver();
-        List<List<int>> racks = refs.TileTracker.PrivateRacks;
+        List<IReadOnlyList<int>> racks = refs.TileTracker.PrivateRacks;
 
         // ASSERT
         Assert.True(racks.Count == 4);
-        foreach (List<int> rack in racks)
+        foreach (IReadOnlyList<int> rack in racks)
         {
             Assert.True(rack.Count >= 13);
         }

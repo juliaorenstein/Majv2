@@ -187,7 +187,7 @@ public class TileLocomotion
     {
         if (FusionManager.TurnPhase != TurnPhase.Exposing) return false;
         if (!refs.FManager.IsExposingPlayer) return false;
-        if (!Tile.TileList[tileId].Equals(refs.TManagerServer.DiscardTile)) return false;
+        if (!Tile.TileList[tileId].Equals(refs.TManagerServer.LastDiscarded)) return false;
         return true;
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class FusionManager : NetworkBehaviour, IFusionManager
 {
     public Dictionary<int, PlayerRef> PlayerDict { get; set; }
-    public Dictionary<int, InputCollection> InputDict { get; set; }
+    Dictionary<int, InputForServer> InputDict { get; set; }
 
     // Shared between server and client
     [Networked] public GamePhase GamePhase { get; set; }
@@ -42,8 +42,14 @@ public class FusionManager : NetworkBehaviour, IFusionManager
         newInputObj.AssignInputAuthority(player);
 
         PlayerDict[player.PlayerId] = player;
-        InputDict.Add(player.PlayerId, newInputObj.GetComponent<InputCollection>());
+        InputDict.Add(player.PlayerId, newInputObj.GetComponent<InputCollection>().Input);
     }
+
+    // Player Input
+    public bool WaitPressed(int playerId) => InputDict[playerId].input == Buttons.wait;
+    public bool PassPressed(int playerId) => InputDict[playerId].input == Buttons.pass;
+    public bool CallPressed(int playerId) => InputDict[playerId].input == Buttons.call;
+    public bool NeverMindPressed(int playerId) => InputDict[playerId].input == Buttons.nevermind;
 }
 
 public enum GamePhase

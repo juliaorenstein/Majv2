@@ -3,7 +3,6 @@ using Fusion;
 
 public interface IFusionManager
 {
-    Dictionary<int, InputCollection> InputDict { get; set; }
     GamePhase GamePhase { get; set; }
     TurnPhase TurnPhase { get; set; }
 
@@ -18,5 +17,8 @@ public interface IFusionManager
     public int ExposingPlayer { get; set; }
     public bool IsExposingPlayer { get; }
 
-
+    bool CallPressed(int playerId);
+    bool NeverMindPressed(int playerId);
+    bool PassPressed(int playerId);
+    bool WaitPressed(int playerId);
 }

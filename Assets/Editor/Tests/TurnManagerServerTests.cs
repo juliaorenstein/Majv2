@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
 using System;
+using UnityEngine;
 
 public class TurnManagerTests
 {
@@ -39,14 +40,14 @@ public class TurnManagerTests
         vars.turnManager.StartGamePlay();
 
         List<int> oldAiRack = GetTestRacks[3];
-        List<int> newAiRack = vars.tileTracker.PrivateRacks[3];
-        List<int> newDiscard = vars.tileTracker.Discard;
+        IReadOnlyList<int> newAiRack = vars.tileTracker.PrivateRacks[3];
+        IReadOnlyList<int> newDiscard = vars.tileTracker.Discard;
         List<int> aiRackDiff = oldAiRack.Except(newAiRack).ToList();
 
-        Assert.True(newAiRack.Count == 13);
+        Assert.AreEqual(13, newAiRack.Count);
         CollectionAssert.IsSubsetOf(newAiRack, oldAiRack);
-        Assert.True(newDiscard.Count == 1);
-        CollectionAssert.AreEqual(newDiscard, aiRackDiff);
+        Assert.AreEqual(11, newDiscard.Count);
+        CollectionAssert.IsSupersetOf(newDiscard, aiRackDiff);
     }
 
     [TestCase(0)] // host
@@ -60,7 +61,7 @@ public class TurnManagerTests
         for (int player = 0; player < 4; player++)
         {
             List<int> oldRack = GetTestRacks[player];
-            List<int> newRack = vars.tileTracker.PrivateRacks[player];
+            IReadOnlyList<int> newRack = vars.tileTracker.PrivateRacks[player];
 
             CollectionAssert.AreEqual(oldRack, newRack);
         }
@@ -76,7 +77,7 @@ public class TurnManagerTests
         Vars vars = MakeVariablesForTest(activePlayer: 2);
         if (discardTile == 200)
         {
-            vars.tileTracker.DisplayRacks[2].Add(200);
+            vars.tileTracker.MoveTile(200, vars.tileTracker.DisplayRackLocations[2]);
         }
 
         UnityEngine.TestTools.LogAssert
@@ -95,10 +96,10 @@ public class TurnManagerTests
 
         List<int> expectedDiscard = GetTestDiscard;
         expectedDiscard.Add(41);
-        List<int> actualDiscard = vars.tileTracker.Discard;
+        IReadOnlyList<int> actualDiscard = vars.tileTracker.Discard;
         List<int> expectedRack = GetTestRacks[2];
         expectedRack.Remove(41);
-        List<int> actualRack = vars.tileTracker.ActivePrivateRack;
+        IReadOnlyList<int> actualRack = vars.tileTracker.ActivePrivateRack;
 
         CollectionAssert.AreEqual(expectedDiscard, actualDiscard);
         CollectionAssert.AreEqual(expectedRack, actualRack);
@@ -128,7 +129,7 @@ public class TurnManagerTests
     public void Discard_WhenCalledWithJoker_DontShowButtons()
     {
         Vars vars = MakeVariablesForTest(activePlayer: 0);
-        vars.tileTracker.ActivePrivateRack.Add(147);
+        vars.tileTracker.MoveTile(147, vars.tileTracker.ActivePrivateRackLoc);
 
         UnityEngine.TestTools.LogAssert.Expect(UnityEngine.LogType.Log, "Discarding joker - no buttons.");
 
@@ -139,8 +140,12 @@ public class TurnManagerTests
     [Test]
     public void TileCallingMonitor_BeforeTimerExpires_NothingHappens()
     {
-        // not yet sure the best way to implement this
-        throw new NotImplementedException();
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusion.CreateTimer();
+
+        vars.turnManager.TileCallingMonitor();
+
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89]);
     }
 
     // TileCallingMonitor, time expired and no callers or waiters
@@ -153,10 +158,10 @@ public class TurnManagerTests
         vars.turnManager.TileCallingMonitor();
 
         List<int> expectedWall = Enumerable.Range(100, 49).ToList();
-        List<int> actualWall = vars.tileTracker.Wall;
+        IReadOnlyList<int> actualWall = vars.tileTracker.Wall;
         List<List<int>> expectedRacks = GetTestRacks;
         expectedRacks[1].Add(149);
-        List<List<int>> actualRacks = vars.tileTracker.PrivateRacks;
+        List<IReadOnlyList<int>> actualRacks = vars.tileTracker.PrivateRacks;
 
         CollectionAssert.AreEqual(expectedWall, actualWall);
         for (int rackId = 0; rackId < 4; rackId++)
@@ -165,32 +170,142 @@ public class TurnManagerTests
         }
     }
 
+    // TileCallingMonitor, callers before time expired
+    [Test]
+    public void TileCallingMonitor_CallersBeforeTimeExpired_NothingHappens()
+    {
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusion.CreateTimer();
+        SubmitInputAndCallTileCallingMonitor(vars, 0, Buttons.call);
+
+        List<int> expectedDiscard = GetTestDiscard; // fail if the most recent tile has been removed from discard
+        List<int> actualDiscard = vars.tileTracker.Discard.ToList();
+
+        CollectionAssert.AreEqual(expectedDiscard, actualDiscard);
+    }
+
     // TileCallingMonitor, time expired and there are callers
-    [Test]
-    public void TileCallingMonitor_OneCaller_TileGoesToCaller() { throw new NotImplementedException(); }
+    // assumes test above passes
+    [TestCase(0)] // host
+    [TestCase(1)] // not host
+    public void TileCallingMonitor_OneCaller_TileGoesToCaller(int player)
+    {
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusion.CreateTimer();
+
+        CallingPeriodWorkflowShortcut(vars, new() { player }, new() { Buttons.call });
+
+        List<int> expectedDiscard = GetTestDiscard.GetRange(0, 9);
+        List<int> actualDiscard = vars.tileTracker.Discard.ToList();
+        List<int> expectedDisplayRack = new() { GetTestDiscard.Last() };
+        List<int> actualDisplayRack = vars.tileTracker.DisplayRacks[player].ToList();
+
+        CollectionAssert.AreEqual(expectedDiscard, actualDiscard);
+        CollectionAssert.AreEqual(expectedDisplayRack, actualDisplayRack);
+    }
+
+    [TestCase(0, 1, 2, 1)]
+    [TestCase(0, 3, 2, 2)]
+    [TestCase(2, 1, 3, 3)]
+    [TestCase(1, 2, 0, 2)]
+    [TestCase(3, 0, 2, 0)]
+    [TestCase(3, 2, 1, 1)]
+    public void TileCallingMonitor_TwoCallers_TileGoesToCorrectCaller(int discardPlayer, int firstCaller, int secondCaller, int correctCaller)
+    {
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusionManager.ActivePlayer = discardPlayer;
+
+        CallingPeriodWorkflowShortcut(vars, new() { firstCaller, secondCaller }, new() { Buttons.call, Buttons.call });
+
+        TileLoc expectedLocation = vars.tileTracker.DisplayRackLocations[correctCaller];
+        TileLoc actualLocation = vars.tileTracker.TileLocations[89];
+
+        Assert.AreEqual(expectedLocation, actualLocation);
+    }
 
     [Test]
-    public void TileCallingMonitor_TwoCallers_TileGoesToCorrectCaller() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_AICaller_AIExposes()
+    {
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusionManager.ActivePlayer = 2;
 
-    [Test]
-    public void TileCallingMonitor_AICaller_AIExposes() { throw new NotImplementedException(); }
+        CallingPeriodWorkflowShortcut(vars, new() { 3 }, new() { Buttons.call });
+
+        List<int> aiPrivateRack = vars.tileTracker.PrivateRacks[3].ToList();
+        List<int> discard = vars.tileTracker.Discard.ToList();
+
+        Assert.Less(aiPrivateRack.Count, 13);
+        Assert.AreEqual(discard.Count, 11);
+    }
 
     // TileCallingMonitor, timer expired and there are waiters
     [Test]
-    public void TileCallingMonitor_OneWaiter_Waits() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_OneWaiter_ServerWaits()
+    {
+        Vars vars = MakeVariablesForTest();
+
+        CallingPeriodWorkflowShortcut(vars, new() { 2 }, new() { Buttons.wait });
+
+        Assert.Contains(89, vars.tileTracker.Discard.ToList());
+    }
 
     [Test]
-    public void TileCallingMonitor_TwoWaitersOneRescinds_Waits() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_TwoWaitersOneRescinds_Waits()
+    {
+        Vars vars = MakeVariablesForTest();
+        List<int> players = new() { 2, 3, 2 };
+        List<Buttons> actions = new() { Buttons.wait, Buttons.wait, Buttons.nevermind };
+
+        CallingPeriodWorkflowShortcut(vars, players, actions);
+
+        Assert.Contains(89, vars.tileTracker.Discard.ToList());
+    }
 
     [Test]
-    public void TileCallingMonitor_WaitersAndCallers_Waits() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_WaitersAndCallers_Waits()
+    {
+        Vars vars = MakeVariablesForTest();
+        List<int> players = new() { 2, 3 };
+        List<Buttons> actions = new() { Buttons.call, Buttons.wait };
+
+        CallingPeriodWorkflowShortcut(vars, players, actions);
+
+        Assert.Contains(89, vars.tileTracker.Discard.ToList());
+    }
 
     // TileCallingMonitor, back to callers after caller rescinds
     [Test]
-    public void TileCallingMonitor_NoCallersAfterCanceledExpose_NextTurn() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_CancelExposeAndNoMoreCallers_NextTurn()
+    {
+        Vars vars = MakeVariablesForTest(activePlayer: 1);
+        List<int> players = new() { 3 };
+        List<Buttons> actions = new() { Buttons.call };
+
+
+        CallingPeriodWorkflowShortcut(vars, players, actions);
+        SubmitInputAndCallTileCallingMonitor(vars, 3, Buttons.nevermind);
+
+        Debug.Log($"Racks: {vars.tileTracker.PrivateRacksToString()}");
+        Debug.Log($"Active Player: {vars.fakeFusionManager.ActivePlayer}");
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89]);   // the tile ends up in Discard
+        Assert.AreEqual(14, vars.tileTracker.PrivateRacks[2].Count);            // play continues for the next player
+        // FIXME: not making it to any debug statements in NeverMind or NextTurn
+    }
 
     [Test]
-    public void TileCallingMonitor_CallersAfterCanceledExpose_TileGoesToCaller() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_CallersAfterCanceledExpose_TileGoesToCaller()
+    {
+        Vars vars = MakeVariablesForTest(activePlayer: 1);
+        List<int> players = new() { 3, 0 };
+        List<Buttons> actions = new() { Buttons.call, Buttons.call };
+
+
+        CallingPeriodWorkflowShortcut(vars, players, actions);
+        SubmitInputAndCallTileCallingMonitor(vars, 3, Buttons.nevermind);
+
+
+        Assert.AreEqual(TileLoc.DisplayRack0, vars.tileTracker.TileLocations[89]);  // the tile ends up on player 0's rack
+    }
 
     [Test]
     public void TK_ExposeTurn_NextTurnStarts() { throw new NotImplementedException(); }
@@ -250,7 +365,13 @@ public class TurnManagerTests
             Dealer = dealer,
             LocalPlayer = localPlayer,
             ActivePlayer = activePlayer,
-            IsServer = true
+            IsServer = true,
+            InputDict = new() {
+                {0, new()},
+                {1, new()},
+                {2, new()},
+                {3, new()}
+            }
         };
         vars.fakeFusion = new(refs);
         vars.tileTracker = new(refs);
@@ -267,18 +388,18 @@ public class TurnManagerTests
         {
             foreach (int tileId in GetTestRacks[i])
             {
-                tileTracker.MoveTile(tileId, tileTracker.PrivateRacks[i]);
+                tileTracker.MoveTile(tileId, tileTracker.PrivateRackLocations[i]);
             }
         }
 
         foreach (int tileId in GetTestWall)
         {
-            tileTracker.MoveTile(tileId, tileTracker.Wall);
+            tileTracker.MoveTile(tileId, TileLoc.Wall);
         }
 
         foreach (int tileId in GetTestDiscard)
         {
-            tileTracker.MoveTile(tileId, tileTracker.Discard);
+            tileTracker.MoveTile(tileId, TileLoc.Discard);
         }
     }
 
@@ -295,6 +416,27 @@ public class TurnManagerTests
     List<int> GetTestWall { get => Enumerable.Range(100, 50).ToList(); }
 
     List<int> GetTestDiscard { get => Enumerable.Range(80, 10).ToList(); }
+
+    void CallingPeriodWorkflowShortcut(Vars vars, List<int> players, List<Buttons> buttons)
+    {
+        vars.fakeFusion.CreateTimer();
+        for (int i = 0; i < players.Count; i++)
+        {
+            SubmitInputAndCallTileCallingMonitor(vars, players[i], buttons[i]);
+        }
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor();
+    }
+
+    void SubmitInputAndCallTileCallingMonitor(Vars vars, int playerId, Buttons button)
+    {
+        vars.fakeFusionManager.InputDict[playerId].input = button;
+        vars.turnManager.TileCallingMonitor();
+        for (int i = 0; i < 3; i++)
+        {
+            vars.fakeFusionManager.InputDict[i].input = Buttons.none;
+        }
+    }
 }
 
 struct Vars

@@ -16,7 +16,7 @@ public class NetworkCallbacks : MonoBehaviour, INetworkRunnerCallbacks
     SetupServer setupHost;
     SetupClient setupClient;
 
-    public CallInputStruct inputStruct;
+    public InputFromClient inputStruct;
 
 
     private void Start()

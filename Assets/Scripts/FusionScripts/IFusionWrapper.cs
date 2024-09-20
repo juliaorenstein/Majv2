@@ -2,7 +2,6 @@
 
 public interface IFusionWrapper
 {
-    int ActiveDiscardTileId { get; set; }
     bool IsTimerExpired { get; }
     bool IsTimerRunning { get; }
 
@@ -19,8 +18,4 @@ public interface IFusionWrapper
     void RPC_S2C_CallTurn(int callPlayerId, int callTileId);
     void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId);
     void RPC_S2C_SendRack(int playerId, int[] tileArr);
-    bool WasCallPressed(int playerId);
-    bool WasNeverMindPressed(int playerId);
-    bool WasPassPressed(int playerId);
-    bool WasWaitPressed(int playerId);
 }

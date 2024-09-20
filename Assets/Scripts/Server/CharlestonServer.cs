@@ -71,7 +71,7 @@ public class CharlestonServer
             if (!refs.FManager.IsPlayerAI(playerId)) continue;
 
             // This player's HostPassArr entry is the first three tiles of their rack
-            PassList[playerId] = TileTracker.PrivateRacks[playerId].GetRange(0, 3);
+            PassList[playerId] = TileTracker.PrivateRacks[playerId].ToList().GetRange(0, 3);
             PlayersReady++;
         }
         AiPassed = true;
@@ -116,13 +116,9 @@ public class CharlestonServer
         // the tiles they received added to their rack
         for (int playerId = 0; playerId < 4; playerId++)
         {
-            foreach (int tileId in PassList[playerId])
-            {
-                TileTracker.PrivateRacks[playerId].Remove(tileId);
-            }
             foreach (int tileId in RecList[playerId])
             {
-                TileTracker.PrivateRacks[playerId].Add(tileId);
+                TileTracker.MoveTile(tileId, TileTracker.PrivateRackLocations[playerId]);
             }
         }
     }

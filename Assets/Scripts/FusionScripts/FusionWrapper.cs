@@ -8,10 +8,6 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     TurnManagerClient TurnManagerClient { get => refs.TManagerClient; }
     TileTrackerServer TileTracker { get => refs.TileTracker; }
 
-
-    // Tiles
-    [Networked] public int ActiveDiscardTileId { get; set; }
-
     // Timer stuff
     private TickTimer timer;
     public bool IsTimerExpired { get => timer.Expired(Runner); }
@@ -79,12 +75,5 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
     public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.TileTrackerClient.ReceiveRackUpdate(tileArr); // TODO: game state updates
-
-    // Player Input
-
-    public bool WasWaitPressed(int playerId) => FManager.InputDict[playerId].wait;
-    public bool WasPassPressed(int playerId) => FManager.InputDict[playerId].pass;
-    public bool WasCallPressed(int playerId) => FManager.InputDict[playerId].call;
-    public bool WasNeverMindPressed(int playerId) => FManager.InputDict[playerId].nevermind;
 }
 
