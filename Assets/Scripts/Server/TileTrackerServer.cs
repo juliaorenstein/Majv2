@@ -31,7 +31,7 @@ public class TileTrackerServer
         TileLoc.PrivateRack1,
         TileLoc.PrivateRack2,
         TileLoc.PrivateRack3
-        };
+    };
     public List<TileLoc> DisplayRackLocations = new() {
         TileLoc.DisplayRack0,
         TileLoc.DisplayRack1,

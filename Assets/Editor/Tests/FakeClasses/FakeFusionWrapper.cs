@@ -74,7 +74,7 @@ class FakeFusionWrapper : IFusionWrapper
 
     public void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log($"RPC_S2C_NextTurn({nextPlayerId}, {nextTileId})");
     }
 
     public void RPC_S2C_SendRack(int playerId, int[] tileArr) { }

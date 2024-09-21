@@ -38,6 +38,9 @@ public class FusionManager : NetworkBehaviour, IFusionManager
 
     public void InitializePlayer(PlayerRef player)
     {
+        Debug.Log($"FusionManager.InitializePlayer({player})");
+        Debug.Assert(IsServer, "Calling InitializePlayerFromClient. Don't do that.");
+
         NetworkObject newInputObj = Runner.Spawn(Resources.Load<GameObject>("Prefabs/Input Object"));
         newInputObj.AssignInputAuthority(player);
 

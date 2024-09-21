@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Fusion;
 
 public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
@@ -12,8 +13,17 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     private TickTimer timer;
     public bool IsTimerExpired { get => timer.Expired(Runner); }
     public bool IsTimerRunning { get => timer.IsRunning; }
-    public void CreateTimer() => timer = TickTimer.CreateFromSeconds(Runner, 2f);
-    public void ResetTimer() => timer = TickTimer.None;
+    public void CreateTimer()
+    {
+        UnityEngine.Debug.Assert(FManager.IsServer, "Calling CreateTimer from client. Don't do that.");
+        UnityEngine.Debug.Log("FusionWrapper.CreateTimer()");
+        timer = TickTimer.CreateFromSeconds(Runner, 2f);
+    }
+    public void ResetTimer()
+    {
+        UnityEngine.Debug.Log("FusionWrapper.ResetTimer()");
+        timer = TickTimer.None;
+    }
 
     public override void Spawned()
     {
@@ -28,10 +38,11 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
     }
 
     // RPCs
-    public void RPC_S2C_SendGameState(int playerId)
+    public void RPC_S2C_SendGameState(int player)
     {
-        NetworkableTileLocations tileLocs = TileTracker.NetworkTileLocs(playerId);
-        RPC_S2C_SendGameState(FManager.PlayerDict[playerId], tileLocs.WallCount
+        UnityEngine.Debug.Log($"RPC_S2C_SendGameState({player}) - send");
+        NetworkableTileLocations tileLocs = TileTracker.NetworkTileLocs(player);
+        RPC_S2C_SendGameState(FManager.PlayerDict[player], tileLocs.WallCount
             , tileLocs.Discard, tileLocs.PrivateRack, tileLocs.PrivateRackCounts
             , tileLocs.DisplayRacks[0], tileLocs.DisplayRacks[1]
             , tileLocs.DisplayRacks[2], tileLocs.DisplayRacks[3]);
@@ -41,7 +52,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
         , int[] privateRack, int[] privateRackCounts, int[] displayRack0
         , int[] displayRack1, int[] displayRack2, int[] displayRack3)
     {
-        UnityEngine.Debug.Log($"RPC receivied for player {player}");
+        UnityEngine.Debug.Log($"RPC_S2C_SendGameState({player}) - receive");
         refs.TileTrackerClient.ReceiveGameState(wallCount, discard, privateRack
             , privateRackCounts, displayRack0, displayRack1, displayRack2
             , displayRack3);

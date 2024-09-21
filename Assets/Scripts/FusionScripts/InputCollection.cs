@@ -6,11 +6,11 @@ public class InputForServer { public Buttons input; }
 
 public enum Buttons
 {
-    call = 0,
-    wait = 1,
-    pass = 2,
-    nevermind = 3,
-    none = 4
+    none = 0,
+    call = 1,
+    wait = 2,
+    pass = 3,
+    nevermind = 4
 }
 
 public class InputCollection : NetworkBehaviour

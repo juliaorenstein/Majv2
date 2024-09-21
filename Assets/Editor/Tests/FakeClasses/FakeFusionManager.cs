@@ -18,11 +18,10 @@ public class FakeFusionManager : IFusionManager
     public int LocalPlayer { get; set; }
     public int Dealer { get; set; }
     public bool IsDealer { get => LocalPlayer == Dealer; }
-    public int ActivePlayer { get; set; }
+    public int ActivePlayer { get; set; } = -1;
     public bool IsActivePlayer { get => ActivePlayer == LocalPlayer; }
-    public int ExposingPlayer { get; set; }
+    public int ExposingPlayer { get; set; } = -1;
     public bool IsExposingPlayer { get => ExposingPlayer == LocalPlayer; }
-    public int ActiveDiscardTileId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     // input
     public bool WaitPressed(int playerId) => InputDict[playerId].input == Buttons.wait;

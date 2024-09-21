@@ -47,9 +47,15 @@ public class TurnManagerServer
     public void Discard(int discardTile)
     {
         UnityEngine.Debug.Log($"TurnManagerServer.Discard({discardTile})");
-        UnityEngine.Debug.Assert(
-            tileTracker.ActivePrivateRack.Contains(discardTile)
-            , "Discard tile not on active player's rack.");
+        if (fusionManager.ExposingPlayer != -1) DiscardFromExpose(discardTile);
+
+        else
+        {
+            UnityEngine.Debug.Assert(
+                tileTracker.TileLocations[discardTile]
+                == tileTracker.ActivePrivateRackLoc
+                , "discardTile is not on active player's rack.");
+        }
 
         // housekeeping
         fusionManager.TurnPhase = TurnPhase.Discarding;
@@ -68,49 +74,77 @@ public class TurnManagerServer
         fusion.RPC_S2A_ShowButtons(fusionManager.ActivePlayer);
     }
 
+    void DiscardFromExpose(int discardTile)
+    {
+
+        UnityEngine.Debug.Assert(
+            tileTracker.TileLocations[discardTile]
+            == tileTracker.PrivateRackLocations[fusionManager.ExposingPlayer]
+            , "discardTile is not on exposing player's rack during expose.");
+
+        // exposing player's turn is done, set ActivePlayer to this ExposingPlayer
+        // so that the next player is chosen correctly
+        fusionManager.ActivePlayer = fusionManager.ExposingPlayer;
+        InitializeNextTurn();
+    }
+
     public void TileCallingMonitor()
     {
         // this check rules out times when players aren't calling
         // but also clients because they never have a timer set
         if (!fusion.IsTimerRunning) { return; }
+        UpdateCallingAndWaitingLists();
+        ExposingPlayerCheck();
+        // if any player says wait, don't do anything
+        if (AnyPlayerWaiting) return;
 
-        // update calling and waiting lists
-        for (int playerId = 0; playerId < 3; playerId++)
+        TimerCheck();
+
+
+        void UpdateCallingAndWaitingLists()
         {
-            if (fusionManager.WaitPressed(playerId)) { playersWaiting.Add(playerId); }
-            if (fusionManager.PassPressed(playerId)) { playersWaiting.Remove(playerId); }
-            if (fusionManager.CallPressed(playerId))
+            for (int playerId = 0; playerId < 4; playerId++)
             {
-                playersWaiting.Remove(playerId);
-                playersCalling.Add(playerId);
+                if (fusionManager.WaitPressed(playerId)) { playersWaiting.Add(playerId); }
+                if (fusionManager.PassPressed(playerId)) { playersWaiting.Remove(playerId); }
+                if (fusionManager.CallPressed(playerId))
+                {
+                    playersWaiting.Remove(playerId);
+                    playersCalling.Add(playerId);
+                }
             }
         }
 
-        // if there's an exposing player, check for never mind
-        if (fusionManager.ExposingPlayer != -1)
+        void ExposingPlayerCheck()
         {
-            if (fusionManager.NeverMindPressed(fusionManager.ExposingPlayer))
+            // if there's an exposing player, check for never mind
+            if (fusionManager.ExposingPlayer != -1)
             {
-                NeverMind(); // don't quit out of function - go to next caller
+                if (fusionManager.NeverMindPressed(fusionManager.ExposingPlayer))
+                {
+                    NeverMind(); // don't quit out of function - go to next caller
+                }
+                else return;
             }
-            else return;
         }
 
-        if (AnyPlayerWaiting) return;                           // if any player says wait, don't do anything
-        if (fusion.IsTimerExpired)
+        void TimerCheck()
         {
-            if (AnyPlayerCalling)
-            {   // if any players call and timer is done/not running, do logic
-                // sort PlayersCalling by going around from current player
-                playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, fusionManager.ActivePlayer));
-                fusionManager.ExposingPlayer = playersCalling[0];
+            if (fusion.IsTimerExpired)
+            {
+                if (AnyPlayerCalling)
+                {   // if any players call and timer is done/not running, do logic
+                    // sort PlayersCalling by going around from current player
+                    playersCalling.Sort((x, y) => PlayersCallingSorter(x, y, fusionManager.ActivePlayer));
+                    fusionManager.ExposingPlayer = playersCalling[0];
 
-                Call();
-                return;
+                    Call();
+                    return;
+                }
+
+                // otherwise go to next turn
+                NextTurn();
             }
-
-            // otherwise go to next turn
-            NextTurn();
         }
     }
 
@@ -134,7 +168,7 @@ public class TurnManagerServer
     void Call()
     {
         callTile = LastDiscarded;
-        H_InitializeNextTurn();
+        UnityEngine.Debug.Assert(!Tile.IsJoker(callTile));
 
         TileLoc rack = tileTracker.DisplayRackLocations[fusionManager.ExposingPlayer];
         tileTracker.MoveTile(callTile, rack);
@@ -160,7 +194,7 @@ public class TurnManagerServer
         UnityEngine.Debug.Log("TurnManagerServer.NextTurn()");
 
         IncrementActivePlayer();
-        H_InitializeNextTurn();
+        InitializeNextTurn();
 
         int nextTileId = tileTracker.Wall.Last();
         tileTracker.MoveTile(nextTileId, tileTracker.ActivePrivateRackLoc);                // add that tile to the player's rack list
@@ -172,7 +206,7 @@ public class TurnManagerServer
         fusion.RPC_S2C_NextTurn(fusionManager.ActivePlayer, nextTileId);         // if it's a person, hand it over to that client
     }
 
-    void H_InitializeNextTurn()
+    void InitializeNextTurn()
     {
         fusion.ResetTimer();
         playersWaiting.Clear(); // this shouldn't be needed
@@ -181,8 +215,6 @@ public class TurnManagerServer
         callTile = -1;
         fusionManager.ExposingPlayer = -1;
     }
-
-
 
     void AITurn()
     {

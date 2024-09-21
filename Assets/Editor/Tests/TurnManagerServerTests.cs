@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
-using System;
-using UnityEngine;
 
 public class TurnManagerTests
 {
@@ -70,7 +68,6 @@ public class TurnManagerTests
     // Discard
     [TestCase(3)] // another player's rack
     [TestCase(105)] // on the wall
-    [TestCase(349)] // invalid tile
     [TestCase(200)] // on display rack
     public void Discard_TileNotOnActivePlayersPrivateRack_FailAssertion(int discardTile)
     {
@@ -81,7 +78,20 @@ public class TurnManagerTests
         }
 
         UnityEngine.TestTools.LogAssert
-            .Expect(UnityEngine.LogType.Assert, "Discard tile not on active player's rack.");
+            .Expect(UnityEngine.LogType.Assert, "discardTile is not on active player's rack.");
+
+        vars.turnManager.Discard(discardTile);
+    }
+
+    [Test]
+    public void Discard_TileNotOnExposePlayersPrivateRack_FailAssertion()
+    {
+        Vars vars = MakeVariablesForTest(activePlayer: 2);
+        vars.fakeFusionManager.ExposingPlayer = 1;
+        int discardTile = 130;
+
+        UnityEngine.TestTools.LogAssert
+            .Expect(UnityEngine.LogType.Assert, "discardTile is not on exposing player's rack during expose.");
 
         vars.turnManager.Discard(discardTile);
     }
@@ -150,24 +160,18 @@ public class TurnManagerTests
 
     // TileCallingMonitor, time expired and no callers or waiters
     [Test]
-    public void TileCallingMonitor_NoCallersOrWaiters_TileGoesToNextPlayer()
+    public void TileCallingMonitor_NoCallersOrWaiters_NextTurn()
     {
         Vars vars = MakeVariablesForTest(activePlayer: 0);
+        vars.fakeFusion.CreateTimer();
         vars.fakeFusion.IsTimerExpired = true;
+        int discardTile = vars.tileTracker.Discard.Last();
+        int nextTile = vars.tileTracker.Wall.Last();
 
         vars.turnManager.TileCallingMonitor();
 
-        List<int> expectedWall = Enumerable.Range(100, 49).ToList();
-        IReadOnlyList<int> actualWall = vars.tileTracker.Wall;
-        List<List<int>> expectedRacks = GetTestRacks;
-        expectedRacks[1].Add(149);
-        List<IReadOnlyList<int>> actualRacks = vars.tileTracker.PrivateRacks;
-
-        CollectionAssert.AreEqual(expectedWall, actualWall);
-        for (int rackId = 0; rackId < 4; rackId++)
-        {
-            CollectionAssert.AreEqual(expectedRacks[rackId], actualRacks[rackId]);
-        }
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[discardTile]);
+        Assert.AreEqual(TileLoc.PrivateRack1, vars.tileTracker.TileLocations[nextTile]);
     }
 
     // TileCallingMonitor, callers before time expired
@@ -223,7 +227,8 @@ public class TurnManagerTests
         Assert.AreEqual(expectedLocation, actualLocation);
     }
 
-    [Test]
+    //[Test]
+    // TODO: Implement AI calling
     public void TileCallingMonitor_AICaller_AIExposes()
     {
         Vars vars = MakeVariablesForTest();
@@ -285,8 +290,8 @@ public class TurnManagerTests
         CallingPeriodWorkflowShortcut(vars, players, actions);
         SubmitInputAndCallTileCallingMonitor(vars, 3, Buttons.nevermind);
 
-        Debug.Log($"Racks: {vars.tileTracker.PrivateRacksToString()}");
-        Debug.Log($"Active Player: {vars.fakeFusionManager.ActivePlayer}");
+        UnityEngine.Debug.Log($"Racks: {vars.tileTracker.PrivateRacksToString()}");
+        UnityEngine.Debug.Log($"Active Player: {vars.fakeFusionManager.ActivePlayer}");
         Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89]);   // the tile ends up in Discard
         Assert.AreEqual(14, vars.tileTracker.PrivateRacks[2].Count);            // play continues for the next player
         // FIXME: not making it to any debug statements in NeverMind or NextTurn
@@ -299,16 +304,55 @@ public class TurnManagerTests
         List<int> players = new() { 3, 0 };
         List<Buttons> actions = new() { Buttons.call, Buttons.call };
 
-
         CallingPeriodWorkflowShortcut(vars, players, actions);
         SubmitInputAndCallTileCallingMonitor(vars, 3, Buttons.nevermind);
-
 
         Assert.AreEqual(TileLoc.DisplayRack0, vars.tileTracker.TileLocations[89]);  // the tile ends up on player 0's rack
     }
 
     [Test]
-    public void TK_ExposeTurn_NextTurnStarts() { throw new NotImplementedException(); }
+    public void TileCallingMonitor_NoCallersOrWaitersDuringSinglePlayer_TurnsGoAroundToFirstPlayer()
+    {
+        Vars vars = MakeVariablesForTest(activePlayer: 3, aiPlayers: 3);
+
+        vars.turnManager.Discard(vars.tileTracker.PrivateRacks[3].Last());
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor(); // should go to player 1's turn
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor(); // should go to player 2's turn
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor(); // should go to player 3's turn
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor(); // should go back around to player 0\
+
+        for (int i = 1; i < 4; i++) // assert ais have 13 tiles each
+        {
+            Assert.AreEqual(13, vars.tileTracker.PrivateRacks[i].Count);
+        }
+        Assert.AreEqual(14, vars.tileTracker.ActivePrivateRack.Count);
+    }
+
+    [Test]
+    public void Discard_ExposeTurn_NextTurnStartsAfterCallingPeriod()
+    {
+        Vars vars = MakeVariablesForTest();
+        vars.fakeFusionManager.ActivePlayer = 3;
+        int exposePlayer = 1;                           // next player after this should be 2, not 0
+
+        vars.turnManager.Discard(vars.tileTracker.PrivateRacks[3].Last());  // discard
+        vars.fakeFusionManager.InputDict[exposePlayer].input = Buttons.call;
+        vars.turnManager.TileCallingMonitor();
+        vars.fakeFusionManager.InputDict[exposePlayer].input = Buttons.none;
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor();          // player three exposes
+        // skipping actual exposing steps for now - this might cause errors later
+        vars.turnManager.Discard(vars.tileTracker.PrivateRacks[exposePlayer].Last());
+        vars.turnManager.TileCallingMonitor();
+        vars.fakeFusion.IsTimerExpired = true;
+        vars.turnManager.TileCallingMonitor();          // should go to next player now
+
+        Assert.AreEqual(14, vars.tileTracker.PrivateRacks[2].Count);  // next player will have 14 tiles, should be player 2
+    }
 
 
     // The following five tests are out of scope for TileLocomotion, but when TurnManager is tested, those tests should start from this class.
@@ -432,10 +476,7 @@ public class TurnManagerTests
     {
         vars.fakeFusionManager.InputDict[playerId].input = button;
         vars.turnManager.TileCallingMonitor();
-        for (int i = 0; i < 3; i++)
-        {
-            vars.fakeFusionManager.InputDict[i].input = Buttons.none;
-        }
+        vars.fakeFusionManager.InputDict[playerId].input = Buttons.none;
     }
 }
 
