@@ -6,8 +6,8 @@ using System.Linq;
 
 public class TileTrackerClient
 {
-    private ClassReferences refs;
-    private IMonoWrapper mono;
+    private readonly ClassReferences refs;
+    private readonly IMonoWrapper mono;
 
     // lists owned and shared by the host
     public ObservableCollection<int> Discard = new();
@@ -147,20 +147,4 @@ public class TileTrackerClient
         }
 
     }
-
-
-    /*
-    void VerifyWallCount(int newWallCount)
-    {
-        UnityEngine.Debug.Assert(newWallCount > WallCount);
-    }
-    void VerifyDiscard(int[] newDiscard)
-    {
-        for (int i = 0; i < Discard.Count; i++)
-        {
-            // the existing Discard list on the client should equal newDiscard up until the newer tile(s)
-            UnityEngine.Debug.Assert(Discard[i] == newDiscard[i]);
-        }
-    }
-    */
 }
