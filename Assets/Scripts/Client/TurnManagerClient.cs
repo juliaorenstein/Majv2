@@ -13,7 +13,7 @@ public class TurnManagerClient
     }
 
     // Setup first turn
-    public void C_StartGamePlay()
+    public void StartGamePlay()
     {
         UnityEngine.Debug.Assert(!fusionManager.IsServer);
         mono.SetActive(MonoObject.Discard, true);
@@ -27,6 +27,8 @@ public class TurnManagerClient
     // Client discards a tile
     public void RequestDiscard(int discardTileId)
     {
+        UnityEngine.Debug.Assert(fusionManager.IsActivePlayer);
+
         fusion.RPC_C2S_Discard(discardTileId);
         mono.SetRaycastTarget(MonoObject.Discard, false);
     }
@@ -38,7 +40,7 @@ public class TurnManagerClient
         mono.SetRaycastTargetOnTile(discardTileId, false);
     }
 
-    // All clients expect discarder see the call wait pass buttons
+    // All clients except discarder see the call wait pass buttons
     public void ShowButtons()
     {
         if (!fusionManager.IsActivePlayer)
@@ -61,14 +63,7 @@ public class TurnManagerClient
         mono.SetRaycastTarget(MonoObject.Discard, true);
     }
 
-    public void CallTurn(int CallTile)
-    {
-        C_Expose(CallTile);
-
-        // FIXME: if a player puts an exposed tile back on their rack, remove it from screen
-    }
-
-    public void C_Expose(int exposeTileId)
+    public void RequestExpose(int exposeTileId)
     {
         mono.MoveTile(exposeTileId, MonoObject.PublicRack);
         fusion.RPC_C2A_Expose(exposeTileId);

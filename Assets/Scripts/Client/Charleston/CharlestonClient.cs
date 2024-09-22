@@ -87,7 +87,7 @@ public class CharlestonClient
         {
             Mono.SetActive(MonoObject.CharlestonBox, false);
             Mono.SetActive(MonoObject.CharlestonPassButton, false);
-            refs.TManagerClient.C_StartGamePlay();
+            refs.TManagerClient.StartGamePlay();
         }
 
         void NextPass()

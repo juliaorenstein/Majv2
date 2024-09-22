@@ -354,36 +354,6 @@ public class TurnManagerTests
         Assert.AreEqual(14, vars.tileTracker.PrivateRacks[2].Count);  // next player will have 14 tiles, should be player 2
     }
 
-
-    // The following five tests are out of scope for TileLocomotion, but when TurnManager is tested, those tests should start from this class.
-    // public void OnPointerClick_RackTileWhenDiscardIsValid_TileIsDiscarded()
-
-    // public void OnPointerClick_RackTileWhenExposeIsValid_TileIsExposed()
-
-    // public void OnPointerClick_RackTileWhenDiscardAndExposePossible_Discarded()
-
-    // public void OnPointerClick_RackTileWhenDiscardAndExposePossible_Expose()
-
-    // public void OnPointerClick_DiscardedTileDuringCalling_TileIsCalled()
-
-    // will test some of these in TurnManager
-    /*
-    [Test]
-    public void OnEndDrag_RackToDiscardValid_Discard() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDiscardInvalid_TileMovesBack() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_DiscardToDisplayRack_Expose() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDisplayRackValid_Expose() { throw new NotImplementedException(); }
-
-    [Test]
-    public void OnEndDrag_RackToDisplayRackInvalid_TileMovesBack() { throw new NotImplementedException(); }
-    */
-
     // automatically sets up a test where:
     // - dealer is player 3
     // - player 3 is ai

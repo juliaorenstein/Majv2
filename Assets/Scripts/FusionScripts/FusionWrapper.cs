@@ -73,7 +73,7 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 
     public void RPC_S2C_CallTurn(int callPlayerId, int callTileId) => RPC_S2C_CallTurn(FManager.PlayerDict[callPlayerId], callTileId);
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_S2C_CallTurn(PlayerRef _, int callTileId) => TurnManagerClient.CallTurn(callTileId);
+    public void RPC_S2C_CallTurn(PlayerRef _, int callTileId) => TurnManagerClient.RequestExpose(callTileId);
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RPC_S2A_ResetButtons() => TurnManagerClient.ResetButtons();
