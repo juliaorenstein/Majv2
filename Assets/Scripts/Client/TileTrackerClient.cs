@@ -9,10 +9,15 @@ public class TileTrackerClient
     private readonly ClassReferences refs;
     private readonly IMonoWrapper mono;
 
-    // lists owned and shared by the host
-    public ObservableCollection<int> Discard = new();
-    public List<ObservableCollection<int>> DisplayRacks = new() { new(), new(), new(), new() };
-    public ObservableCollection<int> LocalPrivateRack = new();
+    // lists owned and shared by the host, along with their public client counterparts
+    ObservableCollection<int> discard = new();
+    public IReadOnlyList<int> Discard => discard.ToList().AsReadOnly();
+
+    List<ObservableCollection<int>> displayRacks = new() { new(), new(), new(), new() };
+    public List<IReadOnlyList<int>> DisplayRacks = new();
+
+    ObservableCollection<int> localPrivateRack = new();
+    public IReadOnlyList<int> LocalPrivateRack => localPrivateRack.ToList().AsReadOnly();
 
     // counts shared by host (for lists of hidden tiles)
     public int[] PrivateRackCounts = new int[4];
@@ -27,12 +32,16 @@ public class TileTrackerClient
         refs.TileTrackerClient = this;
         this.refs = refs;
         mono = refs.Mono;
-        Discard.CollectionChanged += DiscardChanged;
+        foreach (ObservableCollection<int> rack in displayRacks)
+        {
+            DisplayRacks.Add(rack.ToList().AsReadOnly());
+        }
+        discard.CollectionChanged += DiscardChanged;
         foreach (ObservableCollection<int> rack in DisplayRacks)
         {
             rack.CollectionChanged += DisplayRacksChanged;
         }
-        LocalPrivateRack.CollectionChanged += LocalPrivateRackChanged;
+        localPrivateRack.CollectionChanged += LocalPrivateRackChanged;
     }
 
 
@@ -43,16 +52,16 @@ public class TileTrackerClient
         int[][] newDisplayRacks = new int[][] { newDisplayRack0, newDisplayRack1, newDisplayRack2, newDisplayRack3 };
 
         WallCount = newWallCount;       // update wall count
-        ApplyAdd(newDiscard, Discard);  // update discard pile
+        ApplyAdd(newDiscard, discard);  // update discard pile
 
         // update all display racks
         for (int i = 0; i < 4; i++)
         {
-            ApplyAdd(newDisplayRacks[i], DisplayRacks[i]);
+            ApplyAdd(newDisplayRacks[i], displayRacks[i]);
         }
 
         // update local private rack
-        if (Changed(newPrivateRack, LocalPrivateRack))
+        if (Changed(newPrivateRack, localPrivateRack))
         {
             ReceiveRackUpdate(newPrivateRack);
         }
@@ -91,7 +100,7 @@ public class TileTrackerClient
         // note: we don't care about the order of newRack  or therefore any "move" actions because it's none of the 
         // server's business what order the client keeps their tiles in
 
-        ObservableCollection<int> curRack = LocalPrivateRack;
+        ObservableCollection<int> curRack = localPrivateRack;
 
         // removals
         List<int> removeList = new();
