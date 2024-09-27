@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 class FakeMonoWrapper : IMonoWrapper
 {
@@ -10,7 +11,7 @@ class FakeMonoWrapper : IMonoWrapper
 
     public void ExposeOtherPlayerTile(int rackId, int tileId)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log("FakeMonoWrapper.ExposeOtherPlayertile()");
     }
 
     public Dictionary<int, MonoObject> TileLocations = new();
@@ -79,6 +80,6 @@ class FakeMonoWrapper : IMonoWrapper
 
     public void UpdateRack(List<int> tileIds)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log($"FakeMonoWrapper.UpdateRack([{string.Join(", ", tileIds)}])");
     }
 }

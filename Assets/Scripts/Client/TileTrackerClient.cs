@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using Fusion;
 
 public class TileTrackerClient
 {
@@ -16,15 +17,12 @@ public class TileTrackerClient
     List<ObservableCollection<int>> displayRacks = new() { new(), new(), new(), new() };
     public List<IReadOnlyList<int>> DisplayRacks = new();
 
-    ObservableCollection<int> localPrivateRack = new();
-    public IReadOnlyList<int> LocalPrivateRack => localPrivateRack.ToList().AsReadOnly();
+    // clients can rearrange their own and even add/remove during Charleston, so this will just be a public ObsColl without a readonly counterpart
+    public ObservableCollection<int> LocalPrivateRack = new();
 
     // counts shared by host (for lists of hidden tiles)
-    public int[] PrivateRackCounts = new int[4];
-    public int WallCount;
-
-    // everything not shared by host (contents of Wall and PrivateRacks)
-    public List<int> TilePool;
+    public int[] PrivateRackCounts { get; private set; } = new int[4];
+    public int WallCount { get; private set; }
 
     // initiated in SetupClient
     public TileTrackerClient(ClassReferences refs)
@@ -41,7 +39,7 @@ public class TileTrackerClient
         {
             rack.CollectionChanged += DisplayRacksChanged;
         }
-        localPrivateRack.CollectionChanged += LocalPrivateRackChanged;
+        LocalPrivateRack.CollectionChanged += LocalPrivateRackChanged;
     }
 
 
@@ -61,7 +59,7 @@ public class TileTrackerClient
         }
 
         // update local private rack
-        if (Changed(newPrivateRack, localPrivateRack))
+        if (Changed(newPrivateRack, LocalPrivateRack))
         {
             ReceiveRackUpdate(newPrivateRack);
         }
@@ -100,7 +98,7 @@ public class TileTrackerClient
         // note: we don't care about the order of newRack  or therefore any "move" actions because it's none of the 
         // server's business what order the client keeps their tiles in
 
-        ObservableCollection<int> curRack = localPrivateRack;
+        ObservableCollection<int> curRack = LocalPrivateRack;
 
         // removals
         List<int> removeList = new();

@@ -17,5 +17,4 @@ public interface IFusionWrapper
     void RPC_S2A_ShowDiscard(int discardTileId);
     void RPC_S2C_CallTurn(int callPlayerId, int callTileId);
     void RPC_S2C_NextTurn(int nextPlayerId, int nextTileId);
-    void RPC_S2C_SendRack(int playerId, int[] tileArr);
 }

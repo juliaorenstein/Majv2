@@ -83,8 +83,5 @@ public sealed class FusionWrapper : NetworkBehaviour, IFusionWrapper
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RPC_S2A_NeverMind() => TurnManagerClient.NeverMind();
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, TickAligned = false)]
-    public void RPC_S2C_SendRack(int playerId, int[] tileArr) => refs.TileTrackerClient.ReceiveRackUpdate(tileArr); // TODO: game state updates
 }
 

@@ -101,7 +101,7 @@ public class TileLocomotion
 
             ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
 
-            int curIxOnRack = rack.IndexOf(tileId);
+            int curIxOnRack = rack.ToList().IndexOf(tileId);
             bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId);
 
             int newIx = dropIx;

@@ -448,12 +448,14 @@ public class TurnManagerTests
         vars.turnManager.TileCallingMonitor();
         vars.fakeFusionManager.InputDict[playerId].input = Buttons.none;
     }
+
+    struct Vars
+    {
+        public TurnManagerServer turnManager;
+        public FakeFusionManager fakeFusionManager;
+        public FakeFusionWrapper fakeFusion;
+        public TileTrackerServer tileTracker;
+    }
 }
 
-struct Vars
-{
-    public TurnManagerServer turnManager;
-    public FakeFusionManager fakeFusionManager;
-    public FakeFusionWrapper fakeFusion;
-    public TileTrackerServer tileTracker;
-}
+
