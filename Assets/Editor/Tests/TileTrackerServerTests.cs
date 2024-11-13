@@ -25,7 +25,7 @@ public class TileTrackerServerTests
 
         CollectionAssert.DoesNotContain(map[oldLoc], tileId);
         CollectionAssert.Contains(map[newLoc], tileId);
-        Assert.AreEqual(newLoc, vars.tileTracker.TileLocations[tileId]);
+        Assert.AreEqual(newLoc, vars.tileTracker.TileLocations[tileId].curLoc);
     }
 
     public void MoveTile_InputRandomList_FailAssertion()
