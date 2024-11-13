@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 public class CharlestonClientTests
@@ -118,8 +119,8 @@ public class CharlestonClientTests
 
         // ACT
         tileTracker.ReceiveRackUpdate(new int[5] { 4, 5, 6, 7, 8 });
-        ObservableCollection<int> expected = new() { 4, 5, 6, 7, 8 };
-        ObservableCollection<int> actual = tileTracker.LocalPrivateRack;
+        List<int> expected = new() { 4, 5, 6, 7, 8 };
+        List<int> actual = tileTracker.LocalPrivateRack;
 
         // ASSERT
         CollectionAssert.AreEqual(expected, actual);

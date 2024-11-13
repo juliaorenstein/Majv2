@@ -222,7 +222,7 @@ public class TurnManagerTests
         CallingPeriodWorkflowShortcut(vars, new() { firstCaller, secondCaller }, new() { Buttons.call, Buttons.call });
 
         TileLoc expectedLocation = vars.tileTracker.DisplayRackLocations[correctCaller];
-        TileLoc actualLocation = vars.tileTracker.TileLocations[89];
+        TileLoc actualLocation = vars.tileTracker.TileLocations[89].curLoc;
 
         Assert.AreEqual(expectedLocation, actualLocation);
     }

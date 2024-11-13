@@ -52,7 +52,7 @@ public class TurnManagerServer
         else
         {
             UnityEngine.Debug.Assert(
-                tileTracker.TileLocations[discardTile]
+                tileTracker.TileLocations[discardTile].curLoc
                 == tileTracker.ActivePrivateRackLoc
                 , "discardTile is not on active player's rack.");
         }
@@ -78,7 +78,7 @@ public class TurnManagerServer
     {
 
         UnityEngine.Debug.Assert(
-            tileTracker.TileLocations[discardTile]
+            tileTracker.TileLocations[discardTile].curLoc
             == tileTracker.PrivateRackLocations[fusionManager.ExposingPlayer]
             , "discardTile is not on exposing player's rack during expose.");
 

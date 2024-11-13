@@ -99,7 +99,7 @@ public class TileLocomotion
         {
             UnityEngine.Debug.Assert(FusionManager.GamePhase > GamePhase.Pregame);
 
-            ObservableCollection<int> rack = refs.TileTrackerClient.LocalPrivateRack;
+            List<int> rack = refs.TileTrackerClient.LocalPrivateRack;
 
             int curIxOnRack = rack.ToList().IndexOf(tileId);
             bool comingFromCharles = refs.CClient.ClientPassArr.Contains(tileId);
@@ -122,7 +122,8 @@ public class TileLocomotion
             if (curIxOnRack < 0) refs.CClient.MoveTileFromCharlestonToRack(tileId, newIx);
             else
             {
-                refs.TileTrackerClient.LocalPrivateRack.Move(curIxOnRack, newIx);
+                refs.TileTrackerClient.LocalPrivateRack.Remove(tileId);
+                refs.TileTrackerClient.LocalPrivateRack.Insert(tileId, newIx);
             }
         }
 

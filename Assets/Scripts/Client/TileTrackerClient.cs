@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Fusion;
 
 public class TileTrackerClient
 {
@@ -11,18 +10,25 @@ public class TileTrackerClient
     private readonly IMonoWrapper mono;
 
     // lists owned and shared by the host, along with their public client counterparts
-    ObservableCollection<int> discard = new();
+    List<int> discard = new();
     public IReadOnlyList<int> Discard => discard.ToList().AsReadOnly();
 
-    List<ObservableCollection<int>> displayRacks = new() { new(), new(), new(), new() };
+    List<List<int>> displayRacks = new() { new(), new(), new(), new() };
     public List<IReadOnlyList<int>> DisplayRacks = new();
 
     // clients can rearrange their own and even add/remove during Charleston, so this will just be a public ObsColl without a readonly counterpart
-    public ObservableCollection<int> LocalPrivateRack = new();
+    public List<int> LocalPrivateRack = new();
+    TileLoc localPrivateRackLoc;
 
     // counts shared by host (for lists of hidden tiles)
     public int[] PrivateRackCounts { get; private set; } = new int[4];
     public int WallCount { get; private set; }
+
+    // dictionary of tile locations that the client knows about
+    public Dictionary<int, TileLoc> tileLocations = new();
+
+    // TileLocs to their respective lists
+    Dictionary<TileLoc, List<int>> tileLocToListMap;
 
     // initiated in SetupClient
     public TileTrackerClient(ClassReferences refs)
@@ -30,24 +36,65 @@ public class TileTrackerClient
         refs.TileTrackerClient = this;
         this.refs = refs;
         mono = refs.Mono;
-        foreach (ObservableCollection<int> rack in displayRacks)
+        foreach (List<int> rack in displayRacks)
         {
             DisplayRacks.Add(rack.ToList().AsReadOnly());
         }
-        discard.CollectionChanged += DiscardChanged;
-        foreach (ObservableCollection<int> rack in DisplayRacks)
+
+        localPrivateRackLoc = refs.FManager.LocalPlayer switch
         {
-            rack.CollectionChanged += DisplayRacksChanged;
-        }
-        LocalPrivateRack.CollectionChanged += LocalPrivateRackChanged;
+            0 => TileLoc.PrivateRack0,
+            1 => TileLoc.PrivateRack1,
+            2 => TileLoc.PrivateRack2,
+            3 => TileLoc.PrivateRack3,
+            _ => throw new Exception("invalid player id")
+        };
+
+        tileLocToListMap = new() {
+            {TileLoc.Discard, discard},
+            {TileLoc.DisplayRack0, displayRacks[0]},
+            {TileLoc.DisplayRack1, displayRacks[1]},
+            {TileLoc.DisplayRack2, displayRacks[2]},
+            {TileLoc.DisplayRack3, displayRacks[3]},
+            {localPrivateRackLoc, LocalPrivateRack}
+        };
     }
 
+
+    public void ReceiveGameState(Dictionary<int, LocChange> tileLocsFromServer)
+    {
+        foreach (KeyValuePair<int, LocChange> item in tileLocsFromServer)
+        {
+            int tileId = item.Key;
+            TileLoc lastLoc = item.Value.lastLoc;
+            TileLoc curLoc = item.Value.curLoc;
+
+            if (tileLocsFromServer.ContainsKey(tileId))
+            {
+                // TODO: this assertion will fail during network issues and when a client joins mid game, but i'll worry about that later
+                UnityEngine.Debug.Assert(tileLocations[tileId] == lastLoc
+                , "Received a lastLoc from server that doesn't match tile's current position on the client");
+
+                List<int> oldList = tileLocToListMap[tileLocations[tileId]]; // should be the same as lastLoc but just in case
+                oldList.Remove(tileId);
+            }
+
+            List<int> newList = tileLocToListMap[curLoc];
+            newList.Add(tileId);
+
+            tileLocations[tileId] = curLoc;
+        }
+    }
 
     public void ReceiveGameState(int newWallCount, int[] newDiscard, int[] newPrivateRack
         , int[] newPrivateRackCounts, int[] newDisplayRack0, int[] newDisplayRack1
         , int[] newDisplayRack2, int[] newDisplayRack3)
     {
         int[][] newDisplayRacks = new int[][] { newDisplayRack0, newDisplayRack1, newDisplayRack2, newDisplayRack3 };
+
+
+
+        /*
 
         WallCount = newWallCount;       // update wall count
         ApplyAdd(newDiscard, discard);  // update discard pile
@@ -88,7 +135,7 @@ public class TileTrackerClient
                 curList.Add(newList[i]);
             }
         }
-
+        */
     }
 
     public void ReceiveRackUpdate(int[] newRack)
@@ -98,7 +145,7 @@ public class TileTrackerClient
         // note: we don't care about the order of newRack  or therefore any "move" actions because it's none of the 
         // server's business what order the client keeps their tiles in
 
-        ObservableCollection<int> curRack = LocalPrivateRack;
+        List<int> curRack = LocalPrivateRack;
 
         // removals
         List<int> removeList = new();
@@ -155,3 +202,4 @@ public class TileTrackerClient
 
     }
 }
+

@@ -10,7 +10,7 @@ public class CharlestonClient
     TileTrackerClient TileTracker { get => refs.TileTrackerClient; }
     IMonoWrapper Mono { get => refs.Mono; }
     ICharlestonFusion CharlestonFusion { get => refs.CFusion; }
-    ObservableCollection<int> Rack { get => TileTracker.LocalPrivateRack; }
+    List<int> Rack { get => TileTracker.LocalPrivateRack; }
 
     public int[] ClientPassArr = new int[3] { -1, -1, -1 };
     readonly int[] StealPasses = new int[2] { 2, 5 };

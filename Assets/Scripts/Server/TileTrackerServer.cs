@@ -22,8 +22,8 @@ public class TileTrackerServer
     List<List<int>> displayRacks = new() { new(), new(), new(), new() };
     public List<IReadOnlyList<int>> DisplayRacks = new();
 
-    Dictionary<int, TileLoc> tileLocations = new();
-    public IReadOnlyDictionary<int, TileLoc> TileLocations => tileLocations;
+    Dictionary<int, LocChange> tileLocations = new();
+    public IReadOnlyDictionary<int, LocChange> TileLocations => tileLocations;
 
     Dictionary<TileLoc, List<int>> TileLocToListMap;
     public List<TileLoc> PrivateRackLocations = new()
@@ -85,14 +85,23 @@ public class TileTrackerServer
     public void MoveTile(int tileId, TileLoc location)
     {
         UnityEngine.Debug.Log($"TileTrackerServer.MoveTile({tileId}, {location})");
-        List<int> newLocationList = TileLocToListMap[location];
-        if (tileLocations.ContainsKey(tileId))
+
+        // set last loc. If tile isn't already being tracked, set last loc to the wall
+        TileLoc newLastLoc = tileLocations.ContainsKey(tileId) ? tileLocations[tileId].curLoc : TileLoc.Wall;
+        TileLoc newCurLoc = location;
+
+        tileLocations[tileId] = new LocChange() // update dictionary entry
         {
-            List<int> oldLocationList = TileLocToListMap[tileLocations[tileId]];
-            oldLocationList.Remove(tileId);   // remove tile from the list it's currently on
-        }
+            lastLoc = newLastLoc,
+            curLoc = newCurLoc
+        };
+
+        List<int> oldLocationList = TileLocToListMap[newLastLoc];
+        List<int> newLocationList = TileLocToListMap[newCurLoc];
+
+        oldLocationList.Remove(tileId);   // remove tile from the list it's currently on
         newLocationList.Add(tileId);                   // add tile to its new location
-        tileLocations[tileId] = location;       // update dictionary entry
+
         SendGameStateToAll();
     }
 
@@ -101,6 +110,26 @@ public class TileTrackerServer
         for (int playerId = 0; playerId < 4; playerId++)
         {
             if (refs.FManager.IsPlayerAI(playerId)) continue;
+            SendGameStateToPlayer(playerId);
+        }
+    }
+
+    void SendGameStateToPlayer(int playerId)
+    {
+        List<TileLoc> ClientTileLocs = new() {
+            TileLoc.Discard,
+            PrivateRackLocations[playerId],
+            TileLoc.DisplayRack0,
+            TileLoc.DisplayRack1,
+            TileLoc.DisplayRack2,
+            TileLoc.DisplayRack3
+        };
+
+        Dictionary<int, LocChange> tileLocsForClient = new();
+        foreach (KeyValuePair<int, LocChange> item in tileLocations)
+        {
+            TileLoc curLoc = item.Value.curLoc;
+            if (ClientTileLocs.Contains(curLoc)) tileLocsForClient.Add(item.Key, item.Value);
             refs.Fusion.RPC_S2C_SendGameState(playerId);
         }
     }
@@ -180,4 +209,11 @@ public enum TileLoc
     DisplayRack1,
     DisplayRack2,
     DisplayRack3,
+}
+
+
+public struct LocChange
+{
+    public TileLoc lastLoc;
+    public TileLoc curLoc;
 }
