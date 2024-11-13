@@ -155,7 +155,7 @@ public class TurnManagerTests
 
         vars.turnManager.TileCallingMonitor();
 
-        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89]);
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89].curLoc);
     }
 
     // TileCallingMonitor, time expired and no callers or waiters
@@ -170,8 +170,8 @@ public class TurnManagerTests
 
         vars.turnManager.TileCallingMonitor();
 
-        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[discardTile]);
-        Assert.AreEqual(TileLoc.PrivateRack1, vars.tileTracker.TileLocations[nextTile]);
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[discardTile].curLoc);
+        Assert.AreEqual(TileLoc.PrivateRack1, vars.tileTracker.TileLocations[nextTile].curLoc);
     }
 
     // TileCallingMonitor, callers before time expired
@@ -292,7 +292,7 @@ public class TurnManagerTests
 
         UnityEngine.Debug.Log($"Racks: {vars.tileTracker.PrivateRacksToString()}");
         UnityEngine.Debug.Log($"Active Player: {vars.fakeFusionManager.ActivePlayer}");
-        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89]);   // the tile ends up in Discard
+        Assert.AreEqual(TileLoc.Discard, vars.tileTracker.TileLocations[89].curLoc);   // the tile ends up in Discard
         Assert.AreEqual(14, vars.tileTracker.PrivateRacks[2].Count);            // play continues for the next player
         // FIXME: not making it to any debug statements in NeverMind or NextTurn
     }
@@ -307,7 +307,7 @@ public class TurnManagerTests
         CallingPeriodWorkflowShortcut(vars, players, actions);
         SubmitInputAndCallTileCallingMonitor(vars, 3, Buttons.nevermind);
 
-        Assert.AreEqual(TileLoc.DisplayRack0, vars.tileTracker.TileLocations[89]);  // the tile ends up on player 0's rack
+        Assert.AreEqual(TileLoc.DisplayRack0, vars.tileTracker.TileLocations[89].curLoc);  // the tile ends up on player 0's rack
     }
 
     [Test]

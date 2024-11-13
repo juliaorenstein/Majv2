@@ -163,6 +163,8 @@ public class TileLocomotionTests
         List<int> expectedRack = new() { 0, 1, 4, 2, 3 };
         List<int> actualRack = tileTracker.LocalPrivateRack;
 
+        Debug.Log(string.Join(", ", expectedRack));
+        Debug.Log(string.Join(", ", actualRack));
         CollectionAssert.AreEqual(expectedRack, actualRack);
     }
 

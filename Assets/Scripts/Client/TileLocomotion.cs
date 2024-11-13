@@ -123,7 +123,7 @@ public class TileLocomotion
             else
             {
                 refs.TileTrackerClient.LocalPrivateRack.Remove(tileId);
-                refs.TileTrackerClient.LocalPrivateRack.Insert(tileId, newIx);
+                refs.TileTrackerClient.LocalPrivateRack.Insert(newIx, tileId);
             }
         }
 

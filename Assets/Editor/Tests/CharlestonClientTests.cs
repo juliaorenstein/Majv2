@@ -91,6 +91,7 @@ public class CharlestonClientTests
     {
         // ARRANGE
         var (refs, mono, _) = CreateVariables();
+        new FakeFusionManager(refs);
 
         CharlestonClient CClient = new(refs)
         {
@@ -112,6 +113,7 @@ public class CharlestonClientTests
     {
         // ARRANGE
         var (refs, mono, _) = CreateVariables();
+        new FakeFusionManager(refs);
         TileTrackerClient tileTracker = new(refs)
         {
             LocalPrivateRack = new() { 1, 2, 3, 4, 5 }
