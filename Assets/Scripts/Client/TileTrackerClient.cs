@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 
 public class TileTrackerClient
 {
@@ -11,10 +12,23 @@ public class TileTrackerClient
 
     // lists owned and shared by the host, along with their public client counterparts
     List<int> discard = new();
-    public IReadOnlyList<int> Discard => discard.ToList().AsReadOnly();
+    public IReadOnlyList<int> Discard => discard.AsReadOnly();
 
-    List<List<int>> displayRacks = new() { new(), new(), new(), new() };
-    public List<IReadOnlyList<int>> DisplayRacks = new();
+    List<int> displayRack0 = new();
+    public IReadOnlyList<int> DisplayRack0 => displayRack0.AsReadOnly();
+
+    List<int> displayRack1 = new();
+    public IReadOnlyList<int> DisplayRack1 => displayRack1.AsReadOnly();
+
+    List<int> displayRack2 = new();
+    public IReadOnlyList<int> DisplayRack2 => displayRack2.AsReadOnly();
+
+    List<int> displayRack3 = new();
+    public IReadOnlyList<int> DisplayRack3 => displayRack3.AsReadOnly();
+
+    List<List<int>> displayRacks;
+    public List<IReadOnlyList<int>> DisplayRacks;
+
 
     // clients can rearrange their own and even add/remove during Charleston, so this will just be a public ObsColl without a readonly counterpart
     public List<int> LocalPrivateRack = new();
@@ -36,10 +50,9 @@ public class TileTrackerClient
         refs.TileTrackerClient = this;
         this.refs = refs;
         mono = refs.Mono;
-        foreach (List<int> rack in displayRacks)
-        {
-            DisplayRacks.Add(rack.ToList().AsReadOnly());
-        }
+
+        displayRacks = new() { displayRack0, displayRack1, displayRack2, displayRack3 };
+        DisplayRacks = new() { DisplayRack0, DisplayRack1, DisplayRack2, DisplayRack3 };
 
         localPrivateRackLoc = refs.FManager.LocalPlayer switch
         {
@@ -61,29 +74,22 @@ public class TileTrackerClient
     }
 
 
-    public void ReceiveGameState(Dictionary<int, LocChange> tileLocsFromServer)
+    public void ReceiveGameState(ClientGameState gameState)
     {
-        foreach (KeyValuePair<int, LocChange> item in tileLocsFromServer)
+        foreach (KeyValuePair<int, LocChange> item in gameState.TileDict)
         {
             int tileId = item.Key;
             TileLoc lastLoc = item.Value.lastLoc;
             TileLoc curLoc = item.Value.curLoc;
-
-            if (tileLocsFromServer.ContainsKey(tileId))
-            {
-                // TODO: this assertion will fail during network issues and when a client joins mid game, but i'll worry about that later
-                UnityEngine.Debug.Assert(tileLocations[tileId] == lastLoc
-                , "Received a lastLoc from server that doesn't match tile's current position on the client");
-
-                List<int> oldList = tileLocToListMap[tileLocations[tileId]]; // should be the same as lastLoc but just in case
-                oldList.Remove(tileId);
-            }
 
             List<int> newList = tileLocToListMap[curLoc];
             newList.Add(tileId);
 
             tileLocations[tileId] = curLoc;
         }
+
+        WallCount = gameState.WallCount;
+        PrivateRackCounts = gameState.PrivateRackCounts;
     }
 
     public void ReceiveGameState(int newWallCount, int[] newDiscard, int[] newPrivateRack
@@ -200,6 +206,13 @@ public class TileTrackerClient
             throw new NotImplementedException();
         }
 
+    }
+
+    public struct ClientGameState
+    {
+        public Dictionary<int, LocChange> TileDict;
+        public int WallCount;
+        public int[] PrivateRackCounts;
     }
 }
 

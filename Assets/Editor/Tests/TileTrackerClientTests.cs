@@ -83,6 +83,7 @@ public class TileTrackerClientTests
         ClassReferences refs = new();
         new FakeMonoWrapper(refs);
         new CharlestonClient(refs);
+        new FakeFusionManager(refs);
         vars.tileTracker = new(refs);
         PopulateTileTracker(vars.tileTracker);
 
@@ -108,15 +109,19 @@ public class TileTrackerClientTests
 
     TileTrackerClient PopulateTileTracker(TileTrackerClient tileTracker)
     {
+        /*
         int wallCount = GetWallCount;
         int[] discard = GetDiscard.ToArray();
         int[] privateRack = GetPrivateRack.ToArray();
         int[] privateRackCounts = GetPrivateRackCounts;
         List<int[]> displayRacks = GetDisplayRacks.Select(item => item.ToArray()).ToList();
-
-        tileTracker.ReceiveGameState(wallCount, discard
-        , privateRack, privateRackCounts, displayRacks[0]
-        , displayRacks[1], displayRacks[2], displayRacks[3]);
+        */
+        tileTracker.ReceiveGameState(new()
+        {
+            TileDict = GetTileLocsFromServer(),
+            WallCount = GetWallCount,
+            PrivateRackCounts = GetPrivateRackCounts
+        });
 
         return tileTracker;
     }
@@ -131,6 +136,31 @@ public class TileTrackerClientTests
         new List<int> { 110, 111, 112, 113 },
         new List<int> { },
     };
+
+    Dictionary<int, LocChange> GetTileLocsFromServer()
+    {
+        Dictionary<int, LocChange> outDict = new();
+
+        LocChange discard = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.Discard };
+        foreach (int tileId in GetDiscard) { outDict[tileId] = discard; }
+
+        LocChange privateRack = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.PrivateRack0 };
+        foreach (int tileId in GetPrivateRack) { outDict[tileId] = privateRack; }
+
+        LocChange displayRack0 = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.DisplayRack0 };
+        foreach (int tileId in GetDisplayRacks[0]) { outDict[tileId] = displayRack0; }
+
+        LocChange displayRack1 = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.DisplayRack1 };
+        foreach (int tileId in GetDisplayRacks[1]) { outDict[tileId] = displayRack1; }
+
+        LocChange displayRack2 = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.DisplayRack2 };
+        foreach (int tileId in GetDisplayRacks[2]) { outDict[tileId] = displayRack2; }
+
+        LocChange displayRack3 = new() { lastLoc = TileLoc.Wall, curLoc = TileLoc.DisplayRack3 };
+        foreach (int tileId in GetDisplayRacks[3]) { outDict[tileId] = displayRack3; }
+
+        return outDict;
+    }
 
     void ReceiveGameState(Vars vars)
     {
