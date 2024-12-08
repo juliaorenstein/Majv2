@@ -33,8 +33,8 @@ public class TileTrackerClientTests
         AssertAssembly(vars);
     }
 
-    [TestCase(0, 6, 13)]
-    public void ReceiveGameState_ExternalDiscard_TileMovesTilePoolToDiscard(int ix)
+    [Test]
+    public void ReceiveGameState_ExternalDiscard_TileMovesTilePoolToDiscard()
     {
         Vars vars = MakeVariablesForTest();
 
@@ -45,35 +45,100 @@ public class TileTrackerClientTests
         AssertAssembly(vars);
     }
 
-    [Test]
-    public void ReceiveGameState_ExternalDiscard_ExternalPrivateRackCountUpdates() { throw new NotImplementedException(); }
+    public void ReceiveGameState_ExternalDiscard_ExternalPrivateRackCountUpdates()
+    {
+        // actually covered by test above
+    }
 
     [Test]
-    public void ReceiveGameState_LocalNextTurn_TileMovesTilePoolToPrivateRack() { throw new NotImplementedException(); }
+    public void ReceiveGameState_LocalNextTurn_TileMovesTilePoolToPrivateRack()
+    {
+        Vars vars = MakeVariablesForTest();
+
+        vars.testWallCount--;
+        vars.testPrivateRack.Add(35);
+
+        ReceiveGameState(vars);
+        AssertAssembly(vars);
+    }
+
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public void ReceiveGameState_ExternalNextTurn_ExternalPrivateRackCountUpdates(int playerId)
+    {
+        Vars vars = MakeVariablesForTest();
+
+        vars.testWallCount--;
+        vars.testPrivateRackCounts[playerId]++;
+
+        ReceiveGameState(vars);
+        AssertAssembly(vars);
+
+        // FIXME: if this passes for local player, maybe it shouldn't and there should be some 
+        //      sort of logic to ensure that local player private rack count actually matches the real count
+    }
+
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public void ReceiveGameState_Call_TileMovesDiscardToDisplayRack(int playerId)
+    {
+        Vars vars = MakeVariablesForTest();
+
+        int tileId = vars.testDiscard.Last();
+        vars.testDiscard.Remove(tileId);
+        vars.testDisplayRacks[playerId].Add(tileId);
+
+        ReceiveGameState(vars);
+        AssertAssembly(vars);
+    }
 
     [Test]
-    public void ReceiveGameState_ExternalNextTurn_ExternalPrivateRackCountUpdates() { throw new NotImplementedException(); }
+    public void ReceiveGameState_LocalExpose_TileMovesPrivateRackToLocalDisplayRack()
+    {
+        Vars vars = MakeVariablesForTest();
+
+        int tileId = vars.testPrivateRack.Last();
+        vars.testPrivateRack.Remove(tileId);
+        vars.testDisplayRacks[0].Add(tileId);
+
+        ReceiveGameState(vars);
+        AssertAssembly(vars);
+    }
 
     [Test]
-    public void ReceiveGameState_LocalCall_TileMovesDiscardToLocalDisplayRack() { throw new NotImplementedException(); }
+    public void ReceiveGameState_ExternalExpose_TileMovesTilePoolToExternalDisplayRack()
+    {
+        Vars vars = MakeVariablesForTest();
+
+        int tileId = 95;
+        vars.testPrivateRackCounts[1]--;
+        vars.testDisplayRacks[1].Add(tileId);
+
+        ReceiveGameState(vars);
+        AssertAssembly(vars);
+    }
+
+    public void ReceiveGameState_ExternalExpose_ExternalPrivateRackCountUpdates()
+    {
+        // covered above
+    }
 
     [Test]
-    public void ReceiveGameState_ExternalCall_TileMovesDiscardToExternalDisplayRack() { throw new NotImplementedException(); }
+    public void ReceiveGameState_LocalNeverMind_TileMovesDisplayRackToDiscard()
+    {
+        throw new NotImplementedException();
+    }
 
     [Test]
-    public void ReceiveGameState_LocalExpose_TileMovesPrivateRackToLocalDisplayRack() { throw new NotImplementedException(); }
+    public void ReceiveGameState_ExternalNeverMind_TileMovesDisplayRackToDiscard()
+    {
+        throw new NotImplementedException();
+    }
 
-    [Test]
-    public void ReceiveGameState_ExternalExpose_TileMovesTilePoolToExternalDisplayRack() { throw new NotImplementedException(); }
-
-    [Test]
-    public void ReceiveGameState_ExternalExpose_ExternalPrivateRackCountUpdates() { throw new NotImplementedException(); }
-
-    [Test]
-    public void ReceiveGameState_LocalNeverMind_TileMovesDisplayRackToDiscard() { throw new NotImplementedException(); }
-
-    [Test]
-    public void ReceiveGameState_ExternalNeverMind_TileMovesDisplayRackToDiscard() { throw new NotImplementedException(); }
 
     Vars MakeVariablesForTest()
     {
@@ -109,13 +174,6 @@ public class TileTrackerClientTests
 
     TileTrackerClient PopulateTileTracker(TileTrackerClient tileTracker)
     {
-        /*
-        int wallCount = GetWallCount;
-        int[] discard = GetDiscard.ToArray();
-        int[] privateRack = GetPrivateRack.ToArray();
-        int[] privateRackCounts = GetPrivateRackCounts;
-        List<int[]> displayRacks = GetDisplayRacks.Select(item => item.ToArray()).ToList();
-        */
         tileTracker.ReceiveGameState(new()
         {
             TileDict = GetTileLocsFromServer(),
